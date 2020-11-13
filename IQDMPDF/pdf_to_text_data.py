@@ -32,11 +32,11 @@ class CustomPDFParser:
     def print_block(self, page, index):
         self.page[page].print_block(index)
 
-    def get_block_data(self, page, index):
-        return self.page[page].get_block_data(index)
+    def get_block_data_by_index(self, page, index):
+        return self.page[page].get_block_data_by_index(index)
 
-    def get_block_data_with_y(self, page, y):
-        return self.page[page].get_block_data_with_y(y)
+    def get_block_data(self, page, y=None, x=None, exact=False, tolerance=20):
+        return self.page[page].get_block_data(y, x, exact, tolerance)
 
     def convert_pdf_to_text(self, verbose=False):
 
@@ -145,18 +145,27 @@ class PDFPageParser:
         coord = self.get_coordinates(index)
         print("x:%s\ty:%s\n%s" % (coord[0], coord[1], (self.data['text'][index])))
 
-    def get_block_data(self, index):
+    def get_block_data_by_index(self, index):
         coord = self.get_coordinates(index)
         return coord[0], coord[1], self.data['text'][index]
 
-    def get_block_data_with_y(self, y, exact=False):
-        tolerance = 20
+    def get_block_data(self, y=None, x=None, exact=False, y_tol=20, x_tol=20):
         block_data = []
         for i, data in enumerate(self.data['text']):
+            coord = {dim: int(self.data[dim][i]) for dim in ['x', 'y']}
             if exact:
-                if int(self.data['y'][i]) == y:
-                    block_data.append(data)
+                if coord['y'] == y:
+                    if x is None:
+                        block_data.append(data)
+                    else:
+                        if coord['x'] == x:
+                            block_data.append(data)
             else:
-                if y + tolerance > int(self.data['y'][i]) > y - tolerance:
-                    block_data.append(data)
+                if y + y_tol > coord['y'] > y - y_tol:
+                    if x is None:
+                        block_data.append(data)
+                    else:
+                        if x + x_tol > coord['x'] > x - x_tol:
+                            block_data.append(data)
         return block_data
+
