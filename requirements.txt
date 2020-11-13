@@ -1,0 +1,4 @@
+pdfminer > 19
+python-dateutil
+chardet == 3.0.4
+pathvalidate

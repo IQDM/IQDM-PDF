@@ -29,6 +29,7 @@ class ReportParser:
     If ReportParser.report is None, the input text was not identified to be any of the report classes listed in
     REPORT_CLASSES
     """
+
     def __init__(self, text):
         self.report = self.get_report(text)
         if self.report:
