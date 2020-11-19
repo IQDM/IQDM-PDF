@@ -70,11 +70,11 @@ def convert_pdf_to_txt(path):
     return text
 
 
-class CustomPDFParser:
+class CustomPDFReader:
     """Custom PDF Parsing module"""
 
     def __init__(self, file_path, verbose=False):
-        """Initialize a CustomPDFParser object
+        """Initialize a CustomPDFReader object
 
         Parameters
         ----------
@@ -124,7 +124,7 @@ class CustomPDFParser:
         return self.page[page].get_block_data_by_index(index)
 
     def get_block_data(
-        self, page, y=None, x=None, exact=False, y_tol=20, x_tol=20
+        self, page, pos, tol=20
     ):
         """Use PDFPageParser.get_block_data for the provided page
 
@@ -132,23 +132,19 @@ class CustomPDFParser:
         ----------
         page : int
             The index of the PDF page
-        y : int, float, optional
-            The y-coordinate of the text block to be retrieved
-        x : int, float, optional
-            The x-coordinate of the text block to be retrieved
-        exact : bool
-            Set to true if coordinates must match exactly
-        y_tol : int, float
-            Maximum distance a block's y-coordinate may be from y
-        x_tol : int, float
-            Maximum distance a block's x-coordinate may be from x
+        pos : tuple of int, float
+            The (x,y) coordinates of the text block to be retrieved
+        tol : int, float, tuple
+            Maximum distance a block's x or y-coordinate may be from pos.
+            If a tuple is provided, first value is the x_tolerance,
+            2nd is y_tolerance
 
         Returns
         ----------
         list of str
             All text data that meet the input constraints
         """
-        return self.page[page].get_block_data(y, x, exact, y_tol, x_tol)
+        return self.page[page].get_block_data(pos, tol)
 
     def convert_pdf_to_text(self, verbose=False):
         """ "Extract text and coordinates from a PDF
@@ -339,35 +335,31 @@ class PDFPageParser:
         coord = self.get_coordinates(index)
         return coord[0], coord[1], self.data["text"][index]
 
-    def get_block_data(self, y=None, x=None, exact=False, y_tol=20, x_tol=20):
+    def get_block_data(self, pos, tol=20):
         """Get the text block data by x,y coordinates
 
         Parameters
         ----------
-        y : int, float, optional
-            The y-coordinate of the text block to be retrieved
-        x : int, float, optional
-            The x-coordinate of the text block to be retrieved
-        exact : bool
-            Set to true if coordinates must match exactly
-        y_tol : int, float
-            Maximum distance a block's y-coordinate may be from y
-        x_tol : int, float
-            Maximum distance a block's x-coordinate may be from x
+        pos : tuple of int, float
+            The (x,y) coordinates of the text block to be retrieved
+        tol : int, float, tuple
+            Maximum distance a block's x or y-coordinate may be from pos.
+            If a tuple is provided, first value is the x_tolerance,
+            2nd is y_tolerance
 
         Returns
         ----------
         list of str
             All text data that meet the input constraints
         """
+
+        tol = tol if isinstance(tol, tuple) else (tol, tol)
+
         block_data = []
         for i, data in enumerate(self.data["text"]):
-            coord = {dim: int(self.data[dim][i]) for dim in ["x", "y"]}
-            if exact:
-                if y in [None, coord["y"]] and x in [None, coord["x"]]:
-                    block_data.append(data)
-            elif is_in_tol(coord["y"], y, y_tol) and is_in_tol(
-                coord["x"], x, x_tol
-            ):
-                block_data.append(data)
+            if is_in_tol(int(self.data['x'][i]), pos[0], tol[0]) \
+                    and (int(self.data['y'][i]), pos[1], tol[1]):
+                data_clean = data.strip()
+                if data_clean:
+                    block_data.append(data_clean)
         return block_data

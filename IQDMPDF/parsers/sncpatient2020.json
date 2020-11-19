@@ -1,0 +1,34 @@
+{
+  "report_type": "SNCPatient2020",
+  "identifiers": [
+    "SNC Patient QA of Dose Distribution",
+    "Hospital",
+    "QA Date",
+    "QA Parameters",
+    "Summary",
+    "Plan ID",
+    "Verified Plan UID"
+  ],
+  "data": [
+    {"column": "Patient Name", "page": 0, "pos": [135.72, 649.46]},
+    {"column": "Patient ID", "page": 0, "pos": [135.72, 627.35]},
+    {"column": "QA Date", "page": 0, "pos": [101.23, 708.23]},
+    {"column": "Plan Date", "page": 0, "pos": [135.72, 560.18]},
+    {"column": "Plan Name", "page": 0, "pos": [135.72, 605.25]},
+    {"column": "Plan ID", "page": 0, "pos": [135.72, 582.28]},
+    {"column": "Verified Plan UID", "page": 0, "pos": [135.72, 537.57]},
+    {"column": "Total MU", "page": 0, "pos": [135.72, 514.53]},
+    {"column": "Comparison Type", "page": 0, "pos": [28.44, 483.01]},
+    {"column": "Threshold (%)", "page": 0, "pos": [152.14, 463.12]},
+    {"column": "Use Global (%)", "page": 0, "pos": [450.58, 463.12]},
+    {"column": "Difference (%)", "page": 0, "pos": [154.94, 441.02]},
+    {"column": "Meas Uncertainty", "page": 0, "pos": [452.74, 441.02]},
+    {"column": "Distance (mm)", "page": 0, "pos": [154.94, 418.91]},
+    {"column": "Cavity Dose", "page": 0, "pos": [450.79, 418.91]},
+    {"column": "Summary Type", "page": 0, "pos": [28.44, 386.32]},
+    {"column": "Pass (%)", "page": 0, "pos": [152.14, 367.22]},
+    {"column": "Pass", "page": 0, "pos": [153.5, 345.11]},
+    {"column": "Fail", "page": 0, "pos": [156.31, 323.01]},
+    {"column": "Total Points", "page": 0, "pos": [153.5, 300.91]}
+  ]
+}

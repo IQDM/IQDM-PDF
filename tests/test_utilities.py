@@ -5,9 +5,8 @@
 """unittest cases for utilities."""
 #
 # Copyright (c) 2020 Dan Cutright
-# This file is part of DVHA-Stats, released under a MIT license.
+# This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution, also
-#    available at https://github.com/cutright/DVHA-Stats
 
 
 import unittest

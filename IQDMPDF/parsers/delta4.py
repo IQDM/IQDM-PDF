@@ -5,6 +5,7 @@ Created on Thu May 30 2019
 @author: Dan Cutright, PhD
 """
 
+from IQDMPDF.pdf_reader import convert_pdf_to_txt
 from IQDMPDF.utilities import are_all_strings_in_text, get_csv_row
 from dateutil.parser import parse as date_parser
 
@@ -64,7 +65,8 @@ class Delta4Report:
         self.index_end = {}
         self.text = None
 
-    def process_data(self, text_data):
+    def __call__(self, file_path):
+        text_data = convert_pdf_to_txt(file_path)
         self.text = text_data.split("\n")
 
         # Patient information

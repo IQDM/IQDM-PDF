@@ -16,7 +16,6 @@ from os import walk, listdir
 from pathvalidate import sanitize_filename
 from IQDMPDF._version import __version__
 from IQDMPDF.parsers.parser import ReportParser
-from IQDMPDF.pdf_reader import convert_pdf_to_txt
 
 
 SCRIPT_DIR = dirname(__file__)
@@ -24,12 +23,12 @@ SCRIPT_DIR = dirname(__file__)
 DELIMITER = ","
 
 
-def pdf_to_qa_result(abs_file_path):
+def pdf_to_qa_result(file_path):
     """Process a PDF into CSV data
 
     Parameters
     ----------
-    abs_file_path : str
+    file_path : str
         Absolute file path to the PDF to be read
 
     Returns
@@ -38,12 +37,10 @@ def pdf_to_qa_result(abs_file_path):
         CSV data, report type, column headers
     """
 
-    text = convert_pdf_to_txt(abs_file_path)
-
-    report_obj = ReportParser(text)
+    report_obj = ReportParser(file_path)
     if report_obj.report is not None:
         return (
-            report_obj.csv + DELIMITER + abs_file_path,
+            report_obj.csv + DELIMITER + file_path,
             report_obj.report_type,
             report_obj.columns,
         )

@@ -6,83 +6,17 @@ Created on Fri Jun 21 2019
 @contributor: Marc J.P. Chamberland, PhD
 """
 
+from IQDMPDF.parsers.generic import GenericReport
+from IQDMPDF.pdf_reader import convert_pdf_to_txt
 from IQDMPDF.utilities import get_csv_row
-from IQDMPDF.pdf_reader import CustomPDFParser
 import re
 
 
-class SNCPatientReport2020:
+class SNCPatientReport2020(GenericReport):
+    """SNCPatientReport parser for the new format released in 2020"""
     def __init__(self):
-        self.report_type = "sncpatient2020"
-        self.columns = [
-            "Patient Name",
-            "Patient ID",
-            "QA Date",
-            "Plan Date",
-            "Plan Name",
-            "Plan ID",
-            "Verified Plan UID",
-            "Total MU",
-            "Comparison Type",
-            "Threshold (%)",
-            "Difference (%)",
-            "Distance (mm)",
-            "Use Global (%)",
-            "Meas Uncertainty",
-            "Cavity Dose",
-            "Summary Type",
-            "Pass (%)",
-            "Pass",
-            "Fail",
-            "Total Points",
-        ]
-        self.identifiers = [
-            "SNC Patient QA of Dose Distribution",
-            "Hospital",
-            "QA Date",
-            "QA Parameters",
-            "Summary",
-            "Plan ID",
-            "Verified Plan UID",
-        ]
-        self.text = None
-        self.data = None
-
-        self.LUT = {
-            "Patient Name": {"page": 0, "x": 135.72, "y": 649.46},
-            "Patient ID": {"page": 0, "x": 135.72, "y": 627.35},
-            "QA Date": {"page": 0, "x": 101.23, "y": 708.23},
-            "Plan Date": {"page": 0, "x": 135.72, "y": 560.18},
-            "Plan Name": {"page": 0, "x": 135.72, "y": 605.25},
-            "Plan ID": {"page": 0, "x": 135.72, "y": 582.28},
-            "Verified Plan UID": {"page": 0, "x": 135.72, "y": 537.57},
-            "Total MU": {"page": 0, "x": 135.72, "y": 514.53},
-            "Comparison Type": {"page": 0, "x": 28.44, "y": 483.01},
-            "Threshold (%)": {"page": 0, "x": 152.14, "y": 463.12},
-            "Use Global (%)": {"page": 0, "x": 450.58, "y": 463.12},
-            "Difference (%)": {"page": 0, "x": 154.94, "y": 441.02},
-            "Meas Uncertainty": {"page": 0, "x": 452.74, "y": 441.02},
-            "Distance (mm)": {"page": 0, "x": 154.94, "y": 418.91},
-            "Cavity Dose": {"page": 0, "x": 450.79, "y": 418.91},
-            "Summary Type": {"page": 0, "x": 28.44, "y": 386.32},
-            "Pass (%)": {"page": 0, "x": 152.14, "y": 367.22},
-            "Pass": {"page": 0, "x": 153.5, "y": 345.11},
-            "Fail": {"page": 0, "x": 156.31, "y": 323.01},
-            "Total Points": {"page": 0, "x": 153.5, "y": 300.91},
-        }
-
-    def process_data(self, file_path):
-        self.data = CustomPDFParser(file_path)
-
-    @property
-    def summary_data(self):
-        return {
-            c: self.data.get_block_data(**self.LUT[c]) for c in self.columns
-        }
-
-    @property
-    def csv(self):
-        return get_csv_row(self.summary_data, self.columns)
+        """Initilization of a SNCPatientReport class"""
+        GenericReport.__init__(self, "sncpatient2020.json")
 
 
 class SNCPatientReport:
@@ -125,7 +59,8 @@ class SNCPatientReport:
         self.text = None
         self.data = {}
 
-    def process_data(self, text_data):
+    def __call__(self, file_path):
+        text_data = convert_pdf_to_txt(file_path)
         self.text = text_data.split("\n")
         self.data["date"], self.data["hospital"] = [], []
         for row in self.text:
