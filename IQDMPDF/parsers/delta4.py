@@ -1,12 +1,15 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-main program for IMRT QA PDF report parser
-Created on Thu May 30 2019
-@author: Dan Cutright, PhD
-"""
+#
+# delta4.py
+"""Delta4 QA report parser"""
+#
+# Copyright (c) 2020 Dan Cutright
+# This file is part of IQDM-PDF, released under a MIT license.
+#    See the file LICENSE included with this distribution
 
-from IQDMPDF.pdf_reader import convert_pdf_to_txt
-from IQDMPDF.utilities import are_all_strings_in_text, get_csv_row
+from IQDMPDF.utilities import are_all_strings_in_text
+from IQDMPDF.parsers.generic import ParserBase
 from dateutil.parser import parse as date_parser
 
 
@@ -20,8 +23,10 @@ COMPOSITE_BEAM_NAMES = ["Composite", "Fraction"]
 ENERGY_OPTIONS = ["6 MV, FFF", "6 MV", "10 MV, FFF", "10 MV"]
 
 
-class Delta4Report:
+class Delta4Report(ParserBase):
     def __init__(self):
+        ParserBase.__init__(self)
+
         self.report_type = "delta4"
         self.columns = [
             "Patient Name",
@@ -63,11 +68,9 @@ class Delta4Report:
         self.data = {}
         self.index_start = {}
         self.index_end = {}
-        self.text = None
 
     def __call__(self, file_path):
-        text_data = convert_pdf_to_txt(file_path)
-        self.text = text_data.split("\n")
+        super().__call__(file_path)
 
         # Patient information
         if "PRE-TREATMENT REPORT" in self.text[3]:
@@ -220,7 +223,9 @@ class Delta4Report:
         self.data["Energy"] = None
         if ENERGY_OPTIONS:
             for energy_option in ENERGY_OPTIONS:
-                if self.data["Energy"] is None and energy_option in text_data:
+                if self.data["Energy"] is None and energy_option in "\n".join(
+                    self.text
+                ):
                     self.data["Energy"] = [
                         energy_option.replace(",", "")
                     ] * len(energy_override)
@@ -360,7 +365,3 @@ class Delta4Report:
             "Gamma Dist Criteria": float(self.data["gamma_dist"]),
             "Beam Count": len(self.data["Beam"]),
         }
-
-    @property
-    def csv(self):
-        return get_csv_row(self.summary_data, self.columns)

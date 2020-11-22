@@ -27,6 +27,9 @@ import pdfminer
 from io import StringIO
 from IQDMPDF.utilities import get_sorted_indices, is_in_tol
 
+# Search tolerance for get_block_data
+TOLERANCE = 10
+
 
 def convert_pdf_to_txt(path):
     """Extract text from a PDF
@@ -123,9 +126,7 @@ class CustomPDFReader:
         """
         return self.page[page].get_block_data_by_index(index)
 
-    def get_block_data(
-        self, page, pos, tol=20
-    ):
+    def get_block_data(self, page, pos, tol=TOLERANCE, text_cleaner=None):
         """Use PDFPageParser.get_block_data for the provided page
 
         Parameters
@@ -138,13 +139,17 @@ class CustomPDFReader:
             Maximum distance a block's x or y-coordinate may be from pos.
             If a tuple is provided, first value is the x_tolerance,
             2nd is y_tolerance
+        text_cleaner : callable, optional
+            A function called on each text element (e.g., remove leading ':')
 
         Returns
         ----------
         list of str
             All text data that meet the input constraints
         """
-        return self.page[page].get_block_data(pos, tol)
+        return self.page[page].get_block_data(
+            pos, tol, text_cleaner=text_cleaner
+        )
 
     def convert_pdf_to_text(self, verbose=False):
         """ "Extract text and coordinates from a PDF
@@ -335,7 +340,7 @@ class PDFPageParser:
         coord = self.get_coordinates(index)
         return coord[0], coord[1], self.data["text"][index]
 
-    def get_block_data(self, pos, tol=20):
+    def get_block_data(self, pos, tol, text_cleaner=None):
         """Get the text block data by x,y coordinates
 
         Parameters
@@ -346,6 +351,8 @@ class PDFPageParser:
             Maximum distance a block's x or y-coordinate may be from pos.
             If a tuple is provided, first value is the x_tolerance,
             2nd is y_tolerance
+        text_cleaner : callable, optional
+            A function called on each text element (e.g., remove leading ':')
 
         Returns
         ----------
@@ -357,9 +364,14 @@ class PDFPageParser:
 
         block_data = []
         for i, data in enumerate(self.data["text"]):
-            if is_in_tol(int(self.data['x'][i]), pos[0], tol[0]) \
-                    and (int(self.data['y'][i]), pos[1], tol[1]):
-                data_clean = data.strip()
+            valid_x = is_in_tol(int(self.data["x"][i]), pos[0], tol[0])
+            valid_y = is_in_tol(int(self.data["y"][i]), pos[1], tol[1])
+            if valid_x and valid_y:
+                data_clean = (
+                    data.strip()
+                    if text_cleaner is None
+                    else text_cleaner(data)
+                )
                 if data_clean:
                     block_data.append(data_clean)
         return block_data

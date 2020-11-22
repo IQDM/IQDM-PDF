@@ -22,16 +22,16 @@ class TestUtilities(unittest.TestCase):
 
     def test_are_all_strings_in_text(self):
         """Test are_all_strings_in_text"""
-        strings = ['Hello', 'World']
-        text = 'Hello World! This is a unit test!'
+        strings = ["Hello", "World"]
+        text = "Hello World! This is a unit test!"
         self.assertTrue(utilities.are_all_strings_in_text(text, strings))
-        strings.append('FAIL')
+        strings.append("FAIL")
         self.assertFalse(utilities.are_all_strings_in_text(text, strings))
 
     def test_get_csv_row(self):
         """Test test_get_csv_row"""
-        data = {'a': 0, 'b': "test,", 'c': 3.54, 'd': "ignore me!"}
-        columns = ['b', 'a', 'c']
+        data = {"a": 0, "b": "test,", "c": 3.54, "d": "ignore me!"}
+        columns = ["b", "a", "c"]
         expected = '"test,",0,3.54'
         self.assertEqual(utilities.get_csv_row(data, columns), expected)
 

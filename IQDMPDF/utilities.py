@@ -30,7 +30,7 @@ def are_all_strings_in_text(text, list_of_strings):
     return True
 
 
-def get_csv_row(data, columns, delimeter=","):
+def get_csv_row(data, columns, delimiter=","):
     """Convert a dictionary of data into a row for a csv file
 
     Parameters
@@ -39,17 +39,17 @@ def get_csv_row(data, columns, delimeter=","):
         a dictionary with values with str representations
     columns : list
         a list of keys dictating the order of the csv
-    delimeter : str
-        Optionally use the provided delimeter rather than a comma
+    delimiter : str
+        Optionally use the provided delimiter rather than a comma
 
     Returns
     ----------
     str
-        a csv string delimited by delimeter
+        a csv string delimited by delimiter
     """
     str_data = [str(data[c]) for c in columns]
-    clean_str_data = ['"%s"' % s if delimeter in s else s for s in str_data]
-    return delimeter.join(clean_str_data)
+    clean_str_data = ['"%s"' % s if delimiter in s else s for s in str_data]
+    return delimiter.join(clean_str_data)
 
 
 def get_sorted_indices(some_list, reverse=False):
