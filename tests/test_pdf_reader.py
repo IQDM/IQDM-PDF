@@ -12,10 +12,10 @@
 import unittest
 from IQDMPDF import pdf_reader
 from os.path import join, isfile
+from IQDMPDF.paths import DIRECTORIES
 
 
-BASEDATA_DIR = join("tests", "test_data")
-EXAMPLE_DATA = join(BASEDATA_DIR, "simple_test.pdf")
+EXAMPLE_DATA = join(DIRECTORIES["TEST_DATA"], "simple_test.pdf")
 
 
 class TestPDFReader(unittest.TestCase):

@@ -11,18 +11,17 @@
 
 import unittest
 from IQDMPDF.parsers import sncpatient
+from IQDMPDF.paths import DIRECTORIES
 from IQDMPDF.pdf_reader import convert_pdf_to_txt
 from os.path import join
 
-BASEDATA_DIR = join("tests", "test_data", "example_reports")
-
 
 EXAMPLE_DATA = [
-    join(BASEDATA_DIR, 'sncpatient', "UChicago", "DCAM_example_1.pdf")
+    join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago", "DCAM_example_1.pdf")
 ]
 
 OTHER_REPORTS = [
-    join(BASEDATA_DIR, 'delta4', "UChicago", "DCAM_example_1.pdf")
+    join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_1.pdf")
 ]
 
 
