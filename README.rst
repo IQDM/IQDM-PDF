@@ -11,9 +11,9 @@ Scans a directory for IMRT QA reports and parses data into a CSV
 Other information
 -----------------
 
--  Free software: MIT License
--  Documentation: TBD
--  Tested on Python TBD
+-  Free software: `MIT license <https://github.com/IQDM/IQDM-PDF/blob/master/LICENSE>`__
+-  Documentation: `Read the docs <https://iqdm-pdf.readthedocs.io>`__
+-  Tested on Python 3.6, 3.7, 3.8, 3.9
 
 
 Dependencies
