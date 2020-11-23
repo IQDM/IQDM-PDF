@@ -93,7 +93,7 @@ Vendor Compatibility
 .. |lgtm| image:: https://img.shields.io/lgtm/alerts/g/IQDM/IQDM-PDF.svg?logo=lgtm
    :target: https://lgtm.com/projects/g/IQDM/IQDM-PDF/alerts
    :alt: lgtm
-.. |Codecov| image:: https://codecov.io/gh/IQDM/IQDM-PDF/branch/master/graph/badge.svg
+.. |Codecov| image:: https://codecov.io/gh/IQDM/IQDM-PDF/branch/master/graph/badge.svg?token=C1B5689HQH
    :target: https://codecov.io/gh/IQDM/IQDM-PDF
    :alt: Codecov
 .. |Docs| image:: https://readthedocs.org/projects/iqdm-pdf/badge/?version=latest
