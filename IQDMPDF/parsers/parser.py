@@ -18,6 +18,7 @@ REPORT_CLASSES = [Delta4Report, SNCPatientReport, SNCPatientReport2020]
 
 class ReportParser:
     """Determines which Report class to use, then processes the data."""
+
     def __init__(self, file_path):
         """Initialization class for ReportParser
 

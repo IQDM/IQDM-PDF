@@ -48,6 +48,27 @@ class TestUtilities(unittest.TestCase):
         self.assertTrue(utilities.is_in_tol(10, 12, 3))
         self.assertFalse(utilities.is_in_tol(10.1, 12.1, 1))
 
+    def test_bbox_to_pos(self):
+        """Test the bounding box to position converter"""
+        bbox = [0, 1, 2, 3]
+
+        expected = {
+            "top-left": [0, 1],
+            "top-center": [1, 1],
+            "top-right": [2, 1],
+            "center-left": [0, 2],
+            "center-center": [1, 2],
+            "center": [1, 2],
+            "center-right": [2, 2],
+            "bottom-left": [0, 3],
+            "bottom-center": [1, 3],
+            "bottom-right": [2, 3],
+        }
+        for mode, exp_pos in expected.items():
+            pos = utilities.bbox_to_pos(bbox, mode)
+            self.assertEqual(pos[0], exp_pos[0])
+            self.assertEqual(pos[1], exp_pos[1])
+
 
 if __name__ == "__main__":
     import sys

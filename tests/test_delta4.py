@@ -46,22 +46,22 @@ class TestDelta4(unittest.TestCase):
         expected = {
             "Patient Name": "UCM, TG119",
             "Patient ID": "0097",
-            "Plan Date": "2020-05-19",
-            "Energy": "6 MV FFF",
-            "Daily Corr": 1.039,
-            "Norm Dose": 186.0,
-            "Dev": 98.8,
-            "DTA": 96.3,
-            "Gamma-Index": 91.0,
-            "Dose Dev": -0.3,
+            "Plan Date": "5/19/2020  4:17 PM",
+            "Energy": "6 MV, FFF",
+            "Daily Corr": "1.039",
+            "Norm Dose": "186 cGy",
+            "Dev": "98.8%",
+            "DTA": "96.3%",
+            "Gamma-Index": "91.0%",
+            "Dose Dev": "-0.3%",
             "Radiation Dev": "TrueBeamSN1203",
-            "Gamma Pass Criteria": 95.0,
-            "Gamma Dose Criteria": 2.0,
-            "Gamma Dist Criteria": 2.0,
-            "Beam Count": 1,
+            "Gamma Pass Criteria": "95%",
+            "Gamma Dose Criteria": "2.0%",
+            "Gamma Dist Criteria": "2.0 mm",
+            "Beam Count": 2,
         }
         for key, value in expected.items():
-            self.assertEqual(data[key], value)
+            self.assertEqual(value, data[key])
 
 
 if __name__ == "__main__":

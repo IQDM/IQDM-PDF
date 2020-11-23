@@ -15,6 +15,7 @@ import json
 
 class ParserBase:
     """Base class for all Report Parser classes, not to be used alone"""
+
     def __init__(self):
         self.columns = []
         self.identifiers = []
@@ -23,6 +24,10 @@ class ParserBase:
         """"Save file path and text"""
         self.file_path = file_path
         self.text = convert_pdf_to_txt(file_path).split("\n")
+
+    def print(self):
+        if hasattr(self, "data"):
+            self.data.print()
 
     def is_text_data_valid(self, text):
         """Check that all identifiers are in text

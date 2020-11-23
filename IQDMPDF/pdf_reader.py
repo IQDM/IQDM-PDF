@@ -25,7 +25,7 @@ from pdfminer.layout import LAParams
 from pdfminer.converter import PDFPageAggregator
 import pdfminer
 from io import StringIO
-from IQDMPDF.utilities import get_sorted_indices, is_in_tol
+from IQDMPDF.utilities import get_sorted_indices, is_in_tol, bbox_to_pos
 
 # Search tolerance for get_block_data
 TOLERANCE = 10
@@ -76,19 +76,17 @@ def convert_pdf_to_txt(path):
 class CustomPDFReader:
     """Custom PDF Parsing module"""
 
-    def __init__(self, file_path, verbose=False):
+    def __init__(self, file_path):
         """Initialize a CustomPDFReader object
 
         Parameters
         ----------
         file_path : str
             Absolute file path to the PDF to be read
-        verbose : bool
-            Print each line of the PDF as it is parsed
         """
         self.page = []
         self.file_path = file_path
-        self.convert_pdf_to_text(verbose=verbose)
+        self.convert_pdf_to_text()
         self.data = []
 
     def print(self):
@@ -97,36 +95,9 @@ class CustomPDFReader:
             print("Page %s" % (p + 1))
             page.print()
 
-    def print_block(self, page, index):
-        """Print a specific block using PDFPageParser.print_block
-
-        Parameters
-        ----------
-        page : int
-            The index of the PDF page
-        index : int
-            The index of the text block
-        """
-        self.page[page].print_block(index)
-
-    def get_block_data_by_index(self, page, index):
-        """Get the text block data
-
-        Parameters
-        ----------
-        page : int
-            The index of the PDF page
-        index : int
-            The index of the text block
-
-        Returns
-        ----------
-        float, float, str
-            A tuple of x, y, text
-        """
-        return self.page[page].get_block_data_by_index(index)
-
-    def get_block_data(self, page, pos, tol=TOLERANCE, text_cleaner=None):
+    def get_block_data(
+        self, page, pos, tol=TOLERANCE, text_cleaner=None, mode="bottom-left"
+    ):
         """Use PDFPageParser.get_block_data for the provided page
 
         Parameters
@@ -141,6 +112,11 @@ class CustomPDFReader:
             2nd is y_tolerance
         text_cleaner : callable, optional
             A function called on each text element (e.g., remove leading ':')
+        mode : str, optional
+            Options are combinations of top/center/bottom and
+            right/center/left, e.g., 'top-right', 'center-right'.
+            'center' is assumed to be 'center-center'. Default is
+            'bottom-left'.
 
         Returns
         ----------
@@ -148,17 +124,11 @@ class CustomPDFReader:
             All text data that meet the input constraints
         """
         return self.page[page].get_block_data(
-            pos, tol, text_cleaner=text_cleaner
+            pos, tol, text_cleaner=text_cleaner, mode=mode
         )
 
-    def convert_pdf_to_text(self, verbose=False):
-        """ "Extract text and coordinates from a PDF
-
-        Parameters
-        ----------
-        verbose : bool
-            Print each line of the PDF as it is parsed
-        """
+    def convert_pdf_to_text(self):
+        """ "Extract text and coordinates from a PDF"""
 
         # Open a PDF file.
         fp = open(self.file_path, "rb")
@@ -197,16 +167,21 @@ class CustomPDFReader:
             layout = device.get_result()
 
             # extract text from this object
-            page_data = {"x": [], "y": [], "text": []}
-            self.page.append(
-                PDFPageParser(layout._objs, page_data, verbose=verbose)
-            )
+            keys = ["bbox", "x", "y", "text"]
+            page_data = {key: [] for key in keys}
+            self.page.append(PDFPageParser(layout._objs, page_data))
+
+    def get_bbox_of_data(self, text):
+        for p, page in enumerate(self.page):
+            for i, stored_text in enumerate(page.data["text"]):
+                if text in stored_text:
+                    return {"page": p, "bbox": page.data["bbox"][i]}
 
 
 class PDFPageParser:
     """Custom PDF Page Parsing module"""
 
-    def __init__(self, lt_objs, page_data, verbose=False):
+    def __init__(self, lt_objs, page_data):
         """Initialization of PDFPageParser
 
         Parameters
@@ -215,12 +190,9 @@ class PDFPageParser:
             A layout object from PDFPageAggregator.get_result()._objs
         page_data : dict
             A dictionary of lists, with keys 'x', 'y', 'text'
-        verbose : bool
-            Print each line of the PDF as it is parsed
         """
         self.lt_objs = lt_objs
         self.data = page_data
-        self.verbose = verbose
 
         self.parse_obj(lt_objs)
         self.sort_all_data_by_y()
@@ -236,20 +208,11 @@ class PDFPageParser:
         """
         # loop over the object list
         for obj in lt_objs:
-            # if it's a textbox, print text and location
             if isinstance(obj, pdfminer.layout.LTTextBoxHorizontal):
-                if self.verbose:
-                    print(
-                        "%6d, %6d, %s"
-                        % (
-                            obj.bbox[0],
-                            obj.bbox[1],
-                            obj.get_text().replace("\n", "_"),
-                        )
-                    )
-                self.data["x"].append(round(obj.bbox[0], 2))
-                self.data["y"].append(round(obj.bbox[1], 2))
-                # self.data['text'].append(obj.get_text().replace('\n', '_'))
+                bbox = [round(i, 2) for i in obj.bbox]
+                self.data["bbox"].append(bbox)
+                self.data["x"].append(bbox[0])
+                self.data["y"].append(bbox[1])
                 self.data["text"].append(obj.get_text())
             # if it's a container, recurse
             elif isinstance(obj, pdfminer.layout.LTFigure):
@@ -300,52 +263,23 @@ class PDFPageParser:
 
         Returns
         ----------
-        list
-            [x-coordinate, y-coordinate]
+        tuple
+            x0, y0, x1, y1
         """
-        return [self.data[key][index] for key in ["x", "y"]]
+        return tuple(self.data["bbox"][index])
 
     def print(self):
         """Print the coordinates and text value for all text blocks"""
         for index, text in enumerate(self.data["text"]):
-            coord = self.get_coordinates(index)
-            print("x:%s\ty:%s\n%s" % (coord[0], coord[1], text))
+            x0, y0, x1, y1 = tuple(self.data["bbox"][index])
+            print("x0:%s\ty0:%s\tx1:%s\ty1:%s\n%s" % (x0, y0, x1, y1, text))
 
-    def print_block(self, index):
-        """Print the coordinates and text value for the given index
-
-        Parameters
-        ----------
-        index : int
-            The index of the text block
-        """
-        coord = self.get_coordinates(index)
-        print(
-            "x:%s\ty:%s\n%s" % (coord[0], coord[1], (self.data["text"][index]))
-        )
-
-    def get_block_data_by_index(self, index):
-        """Get the text block data by index
-
-        Parameters
-        ----------
-        index : int
-            The index of the text block
-
-        Returns
-        ----------
-        float, float, str
-            A tuple of x, y, text
-        """
-        coord = self.get_coordinates(index)
-        return coord[0], coord[1], self.data["text"][index]
-
-    def get_block_data(self, pos, tol, text_cleaner=None):
+    def get_block_data(self, pos, tol, text_cleaner=None, mode="bottom-left"):
         """Get the text block data by x,y coordinates
 
         Parameters
         ----------
-        pos : tuple of int, float
+        pos : list of int, float
             The (x,y) coordinates of the text block to be retrieved
         tol : int, float, tuple
             Maximum distance a block's x or y-coordinate may be from pos.
@@ -353,6 +287,11 @@ class PDFPageParser:
             2nd is y_tolerance
         text_cleaner : callable, optional
             A function called on each text element (e.g., remove leading ':')
+        mode : str, optional
+            Options are combinations of top/center/bottom and
+            right/center/left, e.g., 'top-right', 'center-right'.
+            'center' is assumed to be 'center-center'. Default is
+            'bottom-left'.
 
         Returns
         ----------
@@ -364,8 +303,9 @@ class PDFPageParser:
 
         block_data = []
         for i, data in enumerate(self.data["text"]):
-            valid_x = is_in_tol(int(self.data["x"][i]), pos[0], tol[0])
-            valid_y = is_in_tol(int(self.data["y"][i]), pos[1], tol[1])
+            data_pos = bbox_to_pos(self.data["bbox"][i], mode)
+            valid_x = is_in_tol(data_pos[0], pos[0], tol[0])
+            valid_y = is_in_tol(data_pos[1], pos[1], tol[1])
             if valid_x and valid_y:
                 data_clean = (
                     data.strip()

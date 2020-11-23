@@ -25,7 +25,7 @@ OTHER_REPORTS = [
 ]
 
 
-class TestDelta4(unittest.TestCase):
+class TestSNCPatient(unittest.TestCase):
     """Unit tests for sncpatient."""
 
     def setUp(self):
@@ -44,29 +44,31 @@ class TestDelta4(unittest.TestCase):
         """Verify example data is parsed correctly: Example data index 0"""
         self.parser(EXAMPLE_DATA[0])
         data = self.parser.summary_data
-        expected = {"Patient Name": '',
-                    "Patient ID": 'WP-001',
-                    "QA Date": '9/25/2020',
-                    "Plan Date": '2020-09-25',
-                    "Energy": '6x',
-                    "Angle": '',
-                    "SSD": '100.0',
-                    "SDD": '',
-                    "Depth": '',
-                    "Dose Type": 'Absolute',
-                    "Difference (%)": '',
-                    "Distance (mm)": '2',
-                    "Threshold (%)": '10.0',
-                    "Meas Uncertainty": 'No',
-                    "Use Global (%)": 'Yes',
-                    "Summary Type": 'Gamma',
-                    "Total Points": '68',
-                    "Pass": '68',
-                    "Fail": '0',
-                    "Pass (%)": '100',
-                    "Notes": '2% 2mm TB4',
-                    "Meas File": '...\\5by5 6x.txt',
-                    "Plan File": '...\\Water_...'}
+        expected = {
+            "Patient Name": "",
+            "Patient ID": "WP-001",
+            "QA Date": "9/25/2020",
+            "Plan Date": "2020-09-25",
+            "Energy": "6x",
+            "Angle": "",
+            "SSD": "100.0",
+            "SDD": "",
+            "Depth": "",
+            "Dose Type": "Absolute",
+            "Difference (%)": "",
+            "Distance (mm)": "2",
+            "Threshold (%)": "10.0",
+            "Meas Uncertainty": "No",
+            "Use Global (%)": "Yes",
+            "Summary Type": "Gamma",
+            "Total Points": "68",
+            "Pass": "68",
+            "Fail": "0",
+            "Pass (%)": "100",
+            "Notes": "2% 2mm TB4",
+            "Meas File": "...\\5by5 6x.txt",
+            "Plan File": "...\\Water_...",
+        }
         for key, value in expected.items():
             self.assertEqual(data[key], value)
 

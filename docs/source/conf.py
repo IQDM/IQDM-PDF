@@ -69,3 +69,5 @@ html_static_path = ['_static']
 latex_elements = {
   'extraclassoptions': 'openany,oneside'
 }
+
+autoclass_content = 'both'

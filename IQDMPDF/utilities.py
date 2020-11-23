@@ -88,3 +88,36 @@ def is_in_tol(value, expected_value, tolerance):
         True if value is within within expected_value +/- tolerance, exclusive
     """
     return expected_value + tolerance > value > expected_value - tolerance
+
+
+def bbox_to_pos(bbox, mode):
+    """Convert a bounding box to an x-y position
+
+    Parameters
+    ----------
+    bbox : list
+        Bounding box from pdf_reader layout object, which is a list of
+        four floats [x0, y0, x1, y1]
+    mode : str
+        Options are combinations of top/center/bottom and right/center/left,
+        e.g., 'top-right', 'center-left'. 'center' is assumed to be
+        'center-center'
+    """
+
+    mode = "center-center" if mode == "center" else mode
+
+    mode = {dim: mode.split("-")[i] for i, dim in enumerate(["y", "x"])}
+    pos = {
+        "x": {
+            "left": bbox[0],
+            "right": bbox[2],
+            "center": (bbox[0] + bbox[2]) / 2.0,
+        },
+        "y": {
+            "bottom": bbox[1],
+            "top": bbox[3],
+            "center": (bbox[1] + bbox[3]) / 2.0,
+        },
+    }
+
+    return [pos[dim][mode[dim]] for dim in ["x", "y"]]
