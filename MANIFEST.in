@@ -1,6 +1,6 @@
 recursive-include IQDMPDF/*.py
-README.md
-LICENSE
-setup.py
-IQDMPDF/report_templates/*.json
+include IQDMPDF/report_templates/*.json
 recursive-include tests *
+include README.rst
+include LICENSE
+include setup.py
