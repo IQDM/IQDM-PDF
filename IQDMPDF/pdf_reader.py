@@ -19,7 +19,6 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfpage import PDFTextExtractionNotAllowed
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfinterp import PDFPageInterpreter
-from pdfminer.pdfdevice import PDFDevice
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.converter import PDFPageAggregator
@@ -146,9 +145,6 @@ class CustomPDFReader:
 
         # Create a PDF resource manager object that stores shared resources.
         rsrcmgr = PDFResourceManager()
-
-        # Create a PDF device object.
-        # device = PDFDevice(rsrcmgr)
 
         # BEGIN LAYOUT ANALYSIS
         # Set parameters for analysis.

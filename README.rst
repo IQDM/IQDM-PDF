@@ -84,8 +84,8 @@ Vendor Compatibility
 .. |build| image:: https://github.com/IQDM/IQDM-PDF/workflows/build/badge.svg
    :target: https://github.com/IQDM/IQDM-PDF/actions
    :alt: build
-.. |pypi| image:: https://img.shields.io/pypi/v/IQDM-PDF.svg
-   :target: https://pypi.org/project/IQDM-PDF
+.. |pypi| image:: https://img.shields.io/pypi/v/IQDMPDF.svg
+   :target: https://pypi.org/project/IQDMPDF
    :alt: PyPI
 .. |lgtm-cq| image:: https://img.shields.io/lgtm/grade/python/g/IQDM/IQDM-PDF.svg?logo=lgtm&label=code%20quality
    :target: https://lgtm.com/projects/g/IQDM/IQDM-PDF/context:python
