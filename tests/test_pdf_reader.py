@@ -47,7 +47,7 @@ class TestPDFReader(unittest.TestCase):
         self.assertEqual(len(reader.page), 2)
 
         tests = [
-            {"page": 0, "pos": [252.0, 675.97]},
+            {"page": 0, "pos": [108.0, 675.97]},
             {"page": 0, "pos": [72.0, 514.93]},
             {"page": 0, "pos": [432.0, 529.57]},
             {"page": 1, "pos": [72.0, 705.25]},
