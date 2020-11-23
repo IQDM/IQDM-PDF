@@ -11,7 +11,7 @@
 
 import unittest
 from IQDMPDF import pdf_reader
-from os.path import join
+from os.path import join, isfile
 
 
 BASEDATA_DIR = join("tests", "test_data")
@@ -32,6 +32,7 @@ class TestPDFReader(unittest.TestCase):
 
     def test_convert_pdf_to_txt(self):
         """Test are_all_strings_in_text"""
+        self.assertTrue(isfile(EXAMPLE_DATA))
         text = pdf_reader.convert_pdf_to_txt(EXAMPLE_DATA)
         text_split = text.split("\n")
         data = [text_split[0], text_split[10], text_split[44], text_split[46]]
