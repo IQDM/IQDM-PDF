@@ -1,6 +1,7 @@
 IQDMPDF
 =======
 
+|build| |pypi| |Docs| |lgtm| |lgtm-cq| |Codecov|
 
 What does it do?
 ----------------
@@ -35,6 +36,8 @@ To scan a directory for IMRT QA report files and genereate a results .csv file:
 
 Command line usage
 ------------------
+
+**NOTE**: command line usage is still under construction for v0.2
 
 .. code-block:: console
 
@@ -77,3 +80,22 @@ Vendor Compatibility
 * `Sun Nuclear <http://sunnuclear.com>`__: *SNC Patient*
 * `ScandiDos <http://scandidos.com>`__: *Delta4*
 
+
+.. |build| image:: https://github.com/IQDM/IQDM-PDF/workflows/build/badge.svg
+   :target: https://github.com/IQDM/IQDM-PDF/actions
+   :alt: build
+.. |pypi| image:: https://img.shields.io/pypi/v/IQDM-PDF.svg
+   :target: https://pypi.org/project/IQDM-PDF
+   :alt: PyPI
+.. |lgtm-cq| image:: https://img.shields.io/lgtm/grade/python/g/IQDM/IQDM-PDF.svg?logo=lgtm&label=code%20quality
+   :target: https://lgtm.com/projects/g/IQDM/IQDM-PDF/context:python
+   :alt: lgtm code quality
+.. |lgtm| image:: https://img.shields.io/lgtm/alerts/g/IQDM/IQDM-PDF.svg?logo=lgtm
+   :target: https://lgtm.com/projects/g/IQDM/IQDM-PDF/alerts
+   :alt: lgtm
+.. |Codecov| image:: https://codecov.io/gh/IQDM/IQDM-PDF/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/IQDM/IQDM-PDF
+   :alt: Codecov
+.. |Docs| image:: https://readthedocs.org/projects/iqdm-pdf/badge/?version=latest
+   :target: https://iqdm-pdf.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
