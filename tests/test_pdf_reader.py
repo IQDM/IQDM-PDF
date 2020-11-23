@@ -47,6 +47,16 @@ class TestPDFReader(unittest.TestCase):
         # Check that the page count is correct
         self.assertEqual(len(reader.page), 2)
 
+        # check str representation
+        expected_sample = [
+            "x0:108.0	y0:675.97	x1:110.71	y1:687.97\nHello World!!!",
+            "x0:432.0	y0:529.57	x1:527.35	y1:541.57\nMid-page test data",
+            "x0:72.0	y0:514.93	x1:287.11	y1:717.25\nThis is a simple PDF used to test IQDM-PDF.",
+        ]
+        reader_str = str(reader)
+        for sample in expected_sample:
+            self.assertTrue(sample in reader_str)
+
         tests = [
             {"page": 0, "pos": [108.0, 675.97]},
             {"page": 0, "pos": [72.0, 514.93]},

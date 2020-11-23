@@ -33,17 +33,17 @@ def pdf_to_qa_result(file_path):
 
     Returns
     ----------
-    str, str, list
-        CSV data, report type, column headers
+    dict
+        report (CSV data), report_type, columns
     """
 
     report_obj = ReportParser(file_path)
     if report_obj.report is not None:
-        return (
-            report_obj.csv + DELIMITER + file_path,
-            report_obj.report_type,
-            report_obj.columns,
-        )
+        return {
+            "report": report_obj.csv + DELIMITER + file_path,
+            "report_type": report_obj.report_type,
+            "columns": report_obj.columns,
+        }
 
 
 def process_files(
@@ -103,28 +103,29 @@ def process_file(file_path, output_file, output_dir=None):
     output_dir : str, optional
         Save results to this directory, default is local directory
     """
-    try:
-        row, report_type, columns = pdf_to_qa_result(file_path)  # process file
-    except Exception as e:
-        print(str(e))
+    # try:
+    results = pdf_to_qa_result(file_path)  # process file
+    if results is not None:
+        row = results["report"]
+        report_type = results["report_type"]
+        columns = results["columns"]
+        current_file = "%s_%s" % (
+            report_type,
+            output_file,
+        )  # prepend report type to file name
+        if output_dir is not None:
+            current_file = join(output_dir, current_file)
+        if row:
+            if not isfile(
+                current_file
+            ):  # if file doesn't exist, need to write columns
+                with open(current_file, "w") as csv:
+                    csv.write(DELIMITER.join(columns) + "\n")
+            with open(current_file, "a") as csv:  # write the processed data
+                csv.write(row + "\n")
+            print("Processed: %s" % file_path)
+    else:
         print("Skipping: %s" % file_path)
-        return
-
-    current_file = "%s_%s" % (
-        report_type,
-        output_file,
-    )  # prepend report type to file name
-    if output_dir is not None:
-        current_file = join(output_dir, current_file)
-    if row:
-        if not isfile(
-            current_file
-        ):  # if file doesn't exist, need to write columns
-            with open(current_file, "w") as csv:
-                csv.write(DELIMITER.join(columns) + "\n")
-        with open(current_file, "a") as csv:  # write the processed data
-            csv.write(row + "\n")
-        print("Processed: %s" % file_path)
 
 
 def main():
@@ -175,7 +176,7 @@ def main():
     cmd_parser.add_argument("directory", nargs="?", help="Initiate scan here")
     args = cmd_parser.parse_args()
 
-    path = args.file_path
+    path = args.directory
     if not path or len(path) < 2:
         if args.print_version:
             print("IMRT-QA-Data-Miner: IQDM-PDF v%s" % __version__)
@@ -191,7 +192,7 @@ def main():
             print_file_name_change = True
 
     process_files(
-        args.file_path,
+        args.directory,
         ignore_extension=args.ignore_extension,
         output_file=output_file,
         output_dir=args.output_dir,

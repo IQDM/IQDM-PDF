@@ -16,7 +16,7 @@ class Delta4Report(ParserBase):
     def __init__(self):
         ParserBase.__init__(self)
 
-        self.report_type = "delta4"
+        self.report_type = "Delta4"
         self.columns = [
             "Patient Name",
             "Patient ID",

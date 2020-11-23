@@ -66,9 +66,9 @@ class ParserBase:
             Output from utilities.get_csv_row. File path automatically
             appended to data
         """
-        data = {key: value for key, value in self.summary_data}
+        data = {key: value for key, value in self.summary_data.items()}
         data["file_path"] = self.file_path
-        return get_csv_row(self.summary_data, self.columns + ["file_path"])
+        return get_csv_row(data, self.columns + ["file_path"])
 
 
 class GenericReport(ParserBase):

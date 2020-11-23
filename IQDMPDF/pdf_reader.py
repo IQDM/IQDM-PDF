@@ -88,11 +88,13 @@ class CustomPDFReader:
         self.convert_pdf_to_text()
         self.data = []
 
-    def print(self):
-        """Print each page of the PDF to the console"""
+    def __str__(self):
+        """Get str rep for each page of the PDF"""
+        ans = []
         for p, page in enumerate(self.page):
-            print("Page %s" % (p + 1))
-            page.print()
+            ans.append("Page %s" % (p + 1))
+            ans.append(str(page))
+        return "\n".join(ans)
 
     def get_block_data(
         self, page, pos, tol=TOLERANCE, text_cleaner=None, mode="bottom-left"
@@ -194,6 +196,16 @@ class PDFPageParser:
         self.sort_all_data_by_y()
         self.sub_sort_all_data_by_x()
 
+    def __str__(self):
+        """Get the coordinates and text value for all text blocks"""
+        ans = []
+        for index, text in enumerate(self.data["text"]):
+            x0, y0, x1, y1 = tuple(self.data["bbox"][index])
+            ans.append(
+                "x0:%s\ty0:%s\tx1:%s\ty1:%s\n%s" % (x0, y0, x1, y1, text)
+            )
+        return "\n".join(ans)
+
     def parse_obj(self, lt_objs):
         """Extract x, y, and text data from a layout objects
 
@@ -263,12 +275,6 @@ class PDFPageParser:
             x0, y0, x1, y1
         """
         return tuple(self.data["bbox"][index])
-
-    def print(self):
-        """Print the coordinates and text value for all text blocks"""
-        for index, text in enumerate(self.data["text"]):
-            x0, y0, x1, y1 = tuple(self.data["bbox"][index])
-            print("x0:%s\ty0:%s\tx1:%s\ty1:%s\n%s" % (x0, y0, x1, y1, text))
 
     def get_block_data(self, pos, tol, text_cleaner=None, mode="bottom-left"):
         """Get the text block data by x,y coordinates
