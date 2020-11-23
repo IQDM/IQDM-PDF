@@ -20,8 +20,6 @@ from IQDMPDF.parsers.parser import ReportParser
 
 SCRIPT_DIR = dirname(__file__)
 
-DELIMITER = ","
-
 
 def pdf_to_qa_result(file_path):
     """Process a PDF into CSV data
@@ -40,7 +38,7 @@ def pdf_to_qa_result(file_path):
     report_obj = ReportParser(file_path)
     if report_obj.report is not None:
         return {
-            "report": report_obj.csv + DELIMITER + file_path,
+            "report": report_obj.csv,
             "report_type": report_obj.report_type,
             "columns": report_obj.columns,
         }
@@ -79,9 +77,7 @@ def process_files(
                 file_path = join(init_directory, file_name)
                 process_file(file_path, output_file, output_dir)
     else:
-        for dirName, subdirList, fileList in walk(
-            init_directory
-        ):  # iterate through files and all sub-directories
+        for dirName, subdirList, fileList in walk(init_directory):
             for file_name in fileList:
                 if (
                     ignore_extension
@@ -103,7 +99,6 @@ def process_file(file_path, output_file, output_dir=None):
     output_dir : str, optional
         Save results to this directory, default is local directory
     """
-    # try:
     results = pdf_to_qa_result(file_path)  # process file
     if results is not None:
         row = results["report"]
@@ -120,7 +115,7 @@ def process_file(file_path, output_file, output_dir=None):
                 current_file
             ):  # if file doesn't exist, need to write columns
                 with open(current_file, "w") as csv:
-                    csv.write(DELIMITER.join(columns) + "\n")
+                    csv.write(",".join(columns) + "\n")
             with open(current_file, "a") as csv:  # write the processed data
                 csv.write(row + "\n")
             print("Processed: %s" % file_path)
@@ -128,9 +123,7 @@ def process_file(file_path, output_file, output_dir=None):
         print("Skipping: %s" % file_path)
 
 
-def main():
-    """Main program to be called from a console"""
-
+def create_arg_parser():
     cmd_parser = argparse.ArgumentParser(
         description="Command line interface for IQDM"
     )
@@ -154,7 +147,7 @@ def main():
         "--output-file",
         dest="output_file",
         help="Output will be saved as <report_type>_results_<time-stamp>.csv by default. "
-        "Define this tag to customize file name after <report_type>_",
+             "Define this tag to customize file name after <report_type>_",
         default=None,
     )
     cmd_parser.add_argument(
@@ -174,7 +167,12 @@ def main():
         action="store_true",
     )
     cmd_parser.add_argument("directory", nargs="?", help="Initiate scan here")
-    args = cmd_parser.parse_args()
+    return cmd_parser.parse_args()
+
+
+def main():
+    """Main program to be called from a console"""
+    args = create_arg_parser().parse_args()
 
     path = args.directory
     if not path or len(path) < 2:

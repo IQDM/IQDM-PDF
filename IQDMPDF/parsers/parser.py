@@ -31,8 +31,8 @@ class ReportParser:
         self.text = convert_pdf_to_txt(file_path)
         self.report = self.get_report()
         if self.report:
-            self.columns = self.report.columns
-            self.csv = self.report.csv
+            self.columns = self.report.columns + ["report_file_path"]
+            self.csv = self.report.csv + ',"%s"' % file_path
             self.report_type = self.report.report_type
 
     def get_report(self):

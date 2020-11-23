@@ -29,11 +29,13 @@ class Delta4Report(ParserBase):
             "Norm Dose",
             "Dev",
             "DTA",
+            "DTA Criteria",
             "Dose Dev",
             "Gamma-Index",
             "Gamma Pass Criteria",
             "Gamma Dose Criteria",
             "Gamma Dist Criteria",
+            "Threshold",
             "Beam Count",
         ]
         self.identifiers = [
@@ -216,10 +218,12 @@ class Delta4Report(ParserBase):
             "Norm Dose": comp_tx_data["norm_dose"],
             "Dev": comp_tx_data["dev"],
             "DTA": comp_tx_data["dta"],
+            "DTA Criteria": self.dta_criteria,
             "Dose Dev": comp_tx_data["dose_dev"],
             "Gamma-Index": comp_tx_data["gamma_index"],
             "Gamma Pass Criteria": self.gamma_pass_criteria,
             "Gamma Dose Criteria": self.gamma_dose,
             "Gamma Dist Criteria": self.gamma_distance,
+            "Threshold": self.threshold,
             "Beam Count": self.beam_count,
         }

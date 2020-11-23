@@ -11,3 +11,4 @@ omit =
     IQDMPDF/_version.py
     tests/*
     docs/*
+    venv/*

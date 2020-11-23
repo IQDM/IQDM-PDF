@@ -142,8 +142,8 @@ class CustomPDFReader:
         document = PDFDocument(parser)
 
         # Check if the document allows text extraction. If not, abort.
-        if not document.is_extractable:
-            raise PDFTextExtractionNotAllowed
+        # if not document.is_extractable:
+        #     raise PDFTextExtractionNotAllowed
 
         # Create a PDF resource manager object that stores shared resources.
         rsrcmgr = PDFResourceManager()
@@ -260,21 +260,6 @@ class PDFPageParser:
 
         for key in list(self.data):
             self.data[key] = [self.data[key][i] for i in sorted_indices]
-
-    def get_coordinates(self, index):
-        """Get the x and y coordinates by text block index
-
-        Parameters
-        ----------
-        index : int
-            The index of the text block
-
-        Returns
-        ----------
-        tuple
-            x0, y0, x1, y1
-        """
-        return tuple(self.data["bbox"][index])
 
     def get_block_data(self, pos, tol, text_cleaner=None, mode="bottom-left"):
         """Get the text block data by x,y coordinates
