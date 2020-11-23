@@ -1,4 +1,5 @@
-recursive-include IQDM-PDF/*.py
+recursive-include IQDMPDF/*.py
 README.md
 LICENSE
 setup.py
+IQDMPDF/report_templates/*.json
