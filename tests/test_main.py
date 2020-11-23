@@ -25,7 +25,7 @@ class TestMain(unittest.TestCase):
         self.csv_data = {}
         for file in listdir(csv_dir):
             with open(join(csv_dir, file), 'r') as f:
-                self.csv_data[file] = f.read()
+                self.csv_data[file] = f.read().split("\n")
 
     def test_process_files(self):
         """Test process_files with example reports"""
@@ -33,8 +33,9 @@ class TestMain(unittest.TestCase):
         test_files = [f for f in listdir() if f.endswith("_unittest.csv")]
         for file in test_files:
             with open(file, 'r') as f:
-                data = f.read()
-                self.assertEqual(self.csv_data[file], data)
+                data = f.read().split("\n")
+                for i, row in enumerate(data):
+                    self.assertEqual(self.csv_data[file][i], row)
             unlink(file)
 
 
