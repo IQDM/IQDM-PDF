@@ -2,17 +2,13 @@ from setuptools import setup, find_packages
 from IQDMPDF._version import __version__
 
 requires = [
-    'pdfminer.six',
     'pdfminer > 19',
-    'numpy',
     'python-dateutil',
     'chardet == 3.0.4',
     'pathvalidate',
-    'python-dateutil',
-    'pathvalidate'
 ]
 
-with open('README.md', 'r') as doc:
+with open('README.rst', 'r') as doc:
     long_description = doc.read()
 
 setup(

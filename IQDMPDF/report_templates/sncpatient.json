@@ -1,0 +1,37 @@
+{
+  "report_type": "SNCPatient",
+  "identifiers": [
+    "QA File Parameter",
+    "Threshold",
+    "Notes",
+    "Reviewed By :",
+    "SSD",
+    "Depth",
+    "Energy"
+  ],
+  "data": [
+    {"column": "Patient Name", "page": 0, "pos": [79.2, 567.58]},
+    {"column": "Patient ID", "page": 0, "pos": [79.2, 555.34]},
+    {"column": "QA Date", "page": 0, "pos": [3.96, 599.12]},
+    {"column": "Plan Date", "page": 0, "pos": [79.2, 543.1]},
+    {"column": "Energy", "page": 0, "pos": [79.2, 494.14]},
+    {"column": "Angle", "page": 0, "pos": [79.2, 481.9]},
+    {"column": "SSD", "page": 0, "pos": [79.2, 530.86]},
+    {"column": "SDD", "page": 0, "pos": [79.2, 518.62]},
+    {"column": "Depth", "page": 0, "pos": [79.2, 506.38]},
+    {"column": "Dose Type", "page": 0, "pos": [6.24, 445.18]},
+    {"column": "Difference (%)", "page": 0, "pos": [154.94, 441.02]},
+    {"column": "Distance (mm)", "page": 0, "pos": [79.2, 432.94]},
+    {"column": "Threshold (%)", "page": 0, "pos": [79.2, 420.7]},
+    {"column": "Meas Uncertainty", "page": 0, "pos": [79.2, 408.46]},
+    {"column": "Use Global (%)", "page": 0, "pos": [79.2, 396.22]},
+    {"column": "Summary Type", "page": 0, "pos": [6.24, 359.5]},
+    {"column": "Total Points", "page": 0, "pos": [79.2, 359.5]},
+    {"column": "Pass", "page": 0, "pos": [79.2, 347.26]},
+    {"column": "Fail", "page": 0, "pos": [79.2, 335.02]},
+    {"column": "Pass (%)", "page": 0, "pos": [79.2, 322.78]},
+    {"column": "Notes", "page": 0, "pos": [6.24, 150.11]},
+    {"column": "Meas File", "page": 0, "pos": [162.36, 309.23]},
+    {"column": "Plan File", "page": 0, "pos": [479.16, 309.23]}
+  ]
+}
