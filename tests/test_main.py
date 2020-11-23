@@ -34,8 +34,10 @@ class TestMain(unittest.TestCase):
         for file in test_files:
             with open(file, 'r') as f:
                 data = f.read().split("\n")
-                for i, row in enumerate(data):
-                    self.assertEqual(self.csv_data[file][i], row)
+                for r, row in enumerate(data):
+                    data_split = data[r].split(",")
+                    for c, col in enumerate(row.split(",")):
+                        self.assertEqual(data_split[c], col)
             unlink(file)
 
 
