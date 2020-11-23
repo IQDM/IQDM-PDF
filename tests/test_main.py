@@ -54,8 +54,8 @@ class TestMain(unittest.TestCase):
             "no_recursive_search",
             "directory",
         ]
-        for arg in arg_parser.__dict__.keys():
-            self.assertTrue(arg in expected_args)
+        for arg in expected_args:
+            self.assertTrue(arg in arg_parser.__dict__.keys())
 
 
 if __name__ == "__main__":
