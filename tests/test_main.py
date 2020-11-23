@@ -38,7 +38,8 @@ class TestMain(unittest.TestCase):
                 test_data = f.read().split("\n")
                 for r, row in enumerate(test_data):
                     new_data_split = self.csv_data[file][r].split(",")
-                    for c, col in enumerate(row.split(",")):
+                    # skip report_file_path column
+                    for c, col in enumerate(row.split(",")[:-1]):
                         self.assertEqual(new_data_split[c], col)
             unlink(file)
 
