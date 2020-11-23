@@ -45,7 +45,7 @@ class TestMain(unittest.TestCase):
 
     def test_create_arg_parser(self):
         """Test arg parser creation"""
-        arg_parser = main.create_arg_parser()
+        arg_parser = main.create_arg_parser().parse_args([])
         expected_args = [
             "ignore_extension",
             "output_dir",

@@ -167,7 +167,7 @@ def create_arg_parser():
         action="store_true",
     )
     cmd_parser.add_argument("directory", nargs="?", help="Initiate scan here")
-    return cmd_parser.parse_args()
+    return cmd_parser
 
 
 def main():
