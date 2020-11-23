@@ -53,16 +53,16 @@ class TestUtilities(unittest.TestCase):
         bbox = [0, 1, 2, 3]
 
         expected = {
-            "top-left": [0, 1],
-            "top-center": [1, 1],
-            "top-right": [2, 1],
+            "bottom-left": [0, 1],
+            "bottom-center": [1, 1],
+            "bottom-right": [2, 1],
             "center-left": [0, 2],
             "center-center": [1, 2],
             "center": [1, 2],
             "center-right": [2, 2],
-            "bottom-left": [0, 3],
-            "bottom-center": [1, 3],
-            "bottom-right": [2, 3],
+            "top-left": [0, 3],
+            "top-center": [1, 3],
+            "top-right": [2, 3],
         }
         for mode, exp_pos in expected.items():
             pos = utilities.bbox_to_pos(bbox, mode)
