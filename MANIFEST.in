@@ -3,3 +3,4 @@ README.md
 LICENSE
 setup.py
 IQDMPDF/report_templates/*.json
+recursive-include tests *
