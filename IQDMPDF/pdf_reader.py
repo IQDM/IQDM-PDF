@@ -148,7 +148,7 @@ class CustomPDFReader:
         rsrcmgr = PDFResourceManager()
 
         # Create a PDF device object.
-        device = PDFDevice(rsrcmgr)
+        # device = PDFDevice(rsrcmgr)
 
         # BEGIN LAYOUT ANALYSIS
         # Set parameters for analysis.
