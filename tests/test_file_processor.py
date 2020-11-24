@@ -56,7 +56,9 @@ class TestFileProcessor(unittest.TestCase):
 
         # no recursive search
         directory = join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago")
-        file_processor.process_files(directory, no_recursive_search=True, callback=self.mock_callback)
+        file_processor.process_files(
+            directory, no_recursive_search=True, callback=self.mock_callback
+        )
         test_files = [
             f
             for f in listdir()

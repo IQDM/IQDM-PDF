@@ -214,9 +214,7 @@ class PDFPageParser:
         ans = []
         for index, text in enumerate(self.data["text"]):
             x0, y0, x1, y1 = tuple(self.data["bbox"][index])
-            ans.append(
-                "x0:%s\ty0:%s\tx1:%s\ty1:%s\n%s" % (x0, y0, x1, y1, text)
-            )
+            ans.append("x0:%s\ty0:%s\tx1:%s\ty1:%s\n%s" % (x0, y0, x1, y1, text))
         return "\n".join(ans)
 
     def parse_obj(self, lt_objs):
@@ -267,9 +265,7 @@ class PDFPageParser:
         reverse : bool
             Passes into standard library sorted() function
         """
-        sorted_indices = get_sorted_indices(
-            self.data[sort_key], reverse=reverse
-        )
+        sorted_indices = get_sorted_indices(self.data[sort_key], reverse=reverse)
 
         for key in list(self.data):
             self.data[key] = [self.data[key][i] for i in sorted_indices]
@@ -308,9 +304,7 @@ class PDFPageParser:
             valid_y = is_in_tol(data_pos[1], pos[1], tol[1])
             if valid_x and valid_y:
                 data_clean = (
-                    data.strip()
-                    if text_cleaner is None
-                    else text_cleaner(data)
+                    data.strip() if text_cleaner is None else text_cleaner(data)
                 )
                 if data_clean:
                     block_data.append(data_clean)

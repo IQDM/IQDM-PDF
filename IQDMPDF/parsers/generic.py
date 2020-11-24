@@ -110,9 +110,7 @@ class GenericReport(ParserBase):
             of type str
         """
         data = {
-            c: self.data.get_block_data(
-                **self.LUT[c], text_cleaner=self.text_cleaner
-            )
+            c: self.data.get_block_data(**self.LUT[c], text_cleaner=self.text_cleaner)
             for c in self.columns
         }
         for key in list(data):

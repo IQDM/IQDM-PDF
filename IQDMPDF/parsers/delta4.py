@@ -77,9 +77,9 @@ class Delta4Report(ParserBase):
         list
             A list of str from the patient demographics block
         """
-        return self.data.get_block_data(
-            page=0, pos=[536.42, 700.18], mode="top-right"
-        )[0].split("\n")
+        return self.data.get_block_data(page=0, pos=[536.42, 700.18], mode="top-right")[
+            0
+        ].split("\n")
 
     @property
     def patient_name(self):
@@ -112,9 +112,7 @@ class Delta4Report(ParserBase):
         list
             A list of str from the plan info block
         """
-        return self.data.get_block_data(page=0, pos=[147.77, 585.71])[0].split(
-            "\n"
-        )
+        return self.data.get_block_data(page=0, pos=[147.77, 585.71])[0].split("\n")
 
     @property
     def plan_name(self):
@@ -175,9 +173,9 @@ class Delta4Report(ParserBase):
         """
         anchor = self.anchors["Treatment Summary"]
         pos = [209.68, anchor["bbox"][1] - 83.52]
-        return self.data.get_block_data(
-            page=anchor["page"], pos=pos, mode="top-left"
-        )[0].split("\n")
+        return self.data.get_block_data(page=anchor["page"], pos=pos, mode="top-left")[
+            0
+        ].split("\n")
 
     @property
     def energy(self):
@@ -220,9 +218,7 @@ class Delta4Report(ParserBase):
         """
         anchor = self.anchors["Treatment Summary"]
         pos = [482.18, anchor["bbox"][1] - 48.96]  # 553.97 - 505.01
-        return self.data.get_block_data(
-            page=anchor["page"], pos=pos, mode="top-right"
-        )
+        return self.data.get_block_data(page=anchor["page"], pos=pos, mode="top-right")
 
     @property
     def beam_count(self):
@@ -268,9 +264,7 @@ class Delta4Report(ParserBase):
         """
         anchor = self.anchors["Parameter Definitions & Acceptance Criteria"]
         pos = [169.37, anchor["bbox"][1] - 41.7]  # 152.93 - 111.23
-        data = self.data.get_block_data(page=anchor["page"], pos=pos)[0].split(
-            "\n"
-        )
+        data = self.data.get_block_data(page=anchor["page"], pos=pos)[0].split("\n")
         for item in data:
             if "Dose from" in item:
                 split = item.strip().split(" ")
@@ -287,9 +281,7 @@ class Delta4Report(ParserBase):
         """
         anchor = self.anchors["Parameter Definitions & Acceptance Criteria"]
         pos = [347.15, anchor["bbox"][1] - 53.22]  # 152.93 - 99.71
-        return self.data.get_block_data(page=anchor["page"], pos=pos)[0].split(
-            "\n"
-        )
+        return self.data.get_block_data(page=anchor["page"], pos=pos)[0].split("\n")
 
     @property
     def gamma_distance(self):
@@ -338,9 +330,7 @@ class Delta4Report(ParserBase):
         """
         anchor = self.anchors["Parameter Definitions & Acceptance Criteria"]
         pos = [399.0, anchor["bbox"][1] - 53.22]  # 152.93 - 99.71
-        return self.data.get_block_data(page=anchor["page"], pos=pos)[0].split(
-            "\n"
-        )
+        return self.data.get_block_data(page=anchor["page"], pos=pos)[0].split("\n")
 
     @property
     def gamma_pass_criteria(self):

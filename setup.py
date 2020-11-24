@@ -7,10 +7,10 @@ from setuptools import setup, find_packages
 from IQDMPDF._version import __version__, __author__
 
 
-with open('requirements.txt') as doc:
+with open("requirements.txt") as doc:
     requires = [line.strip() for line in doc]
 
-with open('README.rst') as doc:
+with open("README.rst") as doc:
     long_description = doc.read()
 
 
@@ -28,30 +28,31 @@ CLASSIFIERS = [
     "Programming Language :: Python :: 3.9",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: Medical Science Apps.",
-    "Topic :: Scientific/Engineering :: Physics"]
+    "Topic :: Scientific/Engineering :: Physics",
+]
 
 
 setup(
-    name='IQDMPDF',
+    name="IQDMPDF",
     version=__version__,
     include_package_data=True,
-    python_requires='>3.5',
+    python_requires=">3.5",
     packages=find_packages(),
-    description='Scans a directory for IMRT QA results',
+    description="Scans a directory for IMRT QA results",
     author=__author__,
     maintainer=__author__,
-    url='https://github.com/IQDM/IQDM-PDF',
-    download_url='https://github.com/IQDM/IQDM-PDF.git',
+    url="https://github.com/IQDM/IQDM-PDF",
+    download_url="https://github.com/IQDM/IQDM-PDF.git",
     license="MIT License",
-    keywords=['data mining', 'radiation oncology', 'IMRT QA'],
+    keywords=["data mining", "radiation oncology", "IMRT QA"],
     classifiers=CLASSIFIERS,
     install_requires=requires,
     long_description=long_description,
-    test_suite='tests',
+    test_suite="tests",
     tests_require=[],
     entry_points={
-        'console_scripts': [
-            'IQDMPDF=IQDMPDF.main:main',
+        "console_scripts": [
+            "IQDMPDF=IQDMPDF.main:main",
         ],
     },
 )

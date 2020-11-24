@@ -26,9 +26,7 @@ def create_arg_parser():
     argparse.ArgumentParser
         Argument parsers for command-line use of IQDM-PDF
     """
-    cmd_parser = argparse.ArgumentParser(
-        description="Command line interface for IQDM"
-    )
+    cmd_parser = argparse.ArgumentParser(description="Command line interface for IQDM")
     cmd_parser.add_argument(
         "-ie",
         "--ignore-extension",
@@ -95,7 +93,14 @@ def validate_kwargs(kwargs):
             print("Initial directory not provided!")
         return {}
 
-    keys = ["init_directory", "ignore_extension", "output_file", "output_dir", "no_recursive_search", "callback=None"]
+    keys = [
+        "init_directory",
+        "ignore_extension",
+        "output_file",
+        "output_dir",
+        "no_recursive_search",
+        "callback=None",
+    ]
     return {key: kwargs[key] for key in keys if key in list(kwargs)}
 
 

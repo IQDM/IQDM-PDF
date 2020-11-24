@@ -68,7 +68,7 @@ class ReportParser:
             Report columns + "report_file_path"
         """
         csv = getattr(self.report, "csv", None)
-        return '%s,"%s"' % (csv, self.file_path) if csv else ''
+        return '%s,"%s"' % (csv, self.file_path) if csv else ""
 
     @property
     def report_type(self):
@@ -79,4 +79,4 @@ class ReportParser:
         str
             Get ReportParser.report_type
         """
-        return getattr(self.report, "report_type", '')
+        return getattr(self.report, "report_type", "")
