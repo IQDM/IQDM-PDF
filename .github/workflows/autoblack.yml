@@ -17,7 +17,7 @@ jobs:
       - name: Install Black
         run: pip install black
       - name: Run black --check .
-        run: black --check .
+        run: black --check . -l 79
       - name: If needed, commit black changes to the pull request
         if: failure()
         run: |
