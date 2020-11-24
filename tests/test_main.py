@@ -12,7 +12,7 @@
 import unittest
 from IQDMPDF import main
 from IQDMPDF.paths import DIRECTORIES
-from os import listdir, unlink, mkdir
+from os import listdir, unlink
 from os.path import join
 
 
