@@ -22,7 +22,6 @@ Dependencies
 ------------
 
 -  `pdfminer.six <https://github.com/pdfminer/pdfminer.six>`__
--  `chardet <https://pypi.org/project/regressors/>`__
 
 
 How to run
