@@ -59,7 +59,10 @@ class SNCPatientReport(GenericReport):
         data = super().summary_data
         data["QA Date"] = data["QA Date"].split(": ")[1].strip()
         data["Dose Type"] = (
-            data["Dose Type"].split("\n")[0].replace("Dose Comparison", "").strip()
+            data["Dose Type"]
+            .split("\n")[0]
+            .replace("Dose Comparison", "")
+            .strip()
         )
 
         data["Summary Type"] = (

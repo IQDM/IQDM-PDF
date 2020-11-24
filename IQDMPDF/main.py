@@ -26,7 +26,9 @@ def create_arg_parser():
     argparse.ArgumentParser
         Argument parsers for command-line use of IQDM-PDF
     """
-    cmd_parser = argparse.ArgumentParser(description="Command line interface for IQDM")
+    cmd_parser = argparse.ArgumentParser(
+        description="Command line interface for IQDM"
+    )
     cmd_parser.add_argument(
         "-ie",
         "--ignore-extension",
@@ -66,7 +68,9 @@ def create_arg_parser():
         default=False,
         action="store_true",
     )
-    cmd_parser.add_argument("init_directory", nargs="?", help="Initiate scan here")
+    cmd_parser.add_argument(
+        "init_directory", nargs="?", help="Initiate scan here"
+    )
     return cmd_parser
 
 

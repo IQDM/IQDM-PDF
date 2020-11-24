@@ -16,7 +16,9 @@ from IQDMPDF.pdf_reader import convert_pdf_to_txt
 from os.path import join
 
 
-EXAMPLE_DATA = [join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_1.pdf")]
+EXAMPLE_DATA = [
+    join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_1.pdf")
+]
 OTHER_REPORTS = [
     join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago", "DCAM_example_1.pdf")
 ]

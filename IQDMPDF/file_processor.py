@@ -79,7 +79,9 @@ def process_file(file_path, output_file, output_dir=None):
         if output_dir is not None:
             current_file = join(output_dir, current_file)
         if row:
-            if not isfile(current_file):  # if file doesn't exist, need to write columns
+            if not isfile(
+                current_file
+            ):  # if file doesn't exist, need to write columns
                 with open(current_file, "w") as csv:
                     csv.write(",".join(parser.columns) + "\n")
             with open(current_file, "a") as csv:  # write the processed data

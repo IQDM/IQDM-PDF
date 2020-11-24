@@ -20,7 +20,9 @@ EXAMPLE_DATA = [
     join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago", "DCAM_example_1.pdf")
 ]
 
-OTHER_REPORTS = [join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_1.pdf")]
+OTHER_REPORTS = [
+    join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_1.pdf")
+]
 
 
 class TestSNCPatient(unittest.TestCase):

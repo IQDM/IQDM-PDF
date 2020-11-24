@@ -66,7 +66,10 @@ def get_sorted_indices(some_list, reverse=False):
         Reverse sort if True
     """
     return [
-        i[0] for i in sorted(enumerate(some_list), key=lambda x: x[1], reverse=reverse)
+        i[0]
+        for i in sorted(
+            enumerate(some_list), key=lambda x: x[1], reverse=reverse
+        )
     ]
 
 
