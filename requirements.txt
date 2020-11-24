@@ -1,4 +1,2 @@
-pdfminer > 19
 pdfminer.six
-python-dateutil
 chardet == 3.0.4

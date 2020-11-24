@@ -20,9 +20,7 @@ Dependencies
 ------------
 
 -  `pdfminer.six <https://github.com/pdfminer/pdfminer.six>`__
--  `python-dateutil <http://scikit-learn.org>`__
 -  `chardet <https://pypi.org/project/regressors/>`__
--  `pathvalidate <http://matplotlib.org>`__
 
 
 How to run
