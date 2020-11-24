@@ -11,7 +11,8 @@
 
 import argparse
 from datetime import datetime
-from os.path import isfile, join, splitext, dirname, abspath
+from os.path import isfile, join, splitext, dirname
+from pathlib import Path
 from os import walk, listdir
 from IQDMPDF._version import __version__
 from IQDMPDF.parsers.parser import ReportParser
@@ -109,7 +110,7 @@ def process_file(file_path, output_file, output_dir=None):
         )  # prepend report type to file name
         if output_dir is not None:
             current_file = join(output_dir, current_file)
-        current_file = abspath(current_file)
+        current_file = Path(current_file).resolve()
         if row:
             if not isfile(
                 current_file
