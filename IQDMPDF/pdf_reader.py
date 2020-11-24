@@ -16,10 +16,8 @@
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 from pdfminer.pdfpage import PDFPage
-from pdfminer.pdfpage import PDFTextExtractionNotAllowed
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfinterp import PDFPageInterpreter
-from pdfminer.pdfdevice import PDFDevice
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.converter import PDFPageAggregator
@@ -89,11 +87,13 @@ class CustomPDFReader:
         self.convert_pdf_to_text()
         self.data = []
 
-    def print(self):
-        """Print each page of the PDF to the console"""
+    def __str__(self):
+        """Get str rep for each page of the PDF"""
+        ans = []
         for p, page in enumerate(self.page):
-            print("Page %s" % (p + 1))
-            page.print()
+            ans.append("Page %s" % (p + 1))
+            ans.append(str(page))
+        return "\n".join(ans)
 
     def get_block_data(
         self, page, pos, tol=TOLERANCE, text_cleaner=None, mode="bottom-left"
@@ -141,14 +141,11 @@ class CustomPDFReader:
         document = PDFDocument(parser)
 
         # Check if the document allows text extraction. If not, abort.
-        if not document.is_extractable:
-            raise PDFTextExtractionNotAllowed
+        # if not document.is_extractable:
+        #     raise PDFTextExtractionNotAllowed
 
         # Create a PDF resource manager object that stores shared resources.
         rsrcmgr = PDFResourceManager()
-
-        # Create a PDF device object.
-        device = PDFDevice(rsrcmgr)
 
         # BEGIN LAYOUT ANALYSIS
         # Set parameters for analysis.
@@ -172,6 +169,20 @@ class CustomPDFReader:
             self.page.append(PDFPageParser(layout._objs, page_data))
 
     def get_bbox_of_data(self, text):
+        """Get the bounding box for a given string
+
+        Parameters
+        ----------
+        text : str
+            Check all parsed data for this string. Return the first bounding
+            box that contains this text. Meant to search for a unique str
+
+        Returns
+        ----------
+        dict
+            Keys are {"page": [int], "bbox": list}
+
+        """
         for p, page in enumerate(self.page):
             for i, stored_text in enumerate(page.data["text"]):
                 if text in stored_text:
@@ -197,6 +208,16 @@ class PDFPageParser:
         self.parse_obj(lt_objs)
         self.sort_all_data_by_y()
         self.sub_sort_all_data_by_x()
+
+    def __str__(self):
+        """Get the coordinates and text value for all text blocks"""
+        ans = []
+        for index, text in enumerate(self.data["text"]):
+            x0, y0, x1, y1 = tuple(self.data["bbox"][index])
+            ans.append(
+                "x0:%s\ty0:%s\tx1:%s\ty1:%s\n%s" % (x0, y0, x1, y1, text)
+            )
+        return "\n".join(ans)
 
     def parse_obj(self, lt_objs):
         """Extract x, y, and text data from a layout objects
@@ -252,27 +273,6 @@ class PDFPageParser:
 
         for key in list(self.data):
             self.data[key] = [self.data[key][i] for i in sorted_indices]
-
-    def get_coordinates(self, index):
-        """Get the x and y coordinates by text block index
-
-        Parameters
-        ----------
-        index : int
-            The index of the text block
-
-        Returns
-        ----------
-        tuple
-            x0, y0, x1, y1
-        """
-        return tuple(self.data["bbox"][index])
-
-    def print(self):
-        """Print the coordinates and text value for all text blocks"""
-        for index, text in enumerate(self.data["text"]):
-            x0, y0, x1, y1 = tuple(self.data["bbox"][index])
-            print("x0:%s\ty0:%s\tx1:%s\ty1:%s\n%s" % (x0, y0, x1, y1, text))
 
     def get_block_data(self, pos, tol, text_cleaner=None, mode="bottom-left"):
         """Get the text block data by x,y coordinates

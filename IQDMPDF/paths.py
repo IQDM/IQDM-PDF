@@ -19,12 +19,13 @@ PARSERS_DIR = join(SCRIPT_DIR, "parsers")
 REPORT_TEMPLATES_DIR = join(SCRIPT_DIR, "report_templates")
 TESTS_DIR = join(PARENT_DIR, "tests")
 TEST_DATA_DIR = join(TESTS_DIR, "test_data")
-EXAMPLE_PDFS_DIR = join(TEST_DATA_DIR, "example_reports")
+EXAMPLE_PDF_DIR = join(TEST_DATA_DIR, "example_reports")
+EXAMPLE_CSV_DIR = join(TEST_DATA_DIR, "example_csv_output")
 
 # Example PDF directories by vendor
-DELTA4_EXAMPLES_DIR = join(EXAMPLE_PDFS_DIR, "delta4")
-SNCPATIENT_EXAMPLES_DIR = join(EXAMPLE_PDFS_DIR, "sncpatient")
-SNCPATIENT2020_EXAMPLES_DIR = join(EXAMPLE_PDFS_DIR, "sncpatient2020")
+DELTA4_EXAMPLES_DIR = join(EXAMPLE_PDF_DIR, "delta4")
+SNCPATIENT_EXAMPLES_DIR = join(EXAMPLE_PDF_DIR, "sncpatient")
+SNCPATIENT2020_EXAMPLES_DIR = join(EXAMPLE_PDF_DIR, "sncpatient2020")
 
 DIRECTORIES = {
     key[:-4]: value for key, value in locals().items() if key.endswith("_DIR")

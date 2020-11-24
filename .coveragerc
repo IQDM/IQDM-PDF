@@ -11,3 +11,7 @@ omit =
     IQDMPDF/_version.py
     tests/*
     docs/*
+    venv/*
+[report]
+exclude_lines =
+    if __name__ == .__main__.:

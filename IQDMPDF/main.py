@@ -13,14 +13,11 @@ import argparse
 from datetime import datetime
 from os.path import isfile, join, splitext, dirname
 from os import walk, listdir
-from pathvalidate import sanitize_filename
 from IQDMPDF._version import __version__
 from IQDMPDF.parsers.parser import ReportParser
 
 
 SCRIPT_DIR = dirname(__file__)
-
-DELIMITER = ","
 
 
 def pdf_to_qa_result(file_path):
@@ -33,17 +30,17 @@ def pdf_to_qa_result(file_path):
 
     Returns
     ----------
-    str, str, list
-        CSV data, report type, column headers
+    dict
+        report (CSV data), report_type, columns
     """
 
     report_obj = ReportParser(file_path)
     if report_obj.report is not None:
-        return (
-            report_obj.csv + DELIMITER + file_path,
-            report_obj.report_type,
-            report_obj.columns,
-        )
+        return {
+            "report": report_obj.csv,
+            "report_type": report_obj.report_type,
+            "columns": report_obj.columns,
+        }
 
 
 def process_files(
@@ -79,9 +76,7 @@ def process_files(
                 file_path = join(init_directory, file_name)
                 process_file(file_path, output_file, output_dir)
     else:
-        for dirName, subdirList, fileList in walk(
-            init_directory
-        ):  # iterate through files and all sub-directories
+        for dirName, subdirList, fileList in walk(init_directory):
             for file_name in fileList:
                 if (
                     ignore_extension
@@ -103,33 +98,38 @@ def process_file(file_path, output_file, output_dir=None):
     output_dir : str, optional
         Save results to this directory, default is local directory
     """
-    try:
-        row, report_type, columns = pdf_to_qa_result(file_path)  # process file
-    except Exception as e:
-        print(str(e))
+    results = pdf_to_qa_result(file_path)  # process file
+    if results is not None:
+        row = results["report"]
+        report_type = results["report_type"]
+        columns = results["columns"]
+        current_file = "%s_%s" % (
+            report_type,
+            output_file,
+        )  # prepend report type to file name
+        if output_dir is not None:
+            current_file = join(output_dir, current_file)
+        if row:
+            if not isfile(
+                current_file
+            ):  # if file doesn't exist, need to write columns
+                with open(current_file, "w") as csv:
+                    csv.write(",".join(columns) + "\n")
+            with open(current_file, "a") as csv:  # write the processed data
+                csv.write(row + "\n")
+            print("Processed: %s" % file_path)
+    else:
         print("Skipping: %s" % file_path)
-        return
-
-    current_file = "%s_%s" % (
-        report_type,
-        output_file,
-    )  # prepend report type to file name
-    if output_dir is not None:
-        current_file = join(output_dir, current_file)
-    if row:
-        if not isfile(
-            current_file
-        ):  # if file doesn't exist, need to write columns
-            with open(current_file, "w") as csv:
-                csv.write(DELIMITER.join(columns) + "\n")
-        with open(current_file, "a") as csv:  # write the processed data
-            csv.write(row + "\n")
-        print("Processed: %s" % file_path)
 
 
-def main():
-    """Main program to be called from a console"""
+def create_arg_parser():
+    """Create an argument parser
 
+    Returns
+    ----------
+    argparse.ArgumentParser
+        Argument parsers for command-line use of IQDM-PDF
+    """
     cmd_parser = argparse.ArgumentParser(
         description="Command line interface for IQDM"
     )
@@ -173,9 +173,13 @@ def main():
         action="store_true",
     )
     cmd_parser.add_argument("directory", nargs="?", help="Initiate scan here")
-    args = cmd_parser.parse_args()
+    return cmd_parser
 
-    path = args.file_path
+
+def main(args):
+    """Main program to be called from a console"""
+
+    path = args.directory
     if not path or len(path) < 2:
         if args.print_version:
             print("IMRT-QA-Data-Miner: IQDM-PDF v%s" % __version__)
@@ -184,16 +188,10 @@ def main():
             print("Initial directory not provided!")
             return
 
-    output_file, print_file_name_change = None, False
-    if args.output_file:
-        output_file = sanitize_filename(args.output_file)
-        if output_file not in args.output_file:
-            print_file_name_change = True
-
     process_files(
-        args.file_path,
+        args.directory,
         ignore_extension=args.ignore_extension,
-        output_file=output_file,
+        output_file=args.output_file,
         output_dir=args.output_dir,
         no_recursive_search=args.no_recursive_search,
     )
@@ -201,9 +199,7 @@ def main():
     if args.print_version:
         print("IMRT-QA-Data-Miner: IQDM-PDF v%s" % __version__)
 
-    if print_file_name_change:
-        print("Output file name was changed to <report_type>_%s" % output_file)
-
 
 if __name__ == "__main__":
-    main()
+    args = create_arg_parser().parse_args()
+    main(args)

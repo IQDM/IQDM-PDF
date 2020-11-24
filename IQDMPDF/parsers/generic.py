@@ -17,6 +17,7 @@ class ParserBase:
     """Base class for all Report Parser classes, not to be used alone"""
 
     def __init__(self):
+        """Initialize columns and identifiers"""
         self.columns = []
         self.identifiers = []
 
@@ -24,10 +25,6 @@ class ParserBase:
         """"Save file path and text"""
         self.file_path = file_path
         self.text = convert_pdf_to_txt(file_path).split("\n")
-
-    def print(self):
-        if hasattr(self, "data"):
-            self.data.print()
 
     def is_text_data_valid(self, text):
         """Check that all identifiers are in text
@@ -45,18 +42,6 @@ class ParserBase:
         return are_all_strings_in_text(text, self.identifiers)
 
     @property
-    def summary_data(self):
-        """Should be overwritten in child class
-
-        Returns
-        ----------
-        dict
-            Keys will match "column" elements from the JSON file. Values are
-            of type str
-        """
-        return {}
-
-    @property
     def csv(self):
         """Get a CSV of summary_data for all columns
 
@@ -66,9 +51,7 @@ class ParserBase:
             Output from utilities.get_csv_row. File path automatically
             appended to data
         """
-        data = {key: value for key, value in self.summary_data}
-        data["file_path"] = self.file_path
-        return get_csv_row(self.summary_data, self.columns + ["file_path"])
+        return get_csv_row(self.summary_data, self.columns)
 
 
 class GenericReport(ParserBase):
