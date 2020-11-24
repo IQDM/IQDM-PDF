@@ -1,7 +1,7 @@
 IQDMPDF
 =======
 
-|build| |pypi| |Docs| |lgtm| |lgtm-cq| |Codecov|
+|build| |Docs| |pypi| |python-version| |lgtm| |lgtm-cq| |Codecov|
 
 What does it do?
 ----------------
@@ -37,19 +37,15 @@ To scan a directory for IMRT QA report files and genereate a results .csv file:
 Command line usage
 ------------------
 
-**NOTE**: command line usage is still under construction for v0.2
-
 .. code-block:: console
 
-    usage: iqdmpdf [-h] [-ie] [-od OUTPUT_DIR] [-rd RESULTS_DIR] [-all]
-                   [-of OUTPUT_FILE] [-ver] [-nr] [-df]
-                   [file_path]
+    usage: IQDMPDF [-h] [-ie] [-od OUTPUT_DIR] [-of OUTPUT_FILE] [-ver] [-nr]
+                   [directory]
 
     Command line interface for IQDM
 
     positional arguments:
-      file_path             Initiate scan if directory, launch dashboard if
-                            results file
+      directory             Initiate scan here
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -59,11 +55,6 @@ Command line usage
       -od OUTPUT_DIR, --output-dir OUTPUT_DIR
                             Output stored in local directory by default, specify
                             otherwise here
-      -rd RESULTS_DIR, --results-dir RESULTS_DIR
-                            Results assumed to be stored in local directory by
-                            default, specify otherwise here
-      -all, --process-all   Process all identified report files, otherwise only
-                            new reports will be analyzed
       -of OUTPUT_FILE, --output-file OUTPUT_FILE
                             Output will be saved as <report_type>_results_<time-
                             stamp>.csv by default. Define this tag to customize
@@ -71,8 +62,7 @@ Command line usage
       -ver, --version       Print the IQDM version
       -nr, --no-recursive-search
                             Include this flag to skip sub-directories
-      -df, --day-first      Assume day first for ambiguous dates in trending
-                            dashboard
+
 
 Vendor Compatibility
 --------------------
@@ -87,6 +77,9 @@ Vendor Compatibility
 .. |pypi| image:: https://img.shields.io/pypi/v/IQDMPDF.svg
    :target: https://pypi.org/project/IQDMPDF
    :alt: PyPI
+.. |python-version| image:: https://img.shields.io/pypi/pyversions/IQDMPDF.svg
+   :target: https://pypi.org/project/IQDMPDF
+   :alt: Python Version
 .. |lgtm-cq| image:: https://img.shields.io/lgtm/grade/python/g/IQDM/IQDM-PDF.svg?logo=lgtm&label=code%20quality
    :target: https://lgtm.com/projects/g/IQDM/IQDM-PDF/context:python
    :alt: lgtm code quality

@@ -13,7 +13,6 @@ import argparse
 from datetime import datetime
 from os.path import isfile, join, splitext, dirname
 from os import walk, listdir
-from pathvalidate import sanitize_filename
 from IQDMPDF._version import __version__
 from IQDMPDF.parsers.parser import ReportParser
 
@@ -147,7 +146,7 @@ def create_arg_parser():
         "--output-file",
         dest="output_file",
         help="Output will be saved as <report_type>_results_<time-stamp>.csv by default. "
-             "Define this tag to customize file name after <report_type>_",
+        "Define this tag to customize file name after <report_type>_",
         default=None,
     )
     cmd_parser.add_argument(
@@ -170,9 +169,8 @@ def create_arg_parser():
     return cmd_parser
 
 
-def main():
+def main(args):
     """Main program to be called from a console"""
-    args = create_arg_parser().parse_args()
 
     path = args.directory
     if not path or len(path) < 2:
@@ -183,16 +181,10 @@ def main():
             print("Initial directory not provided!")
             return
 
-    output_file, print_file_name_change = None, False
-    if args.output_file:
-        output_file = sanitize_filename(args.output_file)
-        if output_file not in args.output_file:
-            print_file_name_change = True
-
     process_files(
         args.directory,
         ignore_extension=args.ignore_extension,
-        output_file=output_file,
+        output_file=args.output_file,
         output_dir=args.output_dir,
         no_recursive_search=args.no_recursive_search,
     )
@@ -200,9 +192,7 @@ def main():
     if args.print_version:
         print("IMRT-QA-Data-Miner: IQDM-PDF v%s" % __version__)
 
-    if print_file_name_change:
-        print("Output file name was changed to <report_type>_%s" % output_file)
-
 
 if __name__ == "__main__":
-    main()
+    args = create_arg_parser().parse_args()
+    main(args)
