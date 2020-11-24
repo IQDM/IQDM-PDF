@@ -17,6 +17,7 @@ class ParserBase:
     """Base class for all Report Parser classes, not to be used alone"""
 
     def __init__(self):
+        """Initialize columns and identifiers"""
         self.columns = []
         self.identifiers = []
 

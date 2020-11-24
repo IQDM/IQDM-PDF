@@ -1,7 +1,7 @@
 IQDMPDF
 =======
 
-|build| |Docs| |pypi| |python-version| |lgtm| |lgtm-cq| |Codecov|
+|build| |Docs| |pypi| |python-version| |lgtm| |lgtm-cq| |Codecov| |code-style|
 
 What does it do?
 ----------------
@@ -92,3 +92,6 @@ Vendor Compatibility
 .. |Docs| image:: https://readthedocs.org/projects/iqdm-pdf/badge/?version=latest
    :target: https://iqdm-pdf.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
+.. |code-style| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black
+   :alt: Code style: black

@@ -12,7 +12,6 @@
 import argparse
 from datetime import datetime
 from os.path import isfile, join, splitext, dirname
-from pathlib import Path
 from os import walk, listdir
 from IQDMPDF._version import __version__
 from IQDMPDF.parsers.parser import ReportParser
@@ -124,6 +123,13 @@ def process_file(file_path, output_file, output_dir=None):
 
 
 def create_arg_parser():
+    """Create an argument parser
+
+    Returns
+    ----------
+    argparse.ArgumentParser
+        Argument parsers for command-line use of IQDM-PDF
+    """
     cmd_parser = argparse.ArgumentParser(
         description="Command line interface for IQDM"
     )

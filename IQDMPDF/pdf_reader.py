@@ -169,6 +169,20 @@ class CustomPDFReader:
             self.page.append(PDFPageParser(layout._objs, page_data))
 
     def get_bbox_of_data(self, text):
+        """Get the bounding box for a given string
+
+        Parameters
+        ----------
+        text : str
+            Check all parsed data for this string. Return the first bounding
+            box that contains this text. Meant to search for a unique str
+
+        Returns
+        ----------
+        dict
+            Keys are {"page": [int], "bbox": list}
+
+        """
         for p, page in enumerate(self.page):
             for i, stored_text in enumerate(page.data["text"]):
                 if text in stored_text:
