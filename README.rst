@@ -5,11 +5,13 @@ IQDMPDF
 
 What does it do?
 ----------------
-Scans a directory for IMRT QA reports and parses data into a CSV
+Scans a directory for IMRT QA reports and parses data into a CSV.
 
 
 Other information
 -----------------
+This library is part of the IMRT QA Data Mining (IQDM) project for
+the AAPM's IMRT Working Group (WGIMRT).
 
 -  Free software: `MIT license <https://github.com/IQDM/IQDM-PDF/blob/master/LICENSE>`__
 -  Documentation: `Read the docs <https://iqdm-pdf.readthedocs.io>`__
@@ -64,6 +66,11 @@ Command line usage
 
 Vendor Compatibility
 --------------------
+
+We plan to support many vendors. If the report is very consistent, a new JSON
+file in the `report_templates <https://github.com/IQDM/IQDM-PDF/tree/master/IQDMPDF/report_templates>`__
+is essentially all that is needed. Additional documentation for custom
+templates coming soon.
 
 * `Sun Nuclear <http://sunnuclear.com>`__: *SNC Patient*
 * `ScandiDos <http://scandidos.com>`__: *Delta4*

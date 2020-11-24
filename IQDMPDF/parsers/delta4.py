@@ -14,6 +14,7 @@ from IQDMPDF.pdf_reader import CustomPDFReader
 
 class Delta4Report(ParserBase):
     """Delta4 IMRT QA report parser"""
+
     def __init__(self):
         """Initialize Delta4Report class"""
         ParserBase.__init__(self)

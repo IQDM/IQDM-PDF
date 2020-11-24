@@ -8,6 +8,9 @@
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution
 
+from os.path import join, splitext
+from os import walk, listdir
+
 
 def are_all_strings_in_text(text, list_of_strings):
     """Check that all strings in list_of_strings exist in text
@@ -121,3 +124,48 @@ def bbox_to_pos(bbox, mode):
     }
 
     return [pos[dim][mode[dim]] for dim in ["x", "y"]]
+
+
+def get_files(init_dir, search_sub_dir=True, extension=None):
+    """Collect paths of all files in a director
+
+    Parameters
+    ----------
+    init_dir : str
+        Initial directory to begin scanning
+    search_sub_dir : bool
+        Recursively search through sub-directories if True
+    extension : str, optional
+        Collect file paths with only this extension (e.g., '.pdf')
+
+    Returns
+    ----------
+    list
+        List of file paths
+    """
+    files = []
+    if not search_sub_dir:
+        append_files(files, init_dir, listdir(init_dir), extension)
+    else:
+        for dir_name, _, file_list in walk(init_dir):
+            append_files(files, dir_name, file_list, extension)
+    return files
+
+
+def append_files(files, dir_name, files_to_append, extension=None):
+    """Helper function for get_files
+
+    Parameters
+    ----------
+    files : list
+        Accumulate file paths into this list
+    dir_name : str
+        The base path of the files in file_list
+    files_to_append : list
+        A list of file paths to loop accumulate
+    extension : str, optional
+        Collect file paths with only this extension (e.g., '.pdf')
+    """
+    for file_name in files_to_append:
+        if extension is None or splitext(file_name)[1].lower() == extension:
+            files.append(join(dir_name, file_name))
