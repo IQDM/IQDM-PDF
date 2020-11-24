@@ -110,7 +110,6 @@ def process_file(file_path, output_file, output_dir=None):
         )  # prepend report type to file name
         if output_dir is not None:
             current_file = join(output_dir, current_file)
-        current_file = Path(current_file).resolve()
         if row:
             if not isfile(
                 current_file

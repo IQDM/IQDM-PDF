@@ -32,7 +32,7 @@ class TestMain(unittest.TestCase):
         # no recursive search
         directory = join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago")
         file_path = listdir(directory)[0]
-        output_dir = "test_data"
+        output_dir = DIRECTORIES["TEST_DATA"]
         output_file = "test_process_file.txt"
         pdf_path = join(directory, file_path)
         main.process_file(pdf_path, output_file, output_dir=output_dir)
