@@ -12,7 +12,7 @@
 import unittest
 from IQDMPDF import file_processor
 from IQDMPDF.paths import DIRECTORIES
-from IQDMPDF.utilities import csv_to_list
+from IQDMPDF.utilities import csv_to_list, get_relative_path
 from os import listdir, unlink
 from os.path import join
 
@@ -48,11 +48,25 @@ class TestFileProcessor(unittest.TestCase):
         for file in test_files:
             with open(file, "r") as f:
                 test_data = f.read().split("\n")
-                for r, row in enumerate(test_data):
-                    new_data_split = csv_to_list(self.csv_data[file][r])
-                    # skip report_file_path column
-                    for c, col in enumerate(csv_to_list(row)[:-1]):
-                        self.assertEqual(new_data_split[c], col)
+                for r, row in enumerate(test_data[1:]):
+                    test_data_split = csv_to_list(row)
+
+                    # find file name relative to test_data dir
+                    test_data_rel_path = get_relative_path(
+                        test_data_split[-1], "test_data"
+                    )
+
+                    # find row of expected data with same relative path
+                    for exp_r, exp_row in enumerate(self.csv_data[file][1:]):
+                        csv_data_split = csv_to_list(exp_row)
+                        csv_data_rel_path = get_relative_path(
+                            csv_data_split[-1], "test_data"
+                        )
+                        if test_data_rel_path == csv_data_rel_path:
+                            # Now csv_data and test_data rows have been matched
+                            for c, col in enumerate(test_data_split[:-1]):
+                                self.assertEqual(csv_data_split[c], col)
+
             unlink(file)
 
         # no recursive search

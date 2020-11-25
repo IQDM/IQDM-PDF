@@ -8,8 +8,8 @@
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution
 
-from os.path import join, splitext
-from os import walk, listdir
+from os.path import join, splitext, normpath
+from os import walk, listdir, sep
 
 
 def are_all_strings_in_text(text, list_of_strings):
@@ -223,3 +223,26 @@ def append_files(files, dir_name, files_to_append, extension=None):
     for file_name in files_to_append:
         if extension is None or splitext(file_name)[1].lower() == extension:
             files.append(join(dir_name, file_name))
+
+
+def get_relative_path(path, relative_base):
+    """Return a partial path with the specified base
+
+    Parameters
+    ----------
+    path : str
+        A path with relative_base as a sub-component
+    relative_base : str
+        A directory within path
+
+    Returns
+    ----------
+    str
+        The path with all components prior to relative_base removed
+    """
+    path = normpath(path)
+    relative_base = normpath(relative_base)
+    path_split = path.split(sep)
+    if relative_base in path_split:
+        index = path_split.index(relative_base)
+        return join(*path_split[index:])
