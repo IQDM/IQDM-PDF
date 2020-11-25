@@ -34,7 +34,7 @@ EXAMPLE_DATA = {
 
 OTHER_REPORTS = {
     0: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_1.pdf"),
-    1: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_2.pdf")
+    1: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_2.pdf"),
 }
 
 EXPECTED = {

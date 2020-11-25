@@ -82,7 +82,7 @@ class Delta4Report(ParserBase):
         )
         if demo_block:
             return demo_block[0].split("\n")
-        return ['', '']  # Redacted report
+        return ["", ""]  # Redacted report
 
     @property
     def patient_name(self):

@@ -18,10 +18,12 @@ from os.path import join
 
 EXAMPLE_DATA = {
     0: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_1.pdf"),
-    1: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_2.pdf")
+    1: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_2.pdf"),
 }
 OTHER_REPORTS = {
-    0: join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago", "DCAM_example_1.pdf"),
+    0: join(
+        DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago", "DCAM_example_1.pdf"
+    ),
     1: join(
         DIRECTORIES["SNCPATIENT_EXAMPLES"],
         "Northwestern_Memorial",
@@ -36,41 +38,41 @@ OTHER_REPORTS = {
 
 EXPECTED = {
     0: {
-            "Patient Name": "UCM, TG119",
-            "Patient ID": "0097",
-            "Plan Date": "5/19/2020  4:17 PM",
-            "Meas Date": "5/20/2020  4:25 PM",
-            "Energy": "6 MV, FFF",
-            "Daily Corr": "1.039",
-            "Norm Dose": "186 cGy",
-            "Dev": "98.8%",
-            "DTA": "96.3%",
-            "Gamma-Index": "91.0%",
-            "Dose Dev": "-0.3%",
-            "Radiation Dev": "TrueBeamSN1203",
-            "Gamma Pass Criteria": "95%",
-            "Gamma Dose Criteria": "2.0%",
-            "Gamma Dist Criteria": "2.0 mm",
-            "Beam Count": 2,
-        },
+        "Patient Name": "UCM, TG119",
+        "Patient ID": "0097",
+        "Plan Date": "5/19/2020  4:17 PM",
+        "Meas Date": "5/20/2020  4:25 PM",
+        "Energy": "6 MV, FFF",
+        "Daily Corr": "1.039",
+        "Norm Dose": "186 cGy",
+        "Dev": "98.8%",
+        "DTA": "96.3%",
+        "Gamma-Index": "91.0%",
+        "Dose Dev": "-0.3%",
+        "Radiation Dev": "TrueBeamSN1203",
+        "Gamma Pass Criteria": "95%",
+        "Gamma Dose Criteria": "2.0%",
+        "Gamma Dist Criteria": "2.0 mm",
+        "Beam Count": 2,
+    },
     1: {
-            "Patient Name": "",
-            "Patient ID": "",
-            "Plan Date": "11/20/2020",
-            "Meas Date": "11/20/2020",
-            "Energy": "6 MV",
-            "Daily Corr": "1.081",
-            "Norm Dose": "303 cGy",
-            "Dev": "95.4%",
-            "DTA": "87.4%",
-            "Gamma-Index": "92.1%",
-            "Dose Dev": "2.0%",
-            "Radiation Dev": "UC_M120",
-            "Gamma Pass Criteria": "95%",
-            "Gamma Dose Criteria": "3.0%",
-            "Gamma Dist Criteria": "2.0 mm",
-            "Beam Count": 4,
-        }
+        "Patient Name": "",
+        "Patient ID": "",
+        "Plan Date": "11/20/2020",
+        "Meas Date": "11/20/2020",
+        "Energy": "6 MV",
+        "Daily Corr": "1.081",
+        "Norm Dose": "303 cGy",
+        "Dev": "95.4%",
+        "DTA": "87.4%",
+        "Gamma-Index": "92.1%",
+        "Dose Dev": "2.0%",
+        "Radiation Dev": "UC_M120",
+        "Gamma Pass Criteria": "95%",
+        "Gamma Dose Criteria": "3.0%",
+        "Gamma Dist Criteria": "2.0 mm",
+        "Beam Count": 4,
+    },
 }
 
 
@@ -79,8 +81,13 @@ class TestDelta4(unittest.TestCase):
 
     def setUp(self):
         self.parser = delta4.Delta4Report()
-        self.text = {key: convert_pdf_to_txt(path) for key, path in EXAMPLE_DATA.items()}
-        self.other_text = {key: convert_pdf_to_txt(path) for key, path in OTHER_REPORTS.items()}
+        self.text = {
+            key: convert_pdf_to_txt(path) for key, path in EXAMPLE_DATA.items()
+        }
+        self.other_text = {
+            key: convert_pdf_to_txt(path)
+            for key, path in OTHER_REPORTS.items()
+        }
 
     def test_is_text_valid(self):
         """Check that identifiers are valid and do not work on others"""
