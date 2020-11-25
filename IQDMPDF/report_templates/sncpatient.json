@@ -20,7 +20,7 @@
     {"column": "SDD", "page": 0, "pos": [79.2, 518.62]},
     {"column": "Depth", "page": 0, "pos": [79.2, 506.38]},
     {"column": "Dose Type", "page": 0, "pos": [6.24, 445.18]},
-    {"column": "Difference (%)", "page": 0, "pos": [154.94, 441.02]},
+    {"column": "Difference (%)", "page": 0, "pos": [79.2, 441.02]},
     {"column": "Distance (mm)", "page": 0, "pos": [79.2, 432.94]},
     {"column": "Threshold (%)", "page": 0, "pos": [79.2, 420.7]},
     {"column": "Meas Uncertainty", "page": 0, "pos": [79.2, 408.46]},

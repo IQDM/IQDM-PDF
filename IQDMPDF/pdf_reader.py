@@ -168,6 +168,10 @@ class CustomPDFReader:
             page_data = {key: [] for key in keys}
             self.page.append(PDFPageParser(layout._objs, page_data))
 
+        device.close()
+        fp.close()
+        parser.close()
+
     def get_bbox_of_data(self, text):
         """Get the bounding box for a given string
 

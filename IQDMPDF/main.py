@@ -10,116 +10,12 @@
 
 
 import argparse
-from datetime import datetime
-from os.path import isfile, join, splitext, dirname
-from os import walk, listdir
+from os.path import dirname
 from IQDMPDF._version import __version__
-from IQDMPDF.parsers.parser import ReportParser
+from IQDMPDF.file_processor import process_files
 
 
 SCRIPT_DIR = dirname(__file__)
-
-
-def pdf_to_qa_result(file_path):
-    """Process a PDF into CSV data
-
-    Parameters
-    ----------
-    file_path : str
-        Absolute file path to the PDF to be read
-
-    Returns
-    ----------
-    dict
-        report (CSV data), report_type, columns
-    """
-
-    report_obj = ReportParser(file_path)
-    if report_obj.report is not None:
-        return {
-            "report": report_obj.csv,
-            "report_type": report_obj.report_type,
-            "columns": report_obj.columns,
-        }
-
-
-def process_files(
-    init_directory,
-    ignore_extension=False,
-    output_file=None,
-    output_dir=None,
-    no_recursive_search=False,
-):
-    """Process all pdf files into parser classes, write data to csv
-
-    Parameters
-    ----------
-    init_directory : str
-        initial scanning directory
-    ignore_extension : bool, optional
-        Set to True to catch pdf files that are missing .pdf extension
-    output_file : str, optional
-       Report type in file name will be prepended to this value
-    output_dir : str, optional
-        Save results to this directory, default is local directory
-    no_recursive_search : bool, optional
-        Ignore sub-directories it True
-    """
-
-    time_stamp = str(datetime.now()).replace(":", "-").replace(".", "-")
-    if output_file is None:
-        output_file = "results_%s.csv" % time_stamp
-
-    if no_recursive_search:
-        for file_name in listdir(init_directory):
-            if ignore_extension or splitext(file_name)[1].lower() == ".pdf":
-                file_path = join(init_directory, file_name)
-                process_file(file_path, output_file, output_dir)
-    else:
-        for dirName, subdirList, fileList in walk(init_directory):
-            for file_name in fileList:
-                if (
-                    ignore_extension
-                    or splitext(file_name)[1].lower() == ".pdf"
-                ):
-                    file_path = join(dirName, file_name)
-                    process_file(file_path, output_file, output_dir)
-
-
-def process_file(file_path, output_file, output_dir=None):
-    """Process a pdf file into a parser class, write data to csv
-
-    Parameters
-    ----------
-    file_path : str
-        PDF file to processed
-    output_file : str
-       Report type in file name will be prepended to this value
-    output_dir : str, optional
-        Save results to this directory, default is local directory
-    """
-    results = pdf_to_qa_result(file_path)  # process file
-    if results is not None:
-        row = results["report"]
-        report_type = results["report_type"]
-        columns = results["columns"]
-        current_file = "%s_%s" % (
-            report_type,
-            output_file,
-        )  # prepend report type to file name
-        if output_dir is not None:
-            current_file = join(output_dir, current_file)
-        if row:
-            if not isfile(
-                current_file
-            ):  # if file doesn't exist, need to write columns
-                with open(current_file, "w") as csv:
-                    csv.write(",".join(columns) + "\n")
-            with open(current_file, "a") as csv:  # write the processed data
-                csv.write(row + "\n")
-            print("Processed: %s" % file_path)
-    else:
-        print("Skipping: %s" % file_path)
 
 
 def create_arg_parser():
@@ -172,34 +68,54 @@ def create_arg_parser():
         default=False,
         action="store_true",
     )
-    cmd_parser.add_argument("directory", nargs="?", help="Initiate scan here")
+    cmd_parser.add_argument(
+        "init_directory", nargs="?", help="Initiate scan here"
+    )
     return cmd_parser
 
 
-def main(args):
-    """Main program to be called from a console"""
+def validate_kwargs(kwargs):
+    """Process kwargs for file_processor.process_files
 
-    path = args.directory
-    if not path or len(path) < 2:
-        if args.print_version:
+    Parameters
+    ----------
+    kwargs : dict
+        Keyword arguments for main. See main.create_arg_parser for
+        valid arguments
+
+    Returns
+    ----------
+    dict
+        Returns a dict containing only keywords applicable to process_files, or
+        an empty dict if "init_directory" is missing or "print_version" is
+        True and "init_directory" is missing
+    """
+    if not kwargs["init_directory"] or len(kwargs) < 2:
+        if kwargs["print_version"]:
             print("IMRT-QA-Data-Miner: IQDM-PDF v%s" % __version__)
-            return
         else:
             print("Initial directory not provided!")
-            return
+        return {}
 
-    process_files(
-        args.directory,
-        ignore_extension=args.ignore_extension,
-        output_file=args.output_file,
-        output_dir=args.output_dir,
-        no_recursive_search=args.no_recursive_search,
-    )
+    keys = [
+        "init_directory",
+        "ignore_extension",
+        "output_file",
+        "output_dir",
+        "no_recursive_search",
+        "callback=None",
+    ]
+    return {key: kwargs[key] for key in keys if key in list(kwargs)}
 
-    if args.print_version:
-        print("IMRT-QA-Data-Miner: IQDM-PDF v%s" % __version__)
+
+def main(**kwargs):
+    """Main program to be called from a console"""
+
+    validated_kwargs = validate_kwargs(kwargs)
+    if validated_kwargs:
+        process_files(**validated_kwargs)
 
 
 if __name__ == "__main__":
-    args = create_arg_parser().parse_args()
-    main(args)
+    params = vars(create_arg_parser().parse_args())
+    main(**params)

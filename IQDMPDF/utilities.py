@@ -8,6 +8,9 @@
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution
 
+from os.path import join, splitext, normpath
+from os import walk, listdir, sep
+
 
 def are_all_strings_in_text(text, list_of_strings):
     """Check that all strings in list_of_strings exist in text
@@ -49,7 +52,62 @@ def get_csv_row(data, columns, delimiter=","):
     """
     str_data = [str(data[c]) for c in columns]
     clean_str_data = ['"%s"' % s if delimiter in s else s for s in str_data]
+    clean_str_data = [s.replace("\n", "<>") for s in clean_str_data]
     return delimiter.join(clean_str_data)
+
+
+def csv_to_list(csv_str, delimiter=","):
+    """Split a CSV into a list
+
+    Parameters
+    ----------
+    csv_str : str
+        A comma-separated value string (with double quotes around values
+        containing the delimiter)
+    delimiter : str
+        The str separator between values
+
+    Returns
+    ----------
+    list
+       csv_str split by the delimiter
+    """
+    if '"' not in csv_str:
+        return csv_str.split(delimiter)
+
+    # add an empty value with another ",", but ignore it
+    # ensures next_csv_element always finds a ","
+    next_value, csv_str = next_csv_element(csv_str + ",", delimiter)
+    ans = [next_value.replace("<>", "\n")]
+    while csv_str:
+        next_value, csv_str = next_csv_element(csv_str, delimiter)
+        ans.append(next_value.replace("<>", "\n"))
+
+    return ans
+
+
+def next_csv_element(csv_str, delimiter=","):
+    """Helper function for csv_to_list
+
+    Parameters
+    ----------
+    csv_str : str
+        A comma-separated value string (with double quotes around values
+        containing the delimiter)
+    delimiter : str
+        The str separator between values
+
+    Returns
+    ----------
+    str, str
+        Return a tuple, the next value and remainder of csv_str
+    """
+    if csv_str.startswith('"'):
+        split = csv_str[1:].find('"') + 1
+        return csv_str[1:split], csv_str[split + 2 :]
+
+    next_delimiter = csv_str.find(delimiter)
+    return csv_str[:next_delimiter], csv_str[next_delimiter + 1 :]
 
 
 def get_sorted_indices(some_list, reverse=False):
@@ -121,3 +179,71 @@ def bbox_to_pos(bbox, mode):
     }
 
     return [pos[dim][mode[dim]] for dim in ["x", "y"]]
+
+
+def get_files(init_dir, search_sub_dir=True, extension=None):
+    """Collect paths of all files in a director
+
+    Parameters
+    ----------
+    init_dir : str
+        Initial directory to begin scanning
+    search_sub_dir : bool
+        Recursively search through sub-directories if True
+    extension : str, optional
+        Collect file paths with only this extension (e.g., '.pdf')
+
+    Returns
+    ----------
+    list
+        List of file paths
+    """
+    files = []
+    if not search_sub_dir:
+        append_files(files, init_dir, listdir(init_dir), extension)
+    else:
+        for dir_name, _, file_list in walk(init_dir):
+            append_files(files, dir_name, file_list, extension)
+    return files
+
+
+def append_files(files, dir_name, files_to_append, extension=None):
+    """Helper function for get_files
+
+    Parameters
+    ----------
+    files : list
+        Accumulate file paths into this list
+    dir_name : str
+        The base path of the files in file_list
+    files_to_append : list
+        A list of file paths to loop accumulate
+    extension : str, optional
+        Collect file paths with only this extension (e.g., '.pdf')
+    """
+    for file_name in files_to_append:
+        if extension is None or splitext(file_name)[1].lower() == extension:
+            files.append(join(dir_name, file_name))
+
+
+def get_relative_path(path, relative_base):
+    """Return a partial path with the specified base
+
+    Parameters
+    ----------
+    path : str
+        A path with relative_base as a sub-component
+    relative_base : str
+        A directory within path
+
+    Returns
+    ----------
+    str
+        The path with all components prior to relative_base removed
+    """
+    path = normpath(path)
+    relative_base = normpath(relative_base)
+    path_split = path.split(sep)
+    if relative_base in path_split:
+        index = path_split.index(relative_base)
+        return join(*path_split[index:])

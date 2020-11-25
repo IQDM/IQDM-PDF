@@ -11,6 +11,7 @@
 
 import unittest
 from IQDMPDF import utilities
+from os.path import join
 
 
 class TestUtilities(unittest.TestCase):
@@ -68,6 +69,26 @@ class TestUtilities(unittest.TestCase):
             pos = utilities.bbox_to_pos(bbox, mode)
             self.assertEqual(pos[0], exp_pos[0])
             self.assertEqual(pos[1], exp_pos[1])
+
+    def test_get_relative_path(self):
+        """Test tool to extract relative path"""
+        test_path = ["this", "is", "a", "test", "path"]
+        exp_path = join(*test_path[-2:])
+        test_path = join(*test_path)
+        rel_test_path = utilities.get_relative_path(test_path, "test")
+        self.assertEqual(exp_path, rel_test_path)
+
+    def test_csv_to_list(self):
+        """Test the csv to list function"""
+        test_csv = 'this,is,a,test,with,a,"comma,",and,empty,final,value,'
+        test_list = utilities.csv_to_list(test_csv)
+        self.assertEqual(test_list[0], "this")
+        self.assertEqual(test_list[6], "comma,")
+        self.assertEqual(test_list[-1], "")
+
+        test_csv = "this,is,a,test,with,a,nonempty,final,value"
+        test_list = utilities.csv_to_list(test_csv)
+        self.assertEqual(test_list[-1], "value")
 
 
 if __name__ == "__main__":
