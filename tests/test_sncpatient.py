@@ -120,8 +120,13 @@ class TestSNCPatient(unittest.TestCase):
 
     def setUp(self):
         self.parser = sncpatient.SNCPatientReport()
-        self.text = {key: convert_pdf_to_txt(path) for key, path in EXAMPLE_DATA.items()}
-        self.other_text = {key: convert_pdf_to_txt(path) for key, path in OTHER_REPORTS.items()}
+        self.text = {
+            key: convert_pdf_to_txt(path) for key, path in EXAMPLE_DATA.items()
+        }
+        self.other_text = {
+            key: convert_pdf_to_txt(path)
+            for key, path in OTHER_REPORTS.items()
+        }
 
     def test_is_text_valid(self):
         """Check that identifiers are valid and do not work on others"""

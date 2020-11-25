@@ -112,9 +112,9 @@ class Delta4Report(ParserBase):
         list
             A list of str from the plan info block
         """
-        return self.data.get_block_data(page=0, pos=[147.77, 618.77], mode='top-left')[0].split(
-            "\n"
-        )
+        return self.data.get_block_data(
+            page=0, pos=[147.77, 618.77], mode="top-left"
+        )[0].split("\n")
 
     @property
     def plan_name(self):
@@ -137,7 +137,7 @@ class Delta4Report(ParserBase):
             Plan date from DICOM
         """
         date = self.meas_plan_info_block[1]
-        if date.count("/") == 2 and ':' in date:
+        if date.count("/") == 2 and ":" in date:
             return date
         return self.meas_plan_info_block[2]
 
@@ -151,7 +151,7 @@ class Delta4Report(ParserBase):
             Date of QA measurement
         """
         plan_date = self.meas_plan_info_block[1]
-        if plan_date.count("/") == 2 and ':' in plan_date:
+        if plan_date.count("/") == 2 and ":" in plan_date:
             return self.meas_plan_info_block[2]
         return self.meas_plan_info_block[4]
 
@@ -212,7 +212,7 @@ class Delta4Report(ParserBase):
             All energies found in report (CSV if multiple)
         """
         lines = self.daily_corr_block
-        if lines[0].replace('.', '').strip().isnumeric():  # no energy
+        if lines[0].replace(".", "").strip().isnumeric():  # no energy
             lines = self.energy_block
 
         for i in range(len(lines)):
@@ -231,7 +231,7 @@ class Delta4Report(ParserBase):
         """
         lines = self.daily_corr_block
         for line in lines:
-            if line.replace('.', '').isnumeric():
+            if line.replace(".", "").isnumeric():
                 return line
             if str(line[-1]).isdigit():
                 return line.split("MV")[1].replace(", FFF", "").strip()
@@ -369,7 +369,13 @@ class Delta4Report(ParserBase):
         if "±" in data and "Dose from" in data:
             return data.split("±")[1]
         pos = [295.42, anchor["bbox"][1] - 8.57]  # 445.92 - 437.35
-        return self.data.get_block_data(page=anchor["page"], pos=pos, mode="top-left")[0].split("\n")[-1].replace("±", '')
+        return (
+            self.data.get_block_data(
+                page=anchor["page"], pos=pos, mode="top-left"
+            )[0]
+            .split("\n")[-1]
+            .replace("±", "")
+        )
 
     @property
     def acceptance_limits(self):
