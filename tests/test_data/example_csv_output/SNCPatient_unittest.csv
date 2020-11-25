@@ -1,10 +1,4 @@
 Patient Name,Patient ID,QA Date,Plan Date,Energy,Angle,SSD,SDD,Depth,Dose Type,Difference (%),Distance (mm),Threshold (%),Meas Uncertainty,Use Global (%),Summary Type,Total Points,Pass,Fail,Pass (%),Notes,Meas File,Plan File,report_file_path
-,,2/5/2020,2/5/2020,6X,,,,,Absolute,2.0,2.0,20.0,No,No,GC,567,512,55,90.3,Notes
-bst1 
-pelvis
-SLC,,,"C:\Users\dcutright\PycharmProjects\IQDM-PDF\venv\lib\site-packages\iqdmpdf-0.2rc1-py3.7.egg\tests\test_data\example_reports\sncpatient\Northwestern_Memorial\ArcCheck_Example_1.pdf"
-,,2/5/2020,2/5/2020,6X,,,,,Absolute,2.0,2.0,20.0,No,No,GC,2197,1940,257,88.3,Notes
-Fields 1-2
-Pelvis=Cervix+PM+LNs
-SLF,,,"C:\Users\dcutright\PycharmProjects\IQDM-PDF\venv\lib\site-packages\iqdmpdf-0.2rc1-py3.7.egg\tests\test_data\example_reports\sncpatient\Northwestern_Memorial\ArcCheck_Example_2.pdf"
-,WP-001,9/25/2020,2020-09-25,6x,,100.0,,,Absolute,2,2,10.0,No,Yes,Gamma,68,68,0,100,2% 2mm TB4,...\5by5 6x.txt,...\Water_...,"C:\Users\dcutright\PycharmProjects\IQDM-PDF\venv\lib\site-packages\iqdmpdf-0.2rc1-py3.7.egg\tests\test_data\example_reports\sncpatient\UChicago\DCAM_example_1.pdf"
+,,2/5/2020,2/5/2020,6X,,,,,Absolute,2.0,2.0,20.0,No,No,GC,567,512,55,90.3,Notes<>bst1 <>pelvis<>SLC,,,"C:\Users\dcutright\PycharmProjects\IQDM-PDF\tests\test_data\example_reports\sncpatient\Northwestern_Memorial\ArcCheck_Example_1.pdf"
+,,2/5/2020,2/5/2020,6X,,,,,Absolute,2.0,2.0,20.0,No,No,GC,2197,1940,257,88.3,Notes<>Fields 1-2<>Pelvis=Cervix+PM+LNs<>SLF,,,"C:\Users\dcutright\PycharmProjects\IQDM-PDF\tests\test_data\example_reports\sncpatient\Northwestern_Memorial\ArcCheck_Example_2.pdf"
+,WP-001,9/25/2020,2020-09-25,6x,,100.0,,,Absolute,2,2,10.0,No,Yes,Gamma,68,68,0,100,2% 2mm TB4,...\5by5 6x.txt,...\Water_...,"C:\Users\dcutright\PycharmProjects\IQDM-PDF\tests\test_data\example_reports\sncpatient\UChicago\DCAM_example_1.pdf"

@@ -12,6 +12,7 @@
 import unittest
 from IQDMPDF import file_processor
 from IQDMPDF.paths import DIRECTORIES
+from IQDMPDF.utilities import csv_to_list
 from os import listdir, unlink
 from os.path import join
 
@@ -48,9 +49,9 @@ class TestFileProcessor(unittest.TestCase):
             with open(file, "r") as f:
                 test_data = f.read().split("\n")
                 for r, row in enumerate(test_data):
-                    new_data_split = self.csv_data[file][r].split(",")
+                    new_data_split = csv_to_list(self.csv_data[file][r])
                     # skip report_file_path column
-                    for c, col in enumerate(row.split(",")[:-1]):
+                    for c, col in enumerate(csv_to_list(row)[:-1]):
                         self.assertEqual(new_data_split[c], col)
             unlink(file)
 
