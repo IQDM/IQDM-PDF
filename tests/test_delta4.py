@@ -19,6 +19,7 @@ from os.path import join
 EXAMPLE_DATA = {
     0: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_1.pdf"),
     1: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_2.pdf"),
+    2: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_3.pdf"),
 }
 OTHER_REPORTS = {
     0: join(
@@ -40,6 +41,7 @@ EXPECTED = {
     0: {
         "Patient Name": "UCM, TG119",
         "Patient ID": "0097",
+        "Plan Name": "1 Prostate-6FFF-TB2",
         "Plan Date": "5/19/2020  4:17 PM",
         "Meas Date": "5/20/2020  4:25 PM",
         "Energy": "6 MV, FFF",
@@ -58,6 +60,7 @@ EXPECTED = {
     1: {
         "Patient Name": "",
         "Patient ID": "",
+        "Plan Name": "1-2 Pelvis",
         "Plan Date": "11/20/2020",
         "Meas Date": "11/20/2020",
         "Energy": "6 MV",
@@ -72,6 +75,25 @@ EXPECTED = {
         "Gamma Dose Criteria": "3.0%",
         "Gamma Dist Criteria": "2.0 mm",
         "Beam Count": 4,
+    },
+    2: {
+        "Patient Name": "UCM, TG119",
+        "Patient ID": "0097",
+        "Plan Name": "4 CShape50-D4",
+        "Plan Date": "11/20/2019  2:30 PM",
+        "Meas Date": "11/21/2019  6:46 PM",
+        "Energy": "6 MV",
+        "Daily Corr": "1.000",
+        "Norm Dose": "261 cGy",
+        "Dev": "100.0%",
+        "DTA": "99.3%",
+        "Gamma-Index": "99.5%",
+        "Dose Dev": "0.1%",
+        "Radiation Dev": "TrueBeamSN1203",
+        "Gamma Pass Criteria": "95%",
+        "Gamma Dose Criteria": "2.0%",
+        "Gamma Dist Criteria": "2.0 mm",
+        "Beam Count": 3,
     },
 }
 

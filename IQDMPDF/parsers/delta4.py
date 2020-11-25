@@ -291,13 +291,14 @@ class Delta4Report(ParserBase):
             split = block.split("\n")
             for text in split:
                 if "%" in text:
-                    data = text.split(" ")
+                    dose_data = text.split(" ")
+                    pass_rate_data = text.split(dose_data[1])[1].split("%")
                     return {
-                        "norm_dose": data[0] + " " + data[1],
-                        "dev": data[2],
-                        "dta": data[3],
-                        "gamma_index": data[4],
-                        "dose_dev": data[5],
+                        "norm_dose": dose_data[0] + " " + dose_data[1],
+                        "dev": pass_rate_data[0].strip() + "%",
+                        "dta": pass_rate_data[1].strip() + "%",
+                        "gamma_index": pass_rate_data[2].strip() + "%",
+                        "dose_dev": pass_rate_data[3].strip() + "%",
                     }
 
     @property
