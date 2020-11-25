@@ -75,11 +75,14 @@ def csv_to_list(csv_str, delimiter=","):
     if '"' not in csv_str:
         return csv_str.split(delimiter)
 
-    next_value, csv_str = next_csv_element(csv_str, delimiter)
+    # add an empty value with another ",", but ignore it
+    # ensures next_csv_element always finds a ","
+    next_value, csv_str = next_csv_element(csv_str + ",", delimiter)
     ans = [next_value.replace("<>", "\n")]
     while csv_str:
         next_value, csv_str = next_csv_element(csv_str, delimiter)
         ans.append(next_value.replace("<>", "\n"))
+
     return ans
 
 
@@ -101,11 +104,9 @@ def next_csv_element(csv_str, delimiter=","):
     """
     if csv_str.startswith('"'):
         split = csv_str[1:].find('"') + 1
-        return csv_str[1:split], csv_str[split + 1 :]
+        return csv_str[1:split], csv_str[split + 2 :]
 
     next_delimiter = csv_str.find(delimiter)
-    if next_delimiter == -1:
-        return csv_str, ""
     return csv_str[:next_delimiter], csv_str[next_delimiter + 1 :]
 
 
