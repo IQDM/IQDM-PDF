@@ -112,7 +112,7 @@ class Delta4Report(ParserBase):
         list
             A list of str from the plan info block
         """
-        return self.data.get_block_data(page=0, pos=[147.77, 585.71])[0].split(
+        return self.data.get_block_data(page=0, pos=[147.77, 618.77], mode='top-left')[0].split(
             "\n"
         )
 
@@ -136,7 +136,10 @@ class Delta4Report(ParserBase):
         str
             Plan date from DICOM
         """
-        return self.meas_plan_info_block[1]
+        date = self.meas_plan_info_block[1]
+        if date.count("/") == 2 and ':' in date:
+            return date
+        return self.meas_plan_info_block[2]
 
     @property
     def meas_date(self):
@@ -147,7 +150,10 @@ class Delta4Report(ParserBase):
         str
             Date of QA measurement
         """
-        return self.meas_plan_info_block[2]
+        plan_date = self.meas_plan_info_block[1]
+        if plan_date.count("/") == 2 and ':' in plan_date:
+            return self.meas_plan_info_block[2]
+        return self.meas_plan_info_block[4]
 
     @property
     def radiation_dev(self):
@@ -158,15 +164,17 @@ class Delta4Report(ParserBase):
         str
             Radiation device per DICOM-RT Plan
         """
+        anchor = self.anchors["Treatment Summary"]
+        pos = [80.88, anchor["bbox"][1] - 8.57]  # 519.36 - 510.79
         return (
-            self.data.get_block_data(page=0, pos=[80.88, 512.27])[0]
+            self.data.get_block_data(page=0, pos=pos, mode="top-left")[0]
             .split("\n")[0]
             .split(": ")[1]
         )
 
     @property
-    def energy_block(self):
-        """Get the energy block (may contain daily corr too)
+    def daily_corr_block(self):
+        """Get the daily correction block (may contain energy too)
 
         Returns
         ----------
@@ -180,6 +188,21 @@ class Delta4Report(ParserBase):
         )[0].split("\n")
 
     @property
+    def energy_block(self):
+        """Get the energy block (if energy not in daily corr block)
+
+        Returns
+        ----------
+        list
+            A list of str from the energy info block
+        """
+        anchor = self.anchors["Treatment Summary"]
+        pos = [209.68, anchor["bbox"][1] - 48.89]  # 519.36 - 470.47
+        return self.data.get_block_data(
+            page=anchor["page"], pos=pos, mode="top-left"
+        )[0].split("\n")
+
+    @property
     def energy(self):
         """Get the energy block (may contain daily corr too)
 
@@ -188,12 +211,14 @@ class Delta4Report(ParserBase):
         str
             All energies found in report (CSV if multiple)
         """
-        energies = self.energy_block
-        for i in range(len(energies)):
-            # TODO: daily corr bleeds over when FFF?
-            if "FFF" in energies[i]:
-                energies[i] = energies[i].split("FFF")[0] + "FFF"
-        return ", ".join(list(set(energies)))
+        lines = self.daily_corr_block
+        if lines[0].replace('.', '').strip().isnumeric():  # no energy
+            lines = self.energy_block
+
+        for i in range(len(lines)):
+            if "FFF" in lines[i]:
+                lines[i] = lines[i].split("FFF")[0] + "FFF"
+        return ", ".join(list(set(lines)))
 
     @property
     def daily_corr(self):
@@ -204,10 +229,12 @@ class Delta4Report(ParserBase):
         str
             The daily correction factor
         """
-        energies = self.energy_block
-        for energy in energies:
-            if str(energy[-1]).isdigit():
-                return energy.split("MV")[1].replace(", FFF", "").strip()
+        lines = self.daily_corr_block
+        for line in lines:
+            if line.replace('.', '').isnumeric():
+                return line
+            if str(line[-1]).isdigit():
+                return line.split("MV")[1].replace(", FFF", "").strip()
 
     @property
     def tx_summary_data_block(self):
@@ -218,8 +245,21 @@ class Delta4Report(ParserBase):
         list
             A list of str from the Treatment Summary block
         """
+        #  x0:88.38 	y0:553.97	x1:197.85	y1:565.97
+        #  x0:209.79	y0:448.73	x1:482.18	y1:505.01
+        #  48.96
+
+        #  x0:88.44	    y0:519.36	x1:198.47	y1:531.36
+        #  x0:250.07	y0:391.39	x1:274.92	y1:435.91
         anchor = self.anchors["Treatment Summary"]
         pos = [482.18, anchor["bbox"][1] - 48.96]  # 553.97 - 505.01
+        block = self.data.get_block_data(
+            page=anchor["page"], pos=pos, mode="top-right"
+        )
+        if block[1].startswith("Energy"):
+            return block
+
+        pos = [274.92, anchor["bbox"][1] - 83.45]  # 519.36 - 435.91
         return self.data.get_block_data(
             page=anchor["page"], pos=pos, mode="top-right"
         )
@@ -233,7 +273,7 @@ class Delta4Report(ParserBase):
         int
             The number of beams
         """
-        return len(self.energy_block)
+        return len(self.daily_corr_block)
 
     @property
     def composite_tx_summary_data(self):
@@ -268,10 +308,11 @@ class Delta4Report(ParserBase):
         """
         anchor = self.anchors["Parameter Definitions & Acceptance Criteria"]
         pos = [169.37, anchor["bbox"][1] - 41.7]  # 152.93 - 111.23
-        data = self.data.get_block_data(page=anchor["page"], pos=pos)[0].split(
-            "\n"
-        )
-        for item in data:
+        data = self.data.get_block_data(page=anchor["page"], pos=pos)
+        if len(data) == 0:
+            pos = [169.42, anchor["bbox"][1] - 53.22]  # 152.93 - 99.71
+            data = self.data.get_block_data(page=anchor["page"], pos=pos)
+        for item in data[0].split("\n"):
             if "Dose from" in item:
                 split = item.strip().split(" ")
                 return split[2]
@@ -325,7 +366,10 @@ class Delta4Report(ParserBase):
         anchor = self.anchors["Parameter Definitions & Acceptance Criteria"]
         pos = [169.42, anchor["bbox"][1] - 53.22]  # 152.93 - 99.71
         data = self.data.get_block_data(page=anchor["page"], pos=pos)[0]
-        return data.split("±")[1]
+        if "±" in data and "Dose from" in data:
+            return data.split("±")[1]
+        pos = [295.42, anchor["bbox"][1] - 8.57]  # 445.92 - 437.35
+        return self.data.get_block_data(page=anchor["page"], pos=pos, mode="top-left")[0].split("\n")[-1].replace("±", '')
 
     @property
     def acceptance_limits(self):
