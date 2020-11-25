@@ -33,7 +33,8 @@ EXAMPLE_DATA = {
 }
 
 OTHER_REPORTS = {
-    0: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_1.pdf")
+    0: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_1.pdf"),
+    1: join(DIRECTORIES["DELTA4_EXAMPLES"], "UChicago", "DCAM_example_2.pdf")
 }
 
 EXPECTED = {
@@ -135,17 +136,10 @@ class TestSNCPatient(unittest.TestCase):
         for text in self.other_text.values():
             self.assertFalse(self.parser.is_text_data_valid(text))
 
-    def test_example_data_0(self):
-        """Verify example data is parsed correctly: Example data index 0"""
-        self.run_example_data_test(0)
-
-    def test_example_data_1(self):
-        """Verify example data is parsed correctly: Example data index 1"""
-        self.run_example_data_test(1)
-
-    def test_example_data_2(self):
-        """Verify example data is parsed correctly: Example data index 2"""
-        self.run_example_data_test(2)
+    def test_example_data(self):
+        """Verify example data is parsed correctly"""
+        for key in EXPECTED.keys():
+            self.run_example_data_test(key)
 
     def run_example_data_test(self, index):
         print("Running example data test: index %s" % index)

@@ -77,9 +77,12 @@ class Delta4Report(ParserBase):
         list
             A list of str from the patient demographics block
         """
-        return self.data.get_block_data(
+        demo_block = self.data.get_block_data(
             page=0, pos=[536.42, 700.18], mode="top-right"
-        )[0].split("\n")
+        )
+        if demo_block:
+            return demo_block[0].split("\n")
+        return ['', '']  # Redacted report
 
     @property
     def patient_name(self):
@@ -416,9 +419,9 @@ class Delta4Report(ParserBase):
         return {
             "Patient Name": self.patient_name,
             "Patient ID": self.patient_id,
-            "Plan Date": self.plan_date,
+            "Plan Date": self.plan_date.strip(),
             "Plan Name": self.plan_name,
-            "Meas Date": self.meas_date,
+            "Meas Date": self.meas_date.strip(),
             "Radiation Dev": self.radiation_dev,
             "Energy": self.energy,
             "Daily Corr": self.daily_corr,
