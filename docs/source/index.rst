@@ -10,6 +10,7 @@ Welcome to the documentation for IQDM-PDF!
    :maxdepth: 2
 
    readme
+   methods
    Module Reference <modules>
    authors
 
