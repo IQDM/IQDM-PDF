@@ -7,8 +7,8 @@ extract text and coordinates from IMRT QA PDF files.
 
 Step 1: Match Report Parser
 ============================
-All of the text is extacted from the PDF into a simple string. Each report
-parser has an `identifiers` property which is a list of strings. If all of
+All of the text is extracted from the PDF into a simple string. Each report
+parser has an ``identifiers`` property which is a list of strings. If all of
 the identifier strings are found in the extracted text, that report parser
 will be selected.
 
@@ -23,9 +23,9 @@ Step 3: Apply Template
 ======================
 Unless customized logic is needed, a `GenericParser <https://iqdm-pdf.readthedocs.io/en/latest/iqdmpdf.html#module-IQDMPDF.parsers.generic>`__
 class can be used that relies solely on a JSON template file. The JSON
-template file requires three keys: `report type`, `identifiers`, and `data`.
-Required keys of `data` are `column`, `page`, and `pos`. For further
-customization, all keys in each item of `data` (except `column`) are passed
+template file requires three keys: ``report type``, ``identifiers``, and ``data``.
+Required keys of ``data`` are ``column``, ``page``, and ``pos``. For further
+customization, all keys in each item of ``data`` (except ``column``) are passed
 into `get_block_data <https://iqdm-pdf.readthedocs.io/en/latest/iqdmpdf.html#IQDMPDF.pdf_reader.CustomPDFReader.get_block_data>`__.
 
 You can check out the `report templates <https://github.com/IQDM/IQDM-PDF/tree/master/IQDMPDF/report_templates>`__
@@ -44,9 +44,19 @@ In the simplest case, a report parser class looks something like this `[source] 
             GenericReport.__init__(self, template)
 
 
+Then update the ``REPORT_CLASSES`` list in `parser.py <https://iqdm-pdf.readthedocs.io/en/latest/_modules/IQDMPDF/parsers/parser.html>`__
+to include the new report parser class.
+
 Step 4: Iterate
 ===============
 From the command-line, you can iterate over all files in a provided directory,
-and save the results (per vendor/template) into a .csv file:
+and save the results into a .csv file per vendor/template:
 
     $ iqdmpdf your/initial/dir
+
+
+Non-Template Based Parsing
+==========================
+If the data in the reports have varying coordinates, the code needs more
+customization. See the `Delta4 <https://iqdm-pdf.readthedocs.io/en/latest/_modules/IQDMPDF/parsers/delta4.html#Delta4Report>`__
+report parser for examples/inspiration.

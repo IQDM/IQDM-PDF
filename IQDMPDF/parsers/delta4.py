@@ -248,12 +248,6 @@ class Delta4Report(ParserBase):
         list
             A list of str from the Treatment Summary block
         """
-        #  x0:88.38 	y0:553.97	x1:197.85	y1:565.97
-        #  x0:209.79	y0:448.73	x1:482.18	y1:505.01
-        #  48.96
-
-        #  x0:88.44	    y0:519.36	x1:198.47	y1:531.36
-        #  x0:250.07	y0:391.39	x1:274.92	y1:435.91
         anchor = self.anchors["Treatment Summary"]
         pos = [482.18, anchor["bbox"][1] - 48.96]  # 553.97 - 505.01
         block = self.data.get_block_data(
