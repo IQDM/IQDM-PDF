@@ -40,14 +40,20 @@ class TestMain(unittest.TestCase):
     def test_main(self):
         """Test remainder of main.main"""
         directory = join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago")
+
+        # test main with no args
+        main.main()
+
+        # Test print version, using arg parser
         args = main.create_arg_parser().parse_args(["-v"])
         main.main(**vars(args))
-        args = main.create_arg_parser().parse_args([])
-        main.main(**vars(args))
+
+        # test main with multiple args
         args = main.create_arg_parser().parse_args(
             [directory, "--version", "-of", "test"]
         )
         main.main(**vars(args))
+
         unlink("SNCPatient_test")
 
 

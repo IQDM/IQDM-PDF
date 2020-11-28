@@ -111,11 +111,13 @@ def validate_kwargs(kwargs):
 def main(**kwargs):
     """Call process_files with validated kwargs"""
 
+    if not kwargs:
+        kwargs = vars(create_arg_parser().parse_args())
+
     validated_kwargs = validate_kwargs(kwargs)
     if validated_kwargs:
         process_files(**validated_kwargs)
 
 
 if __name__ == "__main__":
-    params = vars(create_arg_parser().parse_args())
-    main(**params)
+    main()
