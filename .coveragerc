@@ -12,5 +12,5 @@ omit =
     tests/*
     docs/*
     venv/*
-    main.py
+    IQDMPDF/main.py
 [report]

@@ -38,13 +38,14 @@ Command line usage
 
 .. code-block:: console
 
-    usage: IQDMPDF [-h] [-ie] [-od OUTPUT_DIR] [-of OUTPUT_FILE] [-ver] [-nr]
-                   [directory]
+    usage: iqdmpdf [-h] [-ie] [-od OUTPUT_DIR] [-of OUTPUT_FILE] [-ver] [-nr]
+                   [-re]
+                   [init_directory]
 
     Command line interface for IQDM
 
     positional arguments:
-      directory             Initiate scan here
+      init_directory        Initiate scan here
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -61,6 +62,8 @@ Command line usage
       -ver, --version       Print the IQDM version
       -nr, --no-recursive-search
                             Include this flag to skip sub-directories
+      -re, --raise-errors   Allow failed file parsing to halt the program
+
 
 
 Vendor Compatibility
