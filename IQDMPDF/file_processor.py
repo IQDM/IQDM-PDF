@@ -21,6 +21,7 @@ def process_files(
     output_dir=None,
     no_recursive_search=False,
     callback=None,
+    raise_errors=False,
 ):
     """Process all pdf files into parser classes, write data to csv
 
@@ -39,6 +40,8 @@ def process_files(
     callback : callable
         Pointer to a function to be called before each process_file call. The
         parameter will be dict with keys of "label" and "gauge".
+    raise_errors : bool
+        Set to True to allow errors to be raised (useful for debugging)
     """
 
     time_stamp = str(datetime.now()).replace(":", "-").replace(".", "-")
@@ -54,7 +57,13 @@ def process_files(
             label = "Processing (%s of %s): %s" % (i + 1, len(files), file)
             gauge = float(i) / float(len(files))
             callback({"label": label, "gauge": gauge})
-        process_file(file, output_file, output_dir)
+        try:
+            process_file(file, output_file, output_dir)
+        except Exception as e:
+            if raise_errors:
+                raise e
+            else:
+                print(str(e))
 
 
 def process_file(file_path, output_file, output_dir=None):

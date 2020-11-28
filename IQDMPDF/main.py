@@ -71,6 +71,14 @@ def create_arg_parser():
     cmd_parser.add_argument(
         "init_directory", nargs="?", help="Initiate scan here"
     )
+    cmd_parser.add_argument(
+        "-re",
+        "--raise-errors",
+        dest="raise_errors",
+        help="Allow failed file parsing to halt the program",
+        default=False,
+        action="store_true",
+    )
     return cmd_parser
 
 
@@ -107,6 +115,7 @@ def validate_kwargs(kwargs):
         "output_file",
         "output_dir",
         "no_recursive_search",
+        "raise_errors",
         "callback",
     ]
     return {key: kwargs[key] for key in keys if key in list(kwargs)}
