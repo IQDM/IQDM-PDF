@@ -109,7 +109,7 @@ def validate_kwargs(kwargs):
 
 
 def main(**kwargs):
-    """Main program to be called from a console"""
+    """Call process_files with validated kwargs"""
 
     validated_kwargs = validate_kwargs(kwargs)
     if validated_kwargs:

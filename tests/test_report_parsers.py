@@ -20,6 +20,7 @@ TestDataHelper.__test__ = False
 PARSERS = {
     "sncpatient": sncpatient.SNCPatientReport,
     "delta4": delta4.Delta4Report,
+    "sncpatient2020": sncpatient.SNCPatientReport2020,
 }
 
 
@@ -80,6 +81,11 @@ class TestReportParserBase:
 class TestSNCPatient(TestReportParserBase, unittest.TestCase):
     def setUp(self):
         self.do_setup_for_vendor("sncpatient")
+
+
+class TestSNCPatient2020(TestReportParserBase, unittest.TestCase):
+    def setUp(self):
+        self.do_setup_for_vendor("sncpatient2020")
 
 
 class TestDelta4(TestReportParserBase, unittest.TestCase):

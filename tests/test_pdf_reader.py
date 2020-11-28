@@ -49,13 +49,17 @@ class TestPDFReader(unittest.TestCase):
 
         # check str representation
         expected_sample = [
-            "x0:108.0	y0:675.97	x1:110.71	y1:687.97\nHello World!!!",
-            "x0:432.0	y0:529.57	x1:527.35	y1:541.57\nMid-page test data",
-            "x0:72.0	y0:514.93	x1:287.11	y1:717.25\nThis is a simple PDF used to test IQDM-PDF.",
+            "page_index: 0, data_index: 4\nbbox: [108.0, 675.97, 110.71, 687.97]\nHello World!!!",
+            "page_index: 0, data_index: 13\nbbox: [432.0, 529.57, 527.35, 541.57]\nMid-page test data",
+            "page_index: 0, data_index: 14\nbbox: [72.0, 514.93, 287.11, 717.25]\nThis is a simple PDF used to test IQDM-PDF.",
         ]
         reader_str = str(reader)
         for sample in expected_sample:
             self.assertTrue(sample in reader_str)
+
+        # Test that __repr__ == __str__
+        self.assertEqual(reader_str, reader.__repr__())
+        self.assertEqual(str(reader.page[0]), reader.page[0].__repr__())
 
         tests = [
             {"page": 0, "pos": [108.0, 675.97]},
