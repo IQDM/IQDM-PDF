@@ -10,7 +10,6 @@
 
 from os.path import join, splitext, normpath
 from os import walk, listdir, sep
-from IQDMPDF._version import __version__
 
 
 def are_all_strings_in_text(text, list_of_strings):
