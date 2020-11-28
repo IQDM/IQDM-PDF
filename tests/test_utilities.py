@@ -90,6 +90,20 @@ class TestUtilities(unittest.TestCase):
         test_list = utilities.csv_to_list(test_csv)
         self.assertEqual(test_list[-1], "value")
 
+    def test_create_arg_parser(self):
+        """Test arg parser creation"""
+        arg_parser = utilities.create_arg_parser().parse_args([])
+        expected_args = [
+            "ignore_extension",
+            "output_dir",
+            "output_file",
+            "print_version",
+            "no_recursive_search",
+            "init_directory",
+        ]
+        for arg in expected_args:
+            self.assertTrue(arg in arg_parser.__dict__.keys())
+
 
 if __name__ == "__main__":
     import sys

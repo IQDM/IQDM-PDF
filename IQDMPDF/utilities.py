@@ -10,7 +10,7 @@
 
 from os.path import join, splitext, normpath
 from os import walk, listdir, sep
-from IQDMPDF._version import __version__
+import argparse
 
 
 def are_all_strings_in_text(text, list_of_strings):
@@ -248,3 +248,68 @@ def get_relative_path(path, relative_base):
     if relative_base in path_split:
         index = path_split.index(relative_base)
         return join(*path_split[index:])
+
+
+def create_arg_parser():
+    """Create an argument parser
+
+    Returns
+    ----------
+    argparse.ArgumentParser
+        Argument parsers for command-line use of IQDM-PDF
+    """
+    cmd_parser = argparse.ArgumentParser(
+        description="Command line interface for IQDM"
+    )
+    cmd_parser.add_argument(
+        "-ie",
+        "--ignore-extension",
+        dest="ignore_extension",
+        help="Script will check all files, not just ones with .pdf extensions",
+        default=False,
+        action="store_true",
+    )
+    cmd_parser.add_argument(
+        "-od",
+        "--output-dir",
+        dest="output_dir",
+        help="Output stored in local directory by default, specify otherwise here",
+        default=None,
+    )
+    cmd_parser.add_argument(
+        "-of",
+        "--output-file",
+        dest="output_file",
+        help="Output will be saved as <report_type>_results_<time-stamp>.csv by default. "
+        "Define this tag to customize file name after <report_type>_",
+        default=None,
+    )
+    cmd_parser.add_argument(
+        "-ver",
+        "--version",
+        dest="print_version",
+        help="Print the IQDM version",
+        default=False,
+        action="store_true",
+    )
+    cmd_parser.add_argument(
+        "-nr",
+        "--no-recursive-search",
+        dest="no_recursive_search",
+        help="Include this flag to skip sub-directories",
+        default=False,
+        action="store_true",
+    )
+    cmd_parser.add_argument(
+        "init_directory", nargs="?", help="Initiate scan here"
+    )
+    cmd_parser.add_argument(
+        "-re",
+        "--raise-errors",
+        dest="raise_errors",
+        help="Allow failed file parsing to halt the program",
+        default=False,
+        action="store_true",
+    )
+    return cmd_parser
+
