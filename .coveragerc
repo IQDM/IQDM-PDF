@@ -12,6 +12,5 @@ omit =
     tests/*
     docs/*
     venv/*
+    main.py
 [report]
-exclude_lines =
-    if __name__ == .__main__.:
