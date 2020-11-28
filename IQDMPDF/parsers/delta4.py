@@ -339,14 +339,14 @@ class Delta4Report(ParserBase):
         block = self.data.get_block_data(
             page=anchor["page"], pos=pos, mode="top-right"
         )
-        if not str(block[0]).replace('.', '').replace("\n", "").isnumeric():
+        if not str(block[0]).replace(".", "").replace("\n", "").isnumeric():
             return block
 
         # the above block is daily correction factors
         # [250.08, 425.69, 482.19, 481.97]
         pos = [482.19, anchor["bbox"][1] - 48.96]  # 530.93 - 481.97
         return self.data.get_block_data(
-             page=anchor["page"], pos=pos, mode="top-right"
+            page=anchor["page"], pos=pos, mode="top-right"
         )
 
     @property
