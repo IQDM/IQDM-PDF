@@ -13,7 +13,7 @@ import unittest
 from IQDMPDF import file_processor
 from IQDMPDF.paths import DIRECTORIES
 from os import listdir, unlink
-from os.path import join
+from os.path import join, isdir
 
 
 class TestFileProcessor(unittest.TestCase):
@@ -88,6 +88,27 @@ class TestFileProcessor(unittest.TestCase):
         self.assertTrue("gauge" in msg.keys())
         self.assertTrue(isinstance(msg["label"], str))
         self.assertTrue(isinstance(msg["gauge"], float))
+
+    def test_process_files_raise_errors_kwarg(self):
+        """Check that errors raised by process_file are addressed by kwarg"""
+        bad_dir = "this doesn't exist!#anywhee^&*)"
+        while isdir(bad_dir):
+            bad_dir = bad_dir + "0"
+
+        directory = join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago")
+
+        with self.assertRaises(FileNotFoundError):
+            file_processor.process_files(
+                directory,
+                no_recursive_search=True,
+                output_dir=bad_dir,
+                raise_errors=True,
+            )
+        file_processor.process_files(
+            directory,
+            no_recursive_search=True,
+            output_dir=bad_dir,
+        )
 
 
 if __name__ == "__main__":
