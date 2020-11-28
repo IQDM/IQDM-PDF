@@ -19,16 +19,16 @@
     {"column": "Verified Plan UID", "page": 0, "pos": [135.72, 537.57]},
     {"column": "Total MU", "page": 0, "pos": [135.72, 514.53]},
     {"column": "Comparison Type", "page": 0, "pos": [28.44, 483.01]},
-    {"column": "Threshold (%)", "page": 0, "pos": [152.14, 463.12]},
-    {"column": "Use Global (%)", "page": 0, "pos": [450.58, 463.12]},
-    {"column": "Difference (%)", "page": 0, "pos": [154.94, 441.02]},
-    {"column": "Meas Uncertainty", "page": 0, "pos": [452.74, 441.02]},
-    {"column": "Distance (mm)", "page": 0, "pos": [154.94, 418.91]},
-    {"column": "Cavity Dose", "page": 0, "pos": [450.79, 418.91]},
+    {"column": "Threshold (%)", "page": 0, "pos": [91.22, 463.12], "mode": "bottom-right"},
+    {"column": "Use Global (%)", "page": 0, "pos": [171.59, 463.12], "mode": "bottom-right"},
+    {"column": "Difference (%)", "page": 0, "pos": [92.33, 441.02], "mode": "bottom-right"},
+    {"column": "Meas Uncertainty", "page": 0, "pos": [168.84, 441.02], "mode": "bottom-right"},
+    {"column": "Distance (mm)", "page": 0, "pos": [467.46, 418.91], "mode": "bottom-right"},
     {"column": "Summary Type", "page": 0, "pos": [28.44, 386.32]},
     {"column": "Pass (%)", "page": 0, "pos": [152.14, 367.22]},
     {"column": "Pass", "page": 0, "pos": [153.5, 345.11]},
     {"column": "Fail", "page": 0, "pos": [156.31, 323.01]},
-    {"column": "Total Points", "page": 0, "pos": [153.5, 300.91]}
+    {"column": "Total Points", "page": 0, "pos": [153.5, 300.91]},
+    {"column": "Notes", "page": 0, "pos": [28.4, 85.84]}
   ]
 }

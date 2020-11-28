@@ -83,7 +83,9 @@ class GenericReport(ParserBase):
         self.identifiers = self.json_data["identifiers"]
         self.columns = [el["column"] for el in self.json_data["data"]]
         self.LUT = {
-            el["column"]: {"page": el["page"], "pos": el["pos"]}
+            el["column"]: {
+                key: value for key, value in el.items() if key != "column"
+            }
             for el in self.json_data["data"]
         }
         self.text_cleaner = text_cleaner

@@ -71,7 +71,19 @@ def create_arg_parser():
     cmd_parser.add_argument(
         "init_directory", nargs="?", help="Initiate scan here"
     )
+    cmd_parser.add_argument(
+        "-re",
+        "--raise-errors",
+        dest="raise_errors",
+        help="Allow failed file parsing to halt the program",
+        default=False,
+        action="store_true",
+    )
     return cmd_parser
+
+
+def print_callback(msg):
+    print(msg["label"])
 
 
 def validate_kwargs(kwargs):
@@ -103,13 +115,17 @@ def validate_kwargs(kwargs):
         "output_file",
         "output_dir",
         "no_recursive_search",
-        "callback=None",
+        "raise_errors",
+        "callback",
     ]
     return {key: kwargs[key] for key in keys if key in list(kwargs)}
 
 
-def main(**kwargs):
-    """Main program to be called from a console"""
+def main():
+    """Call process_files with validated kwargs"""
+
+    kwargs = vars(create_arg_parser().parse_args())
+    kwargs["callback"] = print_callback
 
     validated_kwargs = validate_kwargs(kwargs)
     if validated_kwargs:
@@ -117,5 +133,4 @@ def main(**kwargs):
 
 
 if __name__ == "__main__":
-    params = vars(create_arg_parser().parse_args())
-    main(**params)
+    main()

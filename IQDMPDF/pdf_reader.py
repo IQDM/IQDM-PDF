@@ -89,11 +89,11 @@ class CustomPDFReader:
 
     def __str__(self):
         """Get str rep for each page of the PDF"""
-        ans = []
-        for p, page in enumerate(self.page):
-            ans.append("Page %s" % (p + 1))
-            ans.append(str(page))
-        return "\n".join(ans)
+        return "\n".join([str(page) for page in self.page])
+
+    def __repr__(self):
+        """Return the str rep"""
+        return self.__str__()
 
     def get_block_data(
         self, page, pos, tol=TOLERANCE, text_cleaner=None, mode="bottom-left"
@@ -166,7 +166,9 @@ class CustomPDFReader:
             # extract text from this object
             keys = ["bbox", "x", "y", "text"]
             page_data = {key: [] for key in keys}
-            self.page.append(PDFPageParser(layout._objs, page_data))
+            self.page.append(
+                PDFPageParser(layout._objs, page_data, page_index=p)
+            )
 
         device.close()
         fp.close()
@@ -196,7 +198,7 @@ class CustomPDFReader:
 class PDFPageParser:
     """Custom PDF Page Parsing module"""
 
-    def __init__(self, lt_objs, page_data):
+    def __init__(self, lt_objs, page_data, page_index=0):
         """Initialization of PDFPageParser
 
         Parameters
@@ -205,9 +207,12 @@ class PDFPageParser:
             A layout object from PDFPageAggregator.get_result()._objs
         page_data : dict
             A dictionary of lists, with keys 'x', 'y', 'text'
+        page_index : int, optional
+            The index of the page
         """
         self.lt_objs = lt_objs
         self.data = page_data
+        self.page_index = page_index
 
         self.parse_obj(lt_objs)
         self.sort_all_data_by_y()
@@ -217,11 +222,15 @@ class PDFPageParser:
         """Get the coordinates and text value for all text blocks"""
         ans = []
         for index, text in enumerate(self.data["text"]):
-            x0, y0, x1, y1 = tuple(self.data["bbox"][index])
             ans.append(
-                "x0:%s\ty0:%s\tx1:%s\ty1:%s\n%s" % (x0, y0, x1, y1, text)
+                "page_index: %s, data_index: %s\nbbox: %s\n%s"
+                % (self.page_index, index, self.data["bbox"][index], text)
             )
         return "\n".join(ans)
+
+    def __repr__(self):
+        """Return the str rep"""
+        return self.__str__()
 
     def parse_obj(self, lt_objs):
         """Extract x, y, and text data from a layout objects
