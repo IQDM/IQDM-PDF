@@ -140,8 +140,9 @@ class Delta4Report(ParserBase):
             Plan date from DICOM
         """
         date = self.meas_plan_info_block[1]
-        if date.count("/") == 2 and ":" in date:
-            return date
+        if ":" in date:
+            if date.count("/") == 2 or date.count(".") == 2:
+                return date
         return self.meas_plan_info_block[2]
 
     @property
@@ -154,8 +155,9 @@ class Delta4Report(ParserBase):
             Date of QA measurement
         """
         plan_date = self.meas_plan_info_block[1]
-        if plan_date.count("/") == 2 and ":" in plan_date:
-            return self.meas_plan_info_block[2]
+        if ":" in plan_date:
+            if plan_date.count("/") == 2 or plan_date.count(".") == 2:
+                return self.meas_plan_info_block[2]
         return self.meas_plan_info_block[4]
 
     @property
@@ -186,9 +188,16 @@ class Delta4Report(ParserBase):
         """
         anchor = self.anchors["Treatment Summary"]
         pos = [209.68, anchor["bbox"][1] - 83.52]
-        return self.data.get_block_data(
+        block = self.data.get_block_data(
             page=anchor["page"], pos=pos, mode="top-left"
-        )[0].split("\n")
+        )
+        if not len(block):  # [250.08, 414.35, 482.18, 470.45]
+            pos = [250.08, anchor["bbox"][1] - 48.96]
+            block = self.data.get_block_data(
+                page=anchor["page"], pos=pos, mode="top-left"
+            )
+
+        return block[0].split("\n")
 
     @property
     def energy_block(self):
@@ -201,9 +210,50 @@ class Delta4Report(ParserBase):
         """
         anchor = self.anchors["Treatment Summary"]
         pos = [209.68, anchor["bbox"][1] - 48.89]  # 519.36 - 470.47
-        return self.data.get_block_data(
+        block = self.data.get_block_data(
             page=anchor["page"], pos=pos, mode="top-left"
-        )[0].split("\n")
+        )
+        if not len(block):  # Energy at end of beam names
+            return []
+
+        return block[0].split("\n")
+
+    @property
+    def gantry_block(self):
+        """Get the gantry block
+
+        Returns
+        ----------
+        list
+            A list of str from the gantry info block
+        """
+        anchor = self.anchors["Treatment Summary"]
+        pos = [141.31, anchor["bbox"][1] - 83.52]  # 519.36 - 435.89
+        block = self.data.get_block_data(
+            page=anchor["page"], pos=pos, mode="top-left"
+        )
+        if not len(block):  # Energy at end of beam names
+            return []
+
+        return block[0].split("\n")
+
+    @property
+    def beam_name_block(self):
+        """Get the beam name block
+
+        Returns
+        ----------
+        list
+            A list of str from the beam name info block
+        """
+        # [80.88, 425.86, 221.6, 458.92]
+        anchor = self.anchors["Treatment Summary"]
+        pos = [80.88, anchor["bbox"][1] - 72.0]  # 530.93 - 458.92
+        block = self.data.get_block_data(
+            page=anchor["page"], pos=pos, mode="top-left"
+        )
+
+        return block[0].split("\n")
 
     @property
     def energy(self):
@@ -215,10 +265,20 @@ class Delta4Report(ParserBase):
             All energies found in report (CSV if multiple)
         """
         lines = self.daily_corr_block
-        if lines[0].replace(".", "").strip().isnumeric():  # no energy
+        if (
+            lines[0].replace(".", "").strip().isnumeric()
+            or "daily corr" in lines[0].lower()
+        ):  # no energy
             lines = self.energy_block
+            if not lines:
+                lines = self.gantry_block
+                if not lines:
+                    lines = self.beam_name_block
+                    lines = [line for line in lines if "°" in line]
 
         for i in range(len(lines)):
+            if "to" in lines[i] and "°" in lines[i]:
+                lines[i] = lines[i].split("°")[2].strip()
             if "FFF" in lines[i]:
                 lines[i] = lines[i].split("FFF")[0] + "FFF"
         return ", ".join(list(set(lines)))
@@ -232,7 +292,26 @@ class Delta4Report(ParserBase):
         str
             The daily correction factor
         """
-        lines = self.daily_corr_block
+
+        daily_corr = self.process_daily_corr_lines(self.daily_corr_block)
+        if daily_corr is not None:
+            return daily_corr
+
+        # if the above fails, check the energy_block
+
+        daily_corr = self.process_daily_corr_lines(self.energy_block)
+        if daily_corr is not None:
+            return daily_corr
+
+        anchor = self.anchors["Treatment Summary"]
+        pos = [274.92, anchor["bbox"][1] - 83.45]  # 519.36 - 435.91
+        lines = self.data.get_block_data(
+            page=anchor["page"], pos=pos, mode="top-right"
+        )[0].split("\n")
+        return self.process_daily_corr_lines(lines)
+
+    @staticmethod
+    def process_daily_corr_lines(lines):
         for line in lines:
             if line.replace(".", "").isnumeric():
                 return line
@@ -257,8 +336,17 @@ class Delta4Report(ParserBase):
             return block
 
         pos = [274.92, anchor["bbox"][1] - 83.45]  # 519.36 - 435.91
-        return self.data.get_block_data(
+        block = self.data.get_block_data(
             page=anchor["page"], pos=pos, mode="top-right"
+        )
+        if not str(block[0]).replace('.', '').replace("\n", "").isnumeric():
+            return block
+
+        # the above block is daily correction factors
+        # [250.08, 425.69, 482.19, 481.97]
+        pos = [482.19, anchor["bbox"][1] - 48.96]  # 530.93 - 481.97
+        return self.data.get_block_data(
+             page=anchor["page"], pos=pos, mode="top-right"
         )
 
     @property
@@ -270,7 +358,14 @@ class Delta4Report(ParserBase):
         int
             The number of beams
         """
-        return len(self.daily_corr_block)
+        daily_corr_block = self.daily_corr_block
+        daily_corr = self.process_daily_corr_lines(daily_corr_block)
+        if daily_corr is not None:
+            return len(daily_corr_block)
+        energy_block = self.energy_block
+        if len(energy_block):
+            return len(self.energy_block)
+        return len(self.beam_name_block) - 1
 
     @property
     def composite_tx_summary_data(self):
