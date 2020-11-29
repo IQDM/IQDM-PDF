@@ -12,6 +12,7 @@ from IQDMPDF.parsers.parser import ReportParser
 from IQDMPDF.utilities import get_files
 from datetime import datetime
 from os.path import isfile, join
+from IQDMPDF._version import __version__
 
 
 def process_files(
@@ -97,3 +98,55 @@ def process_file(file_path, output_file, output_dir=None):
                 csv.write(row + "\n")
     else:
         print("Skipping: %s" % file_path)
+
+
+def validate_kwargs(kwargs, add_print_callback=True):
+    """Process kwargs from main for process_files
+
+    Parameters
+    ----------
+    kwargs : dict
+        Keyword arguments for main. See main.create_arg_parser for
+        valid arguments
+    add_print_callback : bool
+        If true, add simple print function at the start of each process_file
+        call
+
+    Returns
+    ----------
+    dict
+        Returns a dict containing only keywords applicable to process_files, or
+        an empty dict if "init_directory" is missing or "print_version" is
+        True and "init_directory" is missing
+    """
+    if not kwargs["init_directory"] or len(kwargs) < 2:
+        if kwargs["print_version"]:
+            print("IMRT-QA-Data-Miner: IQDM-PDF v%s" % __version__)
+        else:
+            print("Initial directory not provided!")
+        return {}
+
+    if add_print_callback:
+        kwargs["callback"] = print_callback
+
+    keys = [
+        "init_directory",
+        "ignore_extension",
+        "output_file",
+        "output_dir",
+        "no_recursive_search",
+        "raise_errors",
+        "callback",
+    ]
+    return {key: kwargs[key] for key in keys if key in list(kwargs)}
+
+
+def print_callback(msg):
+    """Simple print callback for process_files
+
+    Parameters
+    ----------
+    msg : dict
+        The message sent from process_files
+    """
+    print(msg["label"])

@@ -110,6 +110,23 @@ class TestFileProcessor(unittest.TestCase):
             output_dir=bad_dir,
         )
 
+    def test_validate_kwargs(self):
+        """Test validate kwargs"""
+        kwargs = {"init_directory": None, "print_version": True}
+        file_processor.validate_kwargs(kwargs)
+
+        kwargs["print_version"] = False
+        file_processor.validate_kwargs(kwargs)
+
+        kwargs["init_directory"] = "."
+        file_processor.validate_kwargs(kwargs)
+
+    def test_print_callback(self):
+        """Test the simple print message callback"""
+        with self.assertRaises(KeyError):
+            file_processor.print_callback({"bad_test": "some string"})
+        file_processor.print_callback({"label": "success!"})
+
 
 if __name__ == "__main__":
     import sys

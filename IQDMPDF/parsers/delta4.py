@@ -130,6 +130,50 @@ class Delta4Report(ParserBase):
         """
         return self.meas_plan_info_block[0]
 
+    def find_nth_date_in_block(self, n):
+        """Find the nth date from meas_plan_info_block
+
+        Parameters
+        ----------
+        n : int
+            The index of date lines in meas_plan_info_block
+
+        Returns
+        ----------
+        str
+            The nth date in meas_plan_info_block
+        """
+        plan_info = self.meas_plan_info_block
+        indices = self.find_date_indices(plan_info)
+        if n < len(indices):
+            index = indices[n]
+            if index < len(plan_info):
+                return plan_info[index]
+        return ""
+
+    @staticmethod
+    def find_date_indices(lines):
+        """Search through a list of strings for a date time
+
+        Parameters
+        ----------
+        lines : list
+            A list of strings, some of which have date and time
+
+        Returns
+        ----------
+        list
+            A list of indices of lines that contain date times
+        """
+        indices = []
+        for i, line in enumerate(lines):
+            if ":" in line:
+                if line.count("/") == 2 or line.count(".") == 2:
+                    indices.append(i)
+            elif line.count("/") == 2 or line.count(".") == 2:
+                indices.append(i)
+        return indices
+
     @property
     def plan_date(self):
         """Get the plan date
@@ -139,11 +183,7 @@ class Delta4Report(ParserBase):
         str
             Plan date from DICOM
         """
-        date = self.meas_plan_info_block[1]
-        if ":" in date:
-            if date.count("/") == 2 or date.count(".") == 2:
-                return date
-        return self.meas_plan_info_block[2]
+        return self.find_nth_date_in_block(0)
 
     @property
     def meas_date(self):
@@ -154,11 +194,18 @@ class Delta4Report(ParserBase):
         str
             Date of QA measurement
         """
-        plan_date = self.meas_plan_info_block[1]
-        if ":" in plan_date:
-            if plan_date.count("/") == 2 or plan_date.count(".") == 2:
-                return self.meas_plan_info_block[2]
-        return self.meas_plan_info_block[4]
+        return self.find_nth_date_in_block(1)
+
+    @property
+    def accepted_date(self):
+        """Get the QA accepted date
+
+        Returns
+        ----------
+        str
+            QA Accepted date from DICOM
+        """
+        return self.find_nth_date_in_block(2)
 
     @property
     def radiation_dev(self):
@@ -275,6 +322,16 @@ class Delta4Report(ParserBase):
                 if not lines:
                     lines = self.beam_name_block
                     lines = [line for line in lines if "°" in line]
+
+        # Energy block is missing Composite/Fraction row
+        if "energy" in lines[0].lower() or "daily corr" in lines[0].lower():
+            anchor = self.anchors["Treatment Summary"]
+            pos = [250.05, anchor["bbox"][1] - 83.52]  # 519.41 - 435.89
+            block = self.data.get_block_data(
+                page=anchor["page"], pos=pos, mode="top-left"
+            )
+            if block:
+                lines = block[0].split("\n")
 
         for i in range(len(lines)):
             if "to" in lines[i] and "°" in lines[i]:
@@ -512,6 +569,7 @@ class Delta4Report(ParserBase):
             "Plan Date": self.plan_date.strip(),
             "Plan Name": self.plan_name,
             "Meas Date": self.meas_date.strip(),
+            "Accepted Date": self.accepted_date.strip(),
             "Radiation Dev": self.radiation_dev,
             "Energy": self.energy,
             "Daily Corr": self.daily_corr,
