@@ -323,6 +323,16 @@ class Delta4Report(ParserBase):
                     lines = self.beam_name_block
                     lines = [line for line in lines if "°" in line]
 
+        # Energy block is missing Composite/Fraction row
+        if "energy" in lines[0].lower() or "daily corr" in lines[0].lower():
+            anchor = self.anchors["Treatment Summary"]
+            pos = [250.05, anchor["bbox"][1] - 83.52]  # 519.41 - 435.89
+            block = self.data.get_block_data(
+                page=anchor["page"], pos=pos, mode="top-left"
+            )
+            if block:
+                lines = block[0].split("\n")
+
         for i in range(len(lines)):
             if "to" in lines[i] and "°" in lines[i]:
                 lines[i] = lines[i].split("°")[2].strip()
