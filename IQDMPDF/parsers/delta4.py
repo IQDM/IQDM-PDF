@@ -130,17 +130,6 @@ class Delta4Report(ParserBase):
         """
         return self.meas_plan_info_block[0]
 
-    @property
-    def plan_date(self):
-        """Get the plan date
-
-        Returns
-        ----------
-        str
-            Plan date from DICOM
-        """
-        return self.find_nth_date_in_block(0)
-
     def find_nth_date_in_block(self, n):
         """Find the nth date from meas_plan_info_block
 
@@ -186,6 +175,17 @@ class Delta4Report(ParserBase):
         return indices
 
     @property
+    def plan_date(self):
+        """Get the plan date
+
+        Returns
+        ----------
+        str
+            Plan date from DICOM
+        """
+        return self.find_nth_date_in_block(0)
+
+    @property
     def meas_date(self):
         """Get the measured name
 
@@ -195,6 +195,17 @@ class Delta4Report(ParserBase):
             Date of QA measurement
         """
         return self.find_nth_date_in_block(1)
+
+    @property
+    def accepted_date(self):
+        """Get the QA accepted date
+
+        Returns
+        ----------
+        str
+            QA Accepted date from DICOM
+        """
+        return self.find_nth_date_in_block(2)
 
     @property
     def radiation_dev(self):
@@ -548,6 +559,7 @@ class Delta4Report(ParserBase):
             "Plan Date": self.plan_date.strip(),
             "Plan Name": self.plan_name,
             "Meas Date": self.meas_date.strip(),
+            "Accepted Date": self.accepted_date.strip(),
             "Radiation Dev": self.radiation_dev,
             "Energy": self.energy,
             "Daily Corr": self.daily_corr,
