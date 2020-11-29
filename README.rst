@@ -28,12 +28,15 @@ Install
 -------
 
 Latest PyPI release:
+
     $ pip install iqdmpdf
 
 Latest dev:
+
     $ pip install git+https://github.com/IQDM/IQDM-PDF.git@dev
 
 Install from source:
+
     $ python setup.py install
 
 
