@@ -14,7 +14,7 @@ The expected results should be added to `tests/test_data/expected_report_data.py
 
 Expected Report Data
 ====================
-The variable ``TEST_DATA`` in `expected_report_data.py` contains exepected
+The variable ``TEST_DATA`` in `expected_report_data.py <https://github.com/IQDM/IQDM-PDF/blob/master/tests/test_data/expected_report_data.py>`__ contains exepected
 data and paths to PDFs for all vendors. An example output from
 `TEST_DATA[vendor][example_description]`:
 
@@ -41,5 +41,5 @@ in a fashion similar to below:
             self.do_setup_for_vendor("new_vendor")
 
 
-And ``PARSERS`` near the top of `test_report_parsers.py` should be updated
+Then just update ``PARSERS`` near the top of `test_report_parsers.py`
 with a "new_vendor" key pointing to the new report parser.

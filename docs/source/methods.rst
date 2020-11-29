@@ -7,16 +7,16 @@ extract text and coordinates from IMRT QA PDF files.
 
 Step 1: Match Report Parser
 ============================
-All of the text is extracted from the PDF into a simple string. Each report
-parser has an ``identifiers`` property which is a list of strings. If all of
-the identifier strings are found in the extracted text, that report parser
-will be selected.
+Each report parser has an ``identifiers`` property which contain words and
+phrases used to uniquely pair a PDF to a report parser. If all of the
+identifiers are found in the PDF text, that report parser will be
+selected.
 
 Step 2: Parse Data by Text Box Coordinates
 ===========================================
-The text data is collected with the selected report parser, stored by page
-along with the bounding box coordinates.  Report parsers can look up a text
-value by page and coordinate.
+The text data is collected with the selected report parser, which is stored by
+page and bounding box coordinates. Report parsers can look up a text value by
+page and coordinate.
 
 Step 3: Apply Template
 ======================
@@ -72,7 +72,7 @@ report parser for examples/inspiration.
 
 Building a New Template
 =======================
-Currently, building a new template requires some python coding. The output
+Currently, building a new JSON template requires some python coding. The output
 from the following code will show all text bounding box coordinates and
 contents.
 
@@ -124,13 +124,12 @@ The ``data`` object in the resulting JSON file for this data would look like:
 
 
 The ``pos`` element is assumed to be the bottom left corner of the bounding
-box by default. If the PDF layout has centered or right-aligned, you can
-also specify ``mode`` to be any combination of bottom/center/top and
+box by default. If the PDF layout has centered or right-aligned elements, you
+can specify ``mode`` to be any combination of bottom/center/top and
 left/center/right. For example, ``top-right`` or ``center-left``;
-``center`` is equivalent to ``center-center``.
-
-For example, if an element is more consistently found at the center of a
-bounding box, the ``data`` element could look like:
+``center`` is equivalent to ``center-center``. For example, if an element is
+more consistently found at the center of a bounding box, the ``data`` element
+could look like:
 
 .. code-block:: json
 
