@@ -139,11 +139,51 @@ class Delta4Report(ParserBase):
         str
             Plan date from DICOM
         """
-        date = self.meas_plan_info_block[1]
-        if ":" in date:
-            if date.count("/") == 2 or date.count(".") == 2:
-                return date
-        return self.meas_plan_info_block[2]
+        return self.find_nth_date_in_block(0)
+
+    def find_nth_date_in_block(self, n):
+        """Find the nth date from meas_plan_info_block
+
+        Parameters
+        ----------
+        n : int
+            The index of date lines in meas_plan_info_block
+
+        Returns
+        ----------
+        str
+            The nth date in meas_plan_info_block
+        """
+        plan_info = self.meas_plan_info_block
+        indices = self.find_date_indices(plan_info)
+        if n < len(indices):
+            index = indices[n]
+            if index < len(plan_info):
+                return plan_info[index]
+        return ""
+
+    @staticmethod
+    def find_date_indices(lines):
+        """Search through a list of strings for a date time
+
+        Parameters
+        ----------
+        lines : list
+            A list of strings, some of which have date and time
+
+        Returns
+        ----------
+        list
+            A list of indices of lines that contain date times
+        """
+        indices = []
+        for i, line in enumerate(lines):
+            if ":" in line:
+                if line.count("/") == 2 or line.count(".") == 2:
+                    indices.append(i)
+            elif line.count("/") == 2 or line.count(".") == 2:
+                indices.append(i)
+        return indices
 
     @property
     def meas_date(self):
@@ -154,11 +194,7 @@ class Delta4Report(ParserBase):
         str
             Date of QA measurement
         """
-        plan_date = self.meas_plan_info_block[1]
-        if ":" in plan_date:
-            if plan_date.count("/") == 2 or plan_date.count(".") == 2:
-                return self.meas_plan_info_block[2]
-        return self.meas_plan_info_block[4]
+        return self.find_nth_date_in_block(1)
 
     @property
     def radiation_dev(self):
