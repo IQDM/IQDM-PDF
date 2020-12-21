@@ -1,7 +1,7 @@
 IQDM-PDF
 ========
 
-|build| |Docs| |pypi| |python-version| |lgtm| |lgtm-cq| |Codecov| |code-style|
+|build| |Docs| |pypi| |python-version| |lgtm| |lgtm-cq| |Codecov| |lines| |repo-size| |code-style|
 
 What does it do?
 ----------------
@@ -143,6 +143,12 @@ Example IMRT QA reports used for unit testing and design are available `here <ht
 .. |Docs| image:: https://readthedocs.org/projects/iqdm-pdf/badge/?version=latest
    :target: https://iqdm-pdf.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
+.. |lines| image:: https://img.shields.io/tokei/lines/github/iqdm/iqdm-pdf
+   :target: https://img.shields.io/tokei/lines/github/iqdm/iqdm-pdf
+   :alt: Lines of code
+.. |repo-size| image:: https://img.shields.io/github/languages/code-size/iqdm/iqdm-pdf
+   :target: https://img.shields.io/github/languages/code-size/iqdm/iqdm-pdf
+   :alt: Repo Size
 .. |code-style| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
    :alt: Code style: black
