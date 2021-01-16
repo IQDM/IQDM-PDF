@@ -21,7 +21,8 @@ the `AAPM's IMRT Working Group (WGIMRT) <https://www.aapm.org/org/structure/?com
 Dependencies
 ------------
 
--  `pdfminer.six <https://github.com/pdfminer/pdfminer.six>`__
+* `pdfminer.six <https://github.com/pdfminer/pdfminer.six>`__
+* `tqdm <https://github.com/tqdm/tqdm>`__
 
 
 Install
@@ -52,10 +53,10 @@ into your current directory:
 .. code-block:: console
 
     usage: iqdmpdf [-h] [-ie] [-od OUTPUT_DIR] [-of OUTPUT_FILE] [-ver] [-nr]
-                   [-re]
+                   [-re] [-n PROCESSES]
                    [init_directory]
 
-    Command line interface for IQDM
+    Command line interface for IQDM-PDF
 
     positional arguments:
       init_directory        Initiate scan here
@@ -76,6 +77,10 @@ into your current directory:
       -nr, --no-recursive-search
                             Include this flag to skip sub-directories
       -re, --raise-errors   Allow failed file parsing to halt the program
+      -n PROCESSES, --processes PROCESSES
+                            Enable multiprocessing, set number of parallel
+                            processes
+
 
 
 

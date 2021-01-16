@@ -4,12 +4,12 @@
 # file_processor.py
 """Process IMRT QA file(s) into CSV file(s)"""
 #
-# Copyright (c) 2020 Dan Cutright
+# Copyright (c) 2021 Dan Cutright
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution
 
 from IQDMPDF.parsers.parser import ReportParser
-from IQDMPDF.utilities import get_files
+from IQDMPDF.utilities import get_files, run_multiprocessing
 from datetime import datetime
 from os.path import isfile, join
 from IQDMPDF._version import __version__
@@ -23,6 +23,7 @@ def process_files(
     no_recursive_search=False,
     callback=None,
     raise_errors=False,
+    processes=1,
 ):
     """Process all pdf files into parser classes, write data to csv
 
@@ -43,9 +44,11 @@ def process_files(
         parameter will be dict with keys of "label" and "gauge".
     raise_errors : bool
         Set to True to allow errors to be raised (useful for debugging)
+    processes : int
+        Number of parallel processes allowed
     """
 
-    time_stamp = str(datetime.now()).replace(":", "-").replace(".", "-")
+    time_stamp = str(datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
     if output_file is None:
         output_file = "results_%s.csv" % time_stamp
 
@@ -53,18 +56,76 @@ def process_files(
     search_sub_dir = not no_recursive_search
     files = get_files(init_directory, search_sub_dir, extension)
 
-    for i, file in enumerate(files):
-        if callback is not None:
-            label = "Processing (%s of %s): %s" % (i + 1, len(files), file)
-            gauge = float(i) / float(len(files))
-            callback({"label": label, "gauge": gauge})
-        try:
-            process_file(file, output_file, output_dir)
-        except Exception as e:
-            if raise_errors:
-                raise e
-            else:
-                print(str(e))
+    if processes == 1:
+        for i, file in enumerate(files):
+            if callback is not None:
+                label = "Processing (%s of %s): %s" % (i + 1, len(files), file)
+                gauge = float(i) / float(len(files))
+                callback({"label": label, "gauge": gauge})
+            try:
+                process_file(file, output_file, output_dir)
+            except Exception as e:
+                if raise_errors:
+                    raise e
+                else:
+                    print(str(e))
+    else:
+        # Multiprocessing
+        print("Processing %s file(s) ..." % len(files))
+        all_data = run_multiprocessing(process_file_worker, files, processes)
+
+        print("Writing results to file(s) ...")
+
+        # remove failed parsing
+        all_data = [row for row in all_data if row["report_type"] is not None]
+
+        report_types = list(set([row["report_type"] for row in all_data]))
+
+        sorted_data = {key: [] for key in report_types}
+        columns = {}
+        for row in all_data:
+            report_type = row["report_type"]
+            sorted_data[report_type].append(row["data"])
+            if report_type not in columns.keys():
+                columns[report_type] = row["columns"]
+
+        for report_type, data in sorted_data.items():
+            current_file = "%s_%s" % (report_type, output_file)
+            if output_dir is not None:
+                current_file = join(output_dir, current_file)
+
+            output = [",".join(columns[report_type])]
+            output.extend(data)
+            with open(current_file, "w") as csv:
+                csv.write("\n".join(output))
+
+            print("%s data written to %s" % (report_type, current_file))
+
+
+def process_file_worker(file_path):
+    """Mutliprocessing worker function
+
+    Parameters
+    ----------
+    file_path : str
+        PDF file to be passed to ReportParser
+
+    Returns
+    -------
+    dict
+        {"data": ReportParser.csv, "report_type": ReportParser.report_type,
+        "columns": ReportParser.columns}
+    """
+    data, report_type, columns = None, None, None
+    try:
+        parser = ReportParser(file_path)
+        if parser.report is not None:
+            data = parser.csv
+            report_type = parser.report_type
+            columns = parser.columns
+    except Exception:
+        pass
+    return {"data": data, "report_type": report_type, "columns": columns}
 
 
 def process_file(file_path, output_file, output_dir=None):
@@ -129,6 +190,12 @@ def validate_kwargs(kwargs, add_print_callback=True):
     if add_print_callback:
         kwargs["callback"] = print_callback
 
+    # command line args are strings
+    try:
+        kwargs["processes"] = int(float(kwargs["processes"]))
+    except Exception:
+        kwargs["processes"] = 1
+
     keys = [
         "init_directory",
         "ignore_extension",
@@ -137,6 +204,7 @@ def validate_kwargs(kwargs, add_print_callback=True):
         "no_recursive_search",
         "raise_errors",
         "callback",
+        "processes",
     ]
     return {key: kwargs[key] for key in keys if key in list(kwargs)}
 
