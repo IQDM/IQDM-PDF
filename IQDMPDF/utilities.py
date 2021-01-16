@@ -4,13 +4,15 @@
 # utilities.py
 """Common functions for IQDM-PDF"""
 #
-# Copyright (c) 2020 Dan Cutright
+# Copyright (c) 2021 Dan Cutright
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution
 
 from os.path import join, splitext, normpath
 from os import walk, listdir, sep
 import argparse
+from multiprocessing import Pool
+from tqdm import tqdm
 
 
 def are_all_strings_in_text(text, list_of_strings):
@@ -259,7 +261,7 @@ def create_arg_parser():
         Argument parsers for command-line use of IQDM-PDF
     """
     cmd_parser = argparse.ArgumentParser(
-        description="Command line interface for IQDM"
+        description="Command line interface for IQDM-PDF"
     )
     cmd_parser.add_argument(
         "-ie",
@@ -311,4 +313,42 @@ def create_arg_parser():
         default=False,
         action="store_true",
     )
+    cmd_parser.add_argument(
+        "-n",
+        "--processes",
+        dest="processes",
+        help="Enable multiprocessing, set number of parallel processes",
+        default=1,
+    )
     return cmd_parser
+
+
+def run_multiprocessing(worker, queue, processes):
+    """Parallel processing
+
+    Parameters
+    ----------
+    worker : callable
+        single parameter function to be called on each item in queue
+    queue : iterable
+        A list of arguments for worker
+    processes : int
+        Number of processes for multiprocessing.Pool
+
+    Returns
+    -------
+    list
+        List of returns from worker
+
+    """
+    progress_kwargs = {
+        "total": len(queue),
+        "bar_format": "{desc:<5.5}{percentage:3.0f}%|{bar:30}{r_bar}",
+    }
+    data = []
+    with Pool(processes=processes) as pool:
+        with tqdm(**progress_kwargs) as pbar:
+            for item in pool.imap_unordered(worker, queue):
+                data.append(item)
+                pbar.update()
+    return data

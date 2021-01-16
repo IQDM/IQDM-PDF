@@ -1,7 +1,7 @@
 IQDM-PDF
 ========
 
-|build| |Docs| |pypi| |python-version| |lgtm| |lgtm-cq| |Codecov| |code-style|
+|build| |Docs| |pypi| |python-version| |lgtm| |lgtm-cq| |Codecov| |lines| |repo-size| |code-style|
 
 What does it do?
 ----------------
@@ -21,7 +21,8 @@ the `AAPM's IMRT Working Group (WGIMRT) <https://www.aapm.org/org/structure/?com
 Dependencies
 ------------
 
--  `pdfminer.six <https://github.com/pdfminer/pdfminer.six>`__
+* `pdfminer.six <https://github.com/pdfminer/pdfminer.six>`__
+* `tqdm <https://github.com/tqdm/tqdm>`__
 
 
 Install
@@ -52,10 +53,10 @@ into your current directory:
 .. code-block:: console
 
     usage: iqdmpdf [-h] [-ie] [-od OUTPUT_DIR] [-of OUTPUT_FILE] [-ver] [-nr]
-                   [-re]
+                   [-re] [-n PROCESSES]
                    [init_directory]
 
-    Command line interface for IQDM
+    Command line interface for IQDM-PDF
 
     positional arguments:
       init_directory        Initiate scan here
@@ -76,6 +77,10 @@ into your current directory:
       -nr, --no-recursive-search
                             Include this flag to skip sub-directories
       -re, --raise-errors   Allow failed file parsing to halt the program
+      -n PROCESSES, --processes PROCESSES
+                            Enable multiprocessing, set number of parallel
+                            processes
+
 
 
 
@@ -143,6 +148,12 @@ Example IMRT QA reports used for unit testing and design are available `here <ht
 .. |Docs| image:: https://readthedocs.org/projects/iqdm-pdf/badge/?version=latest
    :target: https://iqdm-pdf.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
+.. |lines| image:: https://img.shields.io/tokei/lines/github/iqdm/iqdm-pdf
+   :target: https://img.shields.io/tokei/lines/github/iqdm/iqdm-pdf
+   :alt: Lines of code
+.. |repo-size| image:: https://img.shields.io/github/languages/code-size/iqdm/iqdm-pdf
+   :target: https://img.shields.io/github/languages/code-size/iqdm/iqdm-pdf
+   :alt: Repo Size
 .. |code-style| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
    :alt: Code style: black
