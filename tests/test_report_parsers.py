@@ -87,6 +87,14 @@ class TestSNCPatient2020(TestReportParserBase, unittest.TestCase):
     def setUp(self):
         self.do_setup_for_vendor("sncpatient2020")
 
+    def test_append_column_to_existing_ignore(self):
+        """Test that column gets assigned to a pre-existing ignored array """
+        parser = PARSERS["sncpatient2020"]()
+        column = "Patient Name"
+        parser.LUT[column]["ignored"] = []
+        parser._assign_ignored(column, parser.LUT[column])
+        self.assertEqual(parser.LUT[column]["ignored"], [column])
+
 
 class TestDelta4(TestReportParserBase, unittest.TestCase):
     def setUp(self):

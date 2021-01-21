@@ -352,3 +352,23 @@ def run_multiprocessing(worker, queue, processes):
                 data.append(item)
                 pbar.update()
     return data
+
+
+def is_numeric(val):
+    """Check if value is numeric (float or int)
+
+    Parameters
+    ----------
+    val : any
+        Any value
+
+    Returns
+    -------
+    bool
+        Returns true if float(val) doesn't raise a ValueError
+    """
+    try:
+        float(val)
+        return True
+    except ValueError:
+        return False
