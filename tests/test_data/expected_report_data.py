@@ -483,6 +483,6 @@ TEST_DATA = {
                 "Total Points": "1115",
                 "Notes": "6X SLF",
             },
-        }
+        },
     },
 }
