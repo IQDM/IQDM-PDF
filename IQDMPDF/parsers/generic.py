@@ -74,7 +74,9 @@ class GenericReport(ParserBase):
             or is not numeric (and return an empty string if not met). The
             JSON object can also have "alternates" which contains an array of
             data like items that will be checked until a value for a column is
-            found.
+            found. "ignored" is another option, if a value is returned that is
+            in this array, an empty string will be returned instead. The value
+            of "column" is automatically added to the "ignored" array.
         text_cleaner : callable, optional
             A function called on each text element (e.g., remove leading ':')
         """
@@ -87,15 +89,39 @@ class GenericReport(ParserBase):
         self.report_type = self.json_data["report_type"]
         self.identifiers = self.json_data["identifiers"]
         self.columns = [el["column"] for el in self.json_data["data"]]
+
         self.LUT = {
             el["column"]: {
                 key: value for key, value in el.items() if key != "column"
             }
             for el in self.json_data["data"]
         }
+        self._process_ignored_from_json(self.LUT)
+
         self.text_cleaner = text_cleaner
 
         self.missing_columns = []
+
+    def _process_ignored_from_json(self, LUT):
+        """Add column to ignored key in each json_data data item
+
+        Parameters
+        ----------
+        LUT : dict
+            Processed dictionary from self.json_data["data"] or
+            self.json_data["alternates"] where keys are values from "column"
+
+        """
+        for column, data in LUT.items():
+            self._assign_ignored(column, data)
+
+    @staticmethod
+    def _assign_ignored(column, data):
+        if "ignored" in data.keys():
+            if column not in data["ignored"]:
+                data["ignored"].append(column)
+        else:
+            data["ignored"] = [column]
 
     def __call__(self, report_file_path):
         """Process an IMRT QA report PDF
@@ -125,33 +151,24 @@ class GenericReport(ParserBase):
             for c in self.columns
         }
 
-        for key in list(data):
-            data[key] = self._extract_value(data, key)
-            if data[key] == "":
-                self.missing_columns.append(key)
-
-        data = self._apply_alternates(data)
+        self._process_block_data(data)
+        self._apply_alternates(data)
 
         return data
 
-    def _extract_value(self, data, key):
-        """Get first value found, ignore if value equal to column name
+    def _process_block_data(self, data):
+        """Get the first item in data blocks, update missing_columns
 
         Parameters
         ----------
         data : dict
-            Data from CustomPDFReader.get_block_data
-        key : str
+            Has values of the return from CustomPDFReader.get_block_data
 
-        Returns
-        -------
-        str
-            First element in data or "" if empty
         """
-        new = data[key][0] if len(data[key]) else ""
-        if new.strip() == key.strip():
-            new = ""
-        return new
+        for key in list(data):
+            data[key] = data[key][0] if len(data[key]) else ""
+            if data[key] == "":
+                self.missing_columns.append(key)
 
     def _apply_alternates(self, data):
         """Check json_data["alternates"] for alternate instructions. Unlike
@@ -173,13 +190,14 @@ class GenericReport(ParserBase):
             for alternate in self.json_data["alternates"]:
                 key = alternate["column"]
                 alt = {k: v for k, v in alternate.items() if k != "column"}
+                self._assign_ignored(key, alt)
+                alt["ignored"].extend(self.LUT[key])
                 if key in self.missing_columns:
                     data[key] = self.data.get_block_data(
                         **alt, text_cleaner=self.text_cleaner
                     )
-                    data[key] = self._extract_value(data, key)
+                    data[key] = data[key][0] if len(data[key]) else ""
                     if data[key] != "":
                         self.missing_columns.pop(
                             self.missing_columns.index(key)
                         )
-        return data

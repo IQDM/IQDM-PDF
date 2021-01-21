@@ -107,6 +107,7 @@ class CustomPDFReader:
         tol=TOLERANCE,
         text_cleaner=None,
         numeric=None,
+        ignored=None,
         mode="bottom-left",
     ):
         """Use PDFPageParser.get_block_data for the provided page
@@ -126,6 +127,10 @@ class CustomPDFReader:
         numeric : bool, optional
             If true, only return value if it is numeric. If false, only return
             value if it is not numeric. Leave as None to ignore this feature.
+        ignored : list, optional
+            Optionally provide a list of strings that should be ignored. If
+            the value of the block data is in this list, the value will become
+            an empty string instead
         mode : str, optional
             Options are combinations of top/center/bottom and
             right/center/left, e.g., 'top-right', 'center-right'.
@@ -138,7 +143,12 @@ class CustomPDFReader:
             All text data that meet the input constraints
         """
         return self.page[page].get_block_data(
-            pos, tol, text_cleaner=text_cleaner, numeric=numeric, mode=mode
+            pos,
+            tol,
+            text_cleaner=text_cleaner,
+            numeric=numeric,
+            ignored=ignored,
+            mode=mode,
         )
 
     def convert_pdf_to_text(self):
@@ -302,7 +312,13 @@ class PDFPageParser:
             self.data[key] = [self.data[key][i] for i in sorted_indices]
 
     def get_block_data(
-        self, pos, tol, text_cleaner=None, numeric=None, mode="bottom-left"
+        self,
+        pos,
+        tol,
+        text_cleaner=None,
+        numeric=None,
+        ignored=None,
+        mode="bottom-left",
     ):
         """Get the text block data by x,y coordinates
 
@@ -319,6 +335,10 @@ class PDFPageParser:
         numeric : bool, optional
             If true, only return value if it is numeric. If false, only return
             value if it is not numeric. Leave as None to ignore this feature.
+        ignored : list, optional
+            Optionally provide a list of strings that should be ignored. If
+            the value of the block data is in this list, the value will become
+            an empty string instead
         mode : str, optional
             Options are combinations of top/center/bottom and
             right/center/left, e.g., 'top-right', 'center-right'.
@@ -344,7 +364,11 @@ class PDFPageParser:
                     if text_cleaner is None
                     else text_cleaner(data)
                 )
-                if numeric is not None:
+
+                if ignored is not None and data_clean in ignored:
+                    data_clean = ""
+
+                if data_clean and numeric is not None:
                     data_is_numeric = is_numeric(data_clean)
                     if (numeric and not data_is_numeric) or (
                         not numeric and data_is_numeric
