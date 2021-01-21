@@ -90,6 +90,8 @@ class GenericReport(ParserBase):
         }
         self.text_cleaner = text_cleaner
 
+        self.missing_columns = []
+
     def __call__(self, report_file_path):
         """Process an IMRT QA report PDF
 
@@ -117,6 +119,62 @@ class GenericReport(ParserBase):
             )
             for c in self.columns
         }
+
         for key in list(data):
-            data[key] = data[key][0] if len(data[key]) else ""
+            data[key] = self._extract_value(data, key)
+            if data[key] == "":
+                self.missing_columns.append(key)
+
+        data = self._apply_alternates(data)
+
+        return data
+
+    def _extract_value(self, data, key):
+        """Get first value found, ignore if value equal to column name
+
+        Parameters
+        ----------
+        data : dict
+            Data from CustomPDFReader.get_block_data
+        key : str
+
+        Returns
+        -------
+        str
+            First element in data or "" if empty
+        """
+        new = data[key][0] if len(data[key]) else ""
+        if new.strip() == key.strip():
+            new = ""
+        return new
+
+    def _apply_alternates(self, data):
+        """Check json_data["alternates"] for alternate instructions. Unlike
+        json_data["data"], multiple instances of a column can exist in
+        alternates. The code will check each item in alternate until a value
+        is found for that column (if a value isn't already found).
+
+        Parameters
+        ----------
+        data : dict
+            Data from CustomPDFReader.get_block_data
+
+        Returns
+        -------
+        dict
+            data edited by alternates if value is an empty string
+        """
+        if "alternates" in self.json_data:
+            for alternate in self.json_data["alternates"]:
+                key = alternate["column"]
+                alt = {k: v for k, v in alternate.items() if k != "column"}
+                if key in self.missing_columns:
+                    data[key] = self.data.get_block_data(
+                        **alt, text_cleaner=self.text_cleaner
+                    )
+                    data[key] = self._extract_value(data, key)
+                    if data[key] != "":
+                        self.missing_columns.pop(
+                            self.missing_columns.index(key)
+                        )
         return data
