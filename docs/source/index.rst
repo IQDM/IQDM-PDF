@@ -9,7 +9,7 @@ Welcome to the documentation for IQDM-PDF!
    Module Reference <modules>
    testing
    authors
-
+   history
 
 
 Indices and tables

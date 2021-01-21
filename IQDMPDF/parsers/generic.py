@@ -48,7 +48,7 @@ class ParserBase:
         Returns
         ----------
         str
-            Output from utilities.get_csv_row. File path automatically
+            Output from ``utilities.get_csv_row``. File path automatically
             appended to data
         """
         return get_csv_row(self.summary_data, self.columns)
@@ -69,7 +69,12 @@ class GenericReport(ParserBase):
             The format of each data element should be
             {'column': [str], 'page': [int], 'pos': [float, float]}.
             Optionally, you can also supply 'tol', which is either
-            an integer or a list of integers (i.e., [x_tol, y_tol]).
+            an integer or a list of integers (i.e., [x_tol, y_tol]). Also,
+            specifying 'numeric' with a boolean value will ensure the value is
+            or is not numeric (and return an empty string if not met). The
+            JSON object can also have "alternates" which contains an array of
+            data like items that will be checked until a value for a column is
+            found.
         text_cleaner : callable, optional
             A function called on each text element (e.g., remove leading ':')
         """

@@ -40,6 +40,12 @@ Install from source:
 
     $ python setup.py install
 
+If you do not have a C++ compiler installed, you might have issues with
+installing the latest version of pdfminer.six. The following might resolve
+your issue:
+
+    $ pip install pdfminer.six==20200726
+
 
 Usage
 -----
@@ -49,6 +55,10 @@ into your current directory:
 
     $ iqdmpdf [init_directory]
 
+As of v0.2.2, multi-threading is enabled. For example, you can enable 4
+simultaneous threads with the following:
+
+    $ iqdmpdf [init_directory] -n 4
 
 .. code-block:: console
 

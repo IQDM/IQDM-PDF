@@ -142,7 +142,7 @@ class CustomPDFReader:
         )
 
     def convert_pdf_to_text(self):
-        """ "Extract text and coordinates from a PDF"""
+        """Extract text and coordinates from a PDF"""
 
         # Open a PDF file.
         fp = open(self.file_path, "rb")
@@ -200,7 +200,7 @@ class CustomPDFReader:
         Returns
         ----------
         dict
-            Keys are {"page": [int], "bbox": list}
+             "page"->int and "bbox"->[x0, y0, x1, y1]
 
         """
         for p, page in enumerate(self.page):

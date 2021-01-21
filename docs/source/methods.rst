@@ -72,9 +72,9 @@ report parser for examples/inspiration.
 
 Building a New Template
 =======================
-Currently, building a new JSON template requires some python coding. The output
-from the following code will show all text bounding box coordinates and
-contents.
+Currently, building a new JSON template requires some python scripting to
+determine coordinates. The output from the following code will show all text
+bounding box coordinates and contents.
 
 .. code-block:: python
 
@@ -122,14 +122,17 @@ The ``data`` object in the resulting JSON file for this data would look like:
         {"column": "Threshold (%)", "page": 0, "pos": [79.2, 420.7]}
     ]
 
+Note that the value for ``column`` doesn't need to match any text in the PDF.
+
 
 The ``pos`` element is assumed to be the bottom left corner of the bounding
 box by default. If the PDF layout has centered or right-aligned elements, you
 can specify ``mode`` to be any combination of bottom/center/top and
-left/center/right. For example, ``top-right`` or ``center-left``;
-``center`` is equivalent to ``center-center``. For example, if an element is
-more consistently found at the center of a bounding box, the ``data`` element
-could look like:
+left/center/right. (*e.g.*, ``top-right`` or ``center-left``;
+``center`` is equivalent to ``center-center``).
+
+For example, if an element is more consistently found at the center of a
+bounding box, the ``data`` element could look like:
 
 .. code-block:: json
 
