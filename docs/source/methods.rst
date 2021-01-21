@@ -23,10 +23,10 @@ Step 3: Apply Template
 Unless customized logic is needed, a `GenericParser <https://iqdm-pdf.readthedocs.io/en/latest/iqdmpdf.html#module-IQDMPDF.parsers.generic>`__
 class can be used, which reads in a  JSON file containing three keys:
 ``report type``, ``identifiers``, and ``data``. Required keys of ``data``
-are ``column``, ``page``, and ``pos``. For further customization, ``tolerance``
-and ``mode`` can be specified. All keys from ``data`` (except ``column``) are
-passed into the `get_block_data <https://iqdm-pdf.readthedocs.io/en/latest/iqdmpdf.html#IQDMPDF.pdf_reader.CustomPDFReader.get_block_data>`__
-function in ``CustomPDFReader``.
+are ``column``, ``page``, and ``pos``. For further customization, see
+the `get_block_data <https://iqdm-pdf.readthedocs.io/en/latest/iqdmpdf.html#IQDMPDF.pdf_reader.CustomPDFReader.get_block_data>`__
+function documentation in ``CustomPDFReader``. All keys from ``data`` (except
+``column``) are passed.
 
 Check out the `report templates <https://github.com/IQDM/IQDM-PDF/tree/master/IQDMPDF/report_templates>`__
 on GitHub for examples.

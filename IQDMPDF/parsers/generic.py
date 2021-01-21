@@ -117,6 +117,7 @@ class GenericReport(ParserBase):
 
     @staticmethod
     def _assign_ignored(column, data):
+        """Ensure data has ignored key, ensure column is in data['ignored']"""
         if "ignored" in data.keys():
             if column not in data["ignored"]:
                 data["ignored"].append(column)
