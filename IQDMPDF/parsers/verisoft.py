@@ -174,9 +174,37 @@ class VeriSoftReport(ParserBase):
 
     @staticmethod
     def _get_block_element(block, index):
+        """Get Value of block[index], or return 'N/A' if block is ``None``
+
+        Parameters
+        ----------
+        block : list
+            text block data (e.g, gamma_results_block)
+        index : int
+            index of block to return
+
+        Returns
+        -------
+        str
+            Value of ``block``[``index``] of "N/A"
+        """
         return block[index] if block is not None else "N/A"
 
     def _get_diff_position(self, key, index):
+        """Used for Gamma & Abs Dose diff min and max positions
+
+        Parameters
+        ----------
+        key : str
+            Anchor key
+        index : int
+            index of anchors[key].split("\n")
+
+        Returns
+        -------
+        dict
+            "x" and "y" positions (with units)
+        """
         x, y = ["N/A", ""], ["N/A", ""]
         anchor = self.anchors[key]
         if anchor is not None:
@@ -187,6 +215,7 @@ class VeriSoftReport(ParserBase):
         return {"x": x[0] + x[1], "y": y[0] + y[1]}
 
     def _set_manipulations_data(self):
+        """Set data from the Manipulations table"""
         key = "Calibrate Air Density"
         data = self.data.get_block_data(
             self.anchors[key]["page"],
@@ -212,42 +241,98 @@ class VeriSoftReport(ParserBase):
     ########################################################################
     @property
     def institution(self):
+        """Get the institution
+
+        Returns
+        -------
+        str
+            Institution from Administrative Data table
+        """
         return self.admin_block[0].strip()
 
     @property
     def physicist(self):
+        """Get the physicist
+
+        Returns
+        -------
+        str
+            Physicist from Administrative Data table
+        """
         return self.admin_block[1].strip()
 
     @property
     def patient_id(self):
+        """Get the patient ID
+
+        Returns
+        -------
+        str
+            Patient ID from Administrative Data table
+        """
         return self.admin_block[2].strip()
 
     @property
     def patient_name(self):
+        """Get the patient name
+
+        Returns
+        -------
+        str
+            Patient name from Administrative Data table
+        """
         return self.admin_block[-2].strip()
 
     @property
     def comment(self):
+        """Get the comment
+
+        Returns
+        -------
+        str
+            Comment from Administrative Data table
+        """
         return self.admin_block[-1].strip()
 
     ########################################################################
     # Dataset Block
     ########################################################################
     @property
-    def data_set_b_index(self):
+    def _data_set_b_index(self):
+        """Find the index of Data Set B in the Data Set block
+
+        Returns
+        -------
+        int
+            index of Data Set B in the Data Set block
+        """
         for i, line in enumerate(self.data_set_block):
             if "Data Set B" in line:
                 return i
 
     @property
     def data_set_a(self):
-        i = self.data_set_b_index
+        """Get Data Set A file path
+
+        Returns
+        -------
+        str
+            Data Set A file path
+        """
+        i = self._data_set_b_index
         if i is not None:
             return "".join(self.data_set_block[1:i]).strip()
 
     @property
     def data_set_b(self):
-        i = self.data_set_b_index
+        """Get Data Set B file path(s)
+
+        Returns
+        -------
+        str
+            Strings after _data_set_b_index joined by \n
+        """
+        i = self._data_set_b_index
         if i is not None:
             return "\n".join(self.data_set_block[i:]).strip()
 
@@ -256,17 +341,50 @@ class VeriSoftReport(ParserBase):
     ########################################################################
     @property
     def calibrate_air_density(self):
+        """Get the Calibrate Air Density value
+
+        Returns
+        -------
+        str
+            Calibrate Air Density from Manipulations table
+        """
         return self._get_manipulation_value("kUser")
 
     @property
     def set_zero_x(self):
+        """Get the Set Zero x value
+
+        Returns
+        -------
+        str
+            Get the Set Zero x from Manipulations table
+        """
         return self._get_manipulation_value("LR")
 
     @property
     def set_zero_y(self):
+        """Get the Set Zero y value
+
+        Returns
+        -------
+        str
+            Get the Set Zero y from Manipulations table
+        """
         return self._get_manipulation_value("TG")
 
     def _get_manipulation_value(self, key):
+        """Get a manipulation_data value
+
+        Parameters
+        ----------
+        key : str
+            key for manipulations_data (e.g., kUsers, TG, LR)
+
+        Returns
+        -------
+        str
+            Value from manipulations_data or an emtpy string
+        """
         if self.manipulations_data is not None:
             if key in self.manipulations_data.keys():
                 return self.manipulations_data[key]
@@ -277,22 +395,57 @@ class VeriSoftReport(ParserBase):
     ########################################################################
     @property
     def gamma_dist(self):
+        """Get the Gamma Distance to Agreement setting
+
+        Returns
+        -------
+        str
+            DTA from Gamma 2D - Parameters
+        """
         return "".join(self.gamma_param_block[1].strip().split(" ")[0:2])
 
     @property
     def gamma_dose(self):
+        """Get the Gamma Dose difference value
+
+        Returns
+        -------
+        str
+            Gamma Dose Difference value from Gamma 2D - Parameters
+        """
         return "".join(self.gamma_param_block[2].strip().split(" ")[0:2])
 
     @property
     def gamma_dose_info(self):
+        """Get the Gamma Dose difference info
+
+         Returns
+         -------
+         str
+             Gamma Dose Difference normalization from Gamma 2D - Parameters
+         """
         return " ".join(self.gamma_param_block[2].strip().split(" ")[2:])
 
     @property
     def threshold(self):
+        """Get the Gamma Dose threshold value
+
+         Returns
+         -------
+         str
+             Gamma Dose threshold value from Gamma 2D - Parameters
+         """
         return "".join(self.gamma_param_block[4].strip().split(" ")[3:5])
 
     @property
     def threshold_info(self):
+        """Get the Gamma Dose threshold info
+
+         Returns
+         -------
+         str
+             Gamma Dose threshold info from Gamma 2D - Parameters
+         """
         return " ".join(self.gamma_param_block[4].strip().split(" ")[5:])
 
     ########################################################################
@@ -300,6 +453,13 @@ class VeriSoftReport(ParserBase):
     ########################################################################
     @property
     def gamma_diff(self):
+        """Get all of the Gamma 2D values
+
+        Returns
+        -------
+        dict
+            Mean, min, max, median Gamma values from Gamma 2D
+        """
         return {
             key: self._get_block_element(self.gamma_results_block, i)
             for i, key in enumerate(["mean", "min", "max", "median"])
@@ -307,10 +467,24 @@ class VeriSoftReport(ParserBase):
 
     @property
     def gamma_min_pos(self):
+        """Get the min gamma position
+
+        Returns
+        -------
+        dict
+            'x' and 'y' positions of the minimum gamma value
+        """
         return self._get_diff_position("Gamma 2D", 2)
 
     @property
     def gamma_max_pos(self):
+        """Get the max gamma position
+
+        Returns
+        -------
+        dict
+            'x' and 'y' positions of the maximum gamma value
+        """
         return self._get_diff_position("Gamma 2D", 3)
 
     ########################################################################
@@ -318,6 +492,13 @@ class VeriSoftReport(ParserBase):
     ########################################################################
     @property
     def abs_diff(self):
+        """Get all of the Absolute Difference values
+
+        Returns
+        -------
+        dict
+            Mean, min, max, median Absolute Difference values
+        """
         return {
             key: self._get_block_element(self.abs_diff_block, i)
             for i, key in enumerate(["mean", "min", "max", "median"])
@@ -325,10 +506,24 @@ class VeriSoftReport(ParserBase):
 
     @property
     def abs_diff_min_pos(self):
+        """Get the min absolute dose diff position
+
+         Returns
+         -------
+         dict
+             'x' and 'y' positions of the min absolute dose diff value
+         """
         return self._get_diff_position("Absolute Difference", 2)
 
     @property
     def abs_diff_max_pos(self):
+        """Get the max absolute dose diff position
+
+         Returns
+         -------
+         dict
+             'x' and 'y' positions of the maximum absolute dose diff value
+         """
         return self._get_diff_position("Absolute Difference", 3)
 
     ########################################################################
@@ -336,38 +531,101 @@ class VeriSoftReport(ParserBase):
     ########################################################################
     @property
     def num_dose_points(self):
+        """Number of Dose Points from Statistics table
+
+        Returns
+        -------
+        str
+            Number of Dose Points
+        """
         return self.stats_block[0]
 
     @property
     def eval_dose_points(self):
+        """Evaluated Dose Points from Statistics table
+
+        Returns
+        -------
+        str
+            Evaluated Dose Points
+        """
         return self.stats_block[1].split(" ")[0]
 
     @property
     def eval_dose_points_percent(self):
+        """Evaluated Dose Points (%) from Statistics table
+
+        Returns
+        -------
+        str
+            Evaluated Dose Points (%)
+        """
         return self.stats_block[1].split("(")[1].strip().split(" ")[0] + "%"
 
     @property
     def passed_points(self):
+        """Passed Dose Points from Statistics table
+
+        Returns
+        -------
+        str
+            Passed Dose Points
+        """
         return self.stats_block[2].split("(")[0].strip()
 
     @property
     def passed_points_percent(self):
+        """Passed Dose Points (%) from Statistics table
+
+        Returns
+        -------
+        str
+            Passed Dose Points (%)
+        """
         return self.stats_block[2].split("(")[1].strip().split(" ")[0] + "%"
 
     @property
     def failed_points(self):
+        """Failed Dose Points from Statistics table
+
+        Returns
+        -------
+        str
+            Failed Dose Points
+        """
         return self.stats_block[3].split("(")[0].strip()
 
     @property
     def failed_points_percent(self):
+        """Failed Dose Points (%) from Statistics table
+
+        Returns
+        -------
+        str
+            Failed Dose Points (%)
+        """
         return self.stats_block[3].split("(")[1].strip().split(" ")[0] + "%"
 
     @property
     def pass_rate(self):
+        """Result from Statistics table
+
+        Returns
+        -------
+        str
+            Dose point pass rate
+        """
         return self.stats_block[4].split(" ")[0]
 
     @property
     def pass_result_color(self):
+        """Result color from Statistics table
+
+        Returns
+        -------
+        str
+            Result color
+        """
         return self.stats_block[4].split("(")[1].split(")")[0]
 
     ########################################################################
@@ -375,18 +633,46 @@ class VeriSoftReport(ParserBase):
     ########################################################################
     @property
     def passing_criteria(self):
+        """Passing Criteria from the Settings table
+
+        Returns
+        -------
+        str
+            Passing criteria
+        """
         return self.settings_block[0].strip()
 
     @property
     def passing_green(self):
+        """Green threshold from the Settings table
+
+        Returns
+        -------
+        str
+            Minimum pass rate for green status
+        """
         return self.settings_block[1].split(" ")[0] + "%"
 
     @property
     def passing_yellow(self):
+        """Yellow threshold from the Settings table
+
+        Returns
+        -------
+        str
+            Minimum pass rate for yellow status
+        """
         return self.settings_block[2].split(" ")[0] + "%"
 
     @property
     def passing_red(self):
+        """Red threshold from the Settings table
+
+        Returns
+        -------
+        str
+            Minimum pass rate for red status
+        """
         return self.settings_block[3].split(" ")[0] + "%"
 
     ########################################################################
@@ -394,10 +680,24 @@ class VeriSoftReport(ParserBase):
     ########################################################################
     @property
     def date(self):
+        """Date printed in footer of report
+
+        Returns
+        -------
+        str
+            Report date
+        """
         return self.anchors["Date: "]["text"].replace("Date: ", "").strip()
 
     @property
     def version(self):
+        """VeriSoft version printed in footer of report
+
+        Returns
+        -------
+        str
+            Software version
+        """
         return self.anchors["PTW"]["text"].split(" - ")[1].strip()
 
     @property

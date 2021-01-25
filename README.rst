@@ -100,6 +100,7 @@ templates can be found `here <https://iqdm-pdf.readthedocs.io/en/latest/methods.
 
 * `Sun Nuclear <http://sunnuclear.com>`__: *SNC Patient*
 * `ScandiDos <http://scandidos.com>`__: *Delta4*
+* `PTW <https://www.ptwdosimetry.com/>`__: *VeriSoft*
 
 
 Credits
@@ -131,6 +132,9 @@ Example IMRT QA reports used for unit testing and design are available `here <ht
 * Serpil Kucuker Dogan, Nortwestern Memorial Hospital
     * sncpatient/Northwestern_Memorial
     * sncpatient2020/Northwestern_Memorial
+
+* Aditya Panchal, Amita Health
+    * verisoft/AmitaHealth
 
 
 .. |build| image:: https://github.com/IQDM/IQDM-PDF/workflows/build/badge.svg
