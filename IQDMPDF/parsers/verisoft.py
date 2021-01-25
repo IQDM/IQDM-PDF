@@ -51,9 +51,13 @@ class VeriSoftReport(ParserBase):
             "Gamma Max Position Y",
             "Gamma Max Position Y Units",
             "Abs Dose (Min)",
+            "Abs Dose (Min Units)",
             "Abs Dose (Mean)",
+            "Abs Dose (Mean Units)",
             "Abs Dose (Median)",
+            "Abs Dose (Median Units)",
             "Abs Dose (Max)",
+            "Abs Dose (Max Units)",
             "Abs Dose Min Position X",
             "Abs Dose Min Position X Units",
             "Abs Dose Min Position Y",
@@ -505,12 +509,28 @@ class VeriSoftReport(ParserBase):
         Returns
         -------
         dict
-            Mean, min, max, median Absolute Difference values
+            'mean', 'min', 'max', 'median' Absolute Difference values, and
+            'mean_units', etc
         """
-        return {
+
+        ans = {
             key: self._get_block_element(self.abs_diff_block, i)
+            .split(" ")[0]
+            .strip()
             for i, key in enumerate(["mean", "min", "max", "median"])
         }
+
+        for i, key in enumerate(["mean", "min", "max", "median"]):
+            if ans["mean"] != "N/A":
+                ans[key + "_units"] = (
+                    self._get_block_element(self.abs_diff_block, i)
+                    .split(" ")[1]
+                    .strip()
+                )
+            else:
+                ans[key + "_units"] = "N/A"
+
+        return ans
 
     @property
     def abs_diff_min_pos(self):
@@ -756,9 +776,13 @@ class VeriSoftReport(ParserBase):
             "Gamma Max Position Y": gamma_max_pos["y"],
             "Gamma Max Position Y Units": gamma_max_pos["y_units"],
             "Abs Dose (Min)": abs_diff["min"],
+            "Abs Dose (Min Units)": abs_diff["min_units"],
             "Abs Dose (Mean)": abs_diff["mean"],
+            "Abs Dose (Mean Units)": abs_diff["mean_units"],
             "Abs Dose (Median)": abs_diff["median"],
+            "Abs Dose (Median Units)": abs_diff["median_units"],
             "Abs Dose (Max)": abs_diff["max"],
+            "Abs Dose (Max Units)": abs_diff["max_units"],
             "Abs Dose Min Position X": abs_min_pos["x"],
             "Abs Dose Min Position X Units": abs_min_pos["x_units"],
             "Abs Dose Min Position Y": abs_min_pos["y"],
