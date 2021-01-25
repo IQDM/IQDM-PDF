@@ -4,7 +4,7 @@
 # test_report_parsers.py
 """unittest cases for delta4 parser."""
 #
-# Copyright (c) 2020 Dan Cutright
+# Copyright (c) 2021 Dan Cutright
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution, also
 
@@ -14,6 +14,7 @@ from tests.test_data.expected_report_data import TestDataHelper
 from IQDMPDF.pdf_reader import convert_pdf_to_txt
 from IQDMPDF.parsers import sncpatient
 from IQDMPDF.parsers import delta4
+from IQDMPDF.parsers import verisoft
 
 TestDataHelper.__test__ = False
 
@@ -21,6 +22,7 @@ PARSERS = {
     "sncpatient": sncpatient.SNCPatientReport,
     "delta4": delta4.Delta4Report,
     "sncpatient2020": sncpatient.SNCPatientReport2020,
+    "verisoft": verisoft.VeriSoftReport,
 }
 
 
@@ -99,6 +101,11 @@ class TestSNCPatient2020(TestReportParserBase, unittest.TestCase):
 class TestDelta4(TestReportParserBase, unittest.TestCase):
     def setUp(self):
         self.do_setup_for_vendor("delta4")
+
+
+class TestVerisoft(TestReportParserBase, unittest.TestCase):
+    def setUp(self):
+        self.do_setup_for_vendor("verisoft")
 
 
 if __name__ == "__main__":
