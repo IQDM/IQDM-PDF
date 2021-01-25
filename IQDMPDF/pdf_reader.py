@@ -198,7 +198,7 @@ class CustomPDFReader:
         fp.close()
         parser.close()
 
-    def get_bbox_of_data(self, text):
+    def get_bbox_of_data(self, text, return_all=False, include_text=False):
         """Get the bounding box for a given string
 
         Parameters
@@ -206,17 +206,31 @@ class CustomPDFReader:
         text : str
             Check all parsed data for this string. Return the first bounding
             box that contains this text. Meant to search for a unique str
+        return_all : bool
+            If true, then return a list containing all matches, in the order
+            pdfminer.six found them
+        include_text : bool
+            If true, also return the text data
 
         Returns
         ----------
-        dict
-             "page"->int and "bbox"->[x0, y0, x1, y1]
+        dict, list
+             "page"->int and "bbox"->[x0, y0, x1, y1]. If include_data is true,
+             "text"->str will contain the text data. If return_all is true,
+             return a list of these dict objects.
 
         """
+        ans = []
         for p, page in enumerate(self.page):
             for i, stored_text in enumerate(page.data["text"]):
                 if text in stored_text:
-                    return {"page": p, "bbox": page.data["bbox"][i]}
+                    this_ans = {"page": p, "bbox": page.data["bbox"][i]}
+                    if include_text:
+                        this_ans["text"] = stored_text
+                    if not return_all:
+                        return this_ans
+                    ans.append(this_ans)
+        return ans if ans else None
 
 
 class PDFPageParser:

@@ -11,9 +11,15 @@
 from IQDMPDF.pdf_reader import convert_pdf_to_txt
 from IQDMPDF.parsers.delta4 import Delta4Report
 from IQDMPDF.parsers.sncpatient import SNCPatientReport, SNCPatientReport2020
+from IQDMPDF.parsers.verisoft import VeriSoftReport
 
 # These classes will be checked in ReportParser.get_report()
-REPORT_CLASSES = [Delta4Report, SNCPatientReport, SNCPatientReport2020]
+REPORT_CLASSES = [
+    Delta4Report,
+    SNCPatientReport,
+    SNCPatientReport2020,
+    VeriSoftReport,
+]
 
 
 class ReportParser:

@@ -1,6 +1,10 @@
 Change log for IQDM-PDF
 =======================
 
+v0.2.4 (2021.01.24)
+-------------------
+- Support for PTW VeriSoft
+
 v0.2.3 (2021.01.21)
 -------------------
 - Added optional ``alternates`` in JSON templates
