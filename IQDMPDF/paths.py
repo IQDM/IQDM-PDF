@@ -26,6 +26,7 @@ EXAMPLE_CSV_DIR = join(TEST_DATA_DIR, "example_csv_output")
 DELTA4_EXAMPLES_DIR = join(EXAMPLE_PDF_DIR, "delta4")
 SNCPATIENT_EXAMPLES_DIR = join(EXAMPLE_PDF_DIR, "sncpatient")
 SNCPATIENT2020_EXAMPLES_DIR = join(EXAMPLE_PDF_DIR, "sncpatient2020")
+VERISOFT_EXAMPLES_DIR = join(EXAMPLE_PDF_DIR, "verisoft")
 
 DIRECTORIES = {
     key[:-4]: value for key, value in locals().items() if key.endswith("_DIR")

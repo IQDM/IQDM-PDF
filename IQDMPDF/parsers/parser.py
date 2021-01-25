@@ -14,7 +14,12 @@ from IQDMPDF.parsers.sncpatient import SNCPatientReport, SNCPatientReport2020
 from IQDMPDF.parsers.verisoft import VeriSoftReport
 
 # These classes will be checked in ReportParser.get_report()
-REPORT_CLASSES = [Delta4Report, SNCPatientReport, SNCPatientReport2020, VeriSoftReport]
+REPORT_CLASSES = [
+    Delta4Report,
+    SNCPatientReport,
+    SNCPatientReport2020,
+    VeriSoftReport,
+]
 
 
 class ReportParser:

@@ -31,6 +31,8 @@ class VeriSoftReport(ParserBase):
             "Data Set A",
             "Data Set B",
             "Calibrate Air Density",
+            "Set Zero X",
+            "Set Zero Y",
             "Gamma Dist.",
             "Gamma Dose",
             "Gamma Dose Info",
@@ -180,9 +182,9 @@ class VeriSoftReport(ParserBase):
         if anchor is not None:
             text_block = anchor["text"].split("\n")
             split = text_block[index].split("(")[1].replace(")", "").split(";")
-            x = split[0].split('=')[1].strip().split(' ')
-            y = split[1].split('=')[1].strip().split(' ')
-        return {"x": x[0]+x[1], "y": y[0]+y[1]}
+            x = split[0].split("=")[1].strip().split(" ")
+            y = split[1].split("=")[1].strip().split(" ")
+        return {"x": x[0] + x[1], "y": y[0] + y[1]}
 
     def _set_manipulations_data(self):
         key = "Calibrate Air Density"
@@ -194,15 +196,16 @@ class VeriSoftReport(ParserBase):
         parameters, values = [], []
         for block in data:
             if "Parameters" in block:
-                parameters = block.strip().split('\n')[1:]
+                parameters = block.strip().split("\n")[1:]
             elif "Value" in block:
-                values = block.strip().split('\n')[1:]
+                values = block.strip().split("\n")[1:]
 
+        self.manipulations_data = None
         if parameters and values:
-            data = {param: values[i].strip() for i, param in enumerate(parameters)}
+            data = {
+                param: values[i].strip() for i, param in enumerate(parameters)
+            }
             self.manipulations_data = data
-        else:
-            self.manipulations_data = None
 
     ########################################################################
     # Admin Block
@@ -240,23 +243,34 @@ class VeriSoftReport(ParserBase):
     def data_set_a(self):
         i = self.data_set_b_index
         if i is not None:
-            return ''.join(self.data_set_block[1:i]).strip()
+            return "".join(self.data_set_block[1:i]).strip()
 
     @property
     def data_set_b(self):
         i = self.data_set_b_index
         if i is not None:
-            return '\n'.join(self.data_set_block[i:]).strip()
+            return "\n".join(self.data_set_block[i:]).strip()
 
     ########################################################################
     # Manipulations Block
     ########################################################################
     @property
     def calibrate_air_density(self):
+        return self._get_manipulation_value("kUser")
+
+    @property
+    def set_zero_x(self):
+        return self._get_manipulation_value("LR")
+
+    @property
+    def set_zero_y(self):
+        return self._get_manipulation_value("TG")
+
+    def _get_manipulation_value(self, key):
         if self.manipulations_data is not None:
-            if 'kUser' in self.manipulations_data.keys():
-                return self.manipulations_data['kUser']
-        return ''
+            if key in self.manipulations_data.keys():
+                return self.manipulations_data[key]
+        return ""
 
     ########################################################################
     # Gamma Param Block
@@ -334,7 +348,7 @@ class VeriSoftReport(ParserBase):
 
     @property
     def passed_points(self):
-        return self.stats_block[2]
+        return self.stats_block[2].split("(")[0].strip()
 
     @property
     def passed_points_percent(self):
@@ -342,7 +356,7 @@ class VeriSoftReport(ParserBase):
 
     @property
     def failed_points(self):
-        return self.stats_block[3]
+        return self.stats_block[3].split("(")[0].strip()
 
     @property
     def failed_points_percent(self):
@@ -414,6 +428,8 @@ class VeriSoftReport(ParserBase):
             "Data Set A": self.data_set_a,
             "Data Set B": self.data_set_b,
             "Calibrate Air Density": self.calibrate_air_density,
+            "Set Zero X": self.set_zero_x,
+            "Set Zero Y": self.set_zero_y,
             "Gamma Dist.": self.gamma_dist,
             "Gamma Dose": self.gamma_dose,
             "Gamma Dose Info": self.gamma_dose_info,
