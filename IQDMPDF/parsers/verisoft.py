@@ -43,17 +43,29 @@ class VeriSoftReport(ParserBase):
             "Gamma (Median)",
             "Gamma (Max)",
             "Gamma Min Position X",
+            "Gamma Min Position X Units",
             "Gamma Min Position Y",
+            "Gamma Min Position Y Units",
             "Gamma Max Position X",
+            "Gamma Max Position X Units",
             "Gamma Max Position Y",
+            "Gamma Max Position Y Units",
             "Abs Dose (Min)",
+            "Abs Dose (Min Units)",
             "Abs Dose (Mean)",
+            "Abs Dose (Mean Units)",
             "Abs Dose (Median)",
+            "Abs Dose (Median Units)",
             "Abs Dose (Max)",
+            "Abs Dose (Max Units)",
             "Abs Dose Min Position X",
+            "Abs Dose Min Position X Units",
             "Abs Dose Min Position Y",
+            "Abs Dose Min Position Y Units",
             "Abs Dose Max Position X",
+            "Abs Dose Max Position X Units",
             "Abs Dose Max Position Y",
+            "Abs Dose Max Position Y Units",
             "Number of Dose Points",
             "Evaluated Dose Points",
             "Evaluated Dose Points (%)",
@@ -203,16 +215,16 @@ class VeriSoftReport(ParserBase):
         Returns
         -------
         dict
-            "x" and "y" positions (with units)
+            'x' and 'y' positions, 'x_units' and 'y_units'
         """
-        x, y = ["N/A", ""], ["N/A", ""]
+        x, y = ["N/A"] * 2, ["N/A"] * 2
         anchor = self.anchors[key]
         if anchor is not None:
             text_block = anchor["text"].split("\n")
             split = text_block[index].split("(")[1].replace(")", "").split(";")
             x = split[0].split("=")[1].strip().split(" ")
             y = split[1].split("=")[1].strip().split(" ")
-        return {"x": x[0] + x[1], "y": y[0] + y[1]}
+        return {"x": x[0], "x_units": x[1], "y": y[0], "y_units": y[1]}
 
     def _set_manipulations_data(self):
         """Set data from the Manipulations table"""
@@ -497,12 +509,28 @@ class VeriSoftReport(ParserBase):
         Returns
         -------
         dict
-            Mean, min, max, median Absolute Difference values
+            'mean', 'min', 'max', 'median' Absolute Difference values, and
+            'mean_units', etc
         """
-        return {
+
+        ans = {
             key: self._get_block_element(self.abs_diff_block, i)
+            .split(" ")[0]
+            .strip()
             for i, key in enumerate(["mean", "min", "max", "median"])
         }
+
+        for i, key in enumerate(["mean", "min", "max", "median"]):
+            if ans["mean"] != "N/A":
+                ans[key + "_units"] = (
+                    self._get_block_element(self.abs_diff_block, i)
+                    .split(" ")[1]
+                    .strip()
+                )
+            else:
+                ans[key + "_units"] = "N/A"
+
+        return ans
 
     @property
     def abs_diff_min_pos(self):
@@ -740,17 +768,29 @@ class VeriSoftReport(ParserBase):
             "Gamma (Median)": gamma_diff["median"],
             "Gamma (Max)": gamma_diff["max"],
             "Gamma Min Position X": gamma_min_pos["x"],
+            "Gamma Min Position X Units": gamma_min_pos["x_units"],
             "Gamma Min Position Y": gamma_min_pos["y"],
+            "Gamma Min Position Y Units": gamma_min_pos["y_units"],
             "Gamma Max Position X": gamma_max_pos["x"],
+            "Gamma Max Position X Units": gamma_max_pos["x_units"],
             "Gamma Max Position Y": gamma_max_pos["y"],
+            "Gamma Max Position Y Units": gamma_max_pos["y_units"],
             "Abs Dose (Min)": abs_diff["min"],
+            "Abs Dose (Min Units)": abs_diff["min_units"],
             "Abs Dose (Mean)": abs_diff["mean"],
+            "Abs Dose (Mean Units)": abs_diff["mean_units"],
             "Abs Dose (Median)": abs_diff["median"],
+            "Abs Dose (Median Units)": abs_diff["median_units"],
             "Abs Dose (Max)": abs_diff["max"],
+            "Abs Dose (Max Units)": abs_diff["max_units"],
             "Abs Dose Min Position X": abs_min_pos["x"],
+            "Abs Dose Min Position X Units": abs_min_pos["x_units"],
             "Abs Dose Min Position Y": abs_min_pos["y"],
+            "Abs Dose Min Position Y Units": abs_min_pos["y_units"],
             "Abs Dose Max Position X": abs_max_pos["x"],
+            "Abs Dose Max Position X Units": abs_max_pos["x_units"],
             "Abs Dose Max Position Y": abs_max_pos["y"],
+            "Abs Dose Max Position Y Units": abs_max_pos["y_units"],
             "Number of Dose Points": self.num_dose_points,
             "Evaluated Dose Points": self.eval_dose_points,
             "Evaluated Dose Points (%)": self.eval_dose_points_percent,

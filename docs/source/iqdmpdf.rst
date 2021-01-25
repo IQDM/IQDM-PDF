@@ -1,5 +1,5 @@
 PDF Reader Module
----------------------------------
+-----------------
 
 .. automodule:: IQDMPDF.pdf_reader
     :members:
@@ -7,7 +7,7 @@ PDF Reader Module
     :show-inheritance:
 
 File Processor
----------------------------------
+--------------
 
 .. automodule:: IQDMPDF.file_processor
     :members:
@@ -16,7 +16,7 @@ File Processor
 
 
 Unified Report Parser
----------------------------------
+---------------------
 
 .. automodule:: IQDMPDF.parsers.parser
     :members:
@@ -24,31 +24,39 @@ Unified Report Parser
     :show-inheritance:
 
 Generic Report Parser
----------------------------------
+---------------------
 
 .. automodule:: IQDMPDF.parsers.generic
     :members:
     :undoc-members:
     :show-inheritance:
 
-SNC Patient Report Parser
----------------------------------
-
-.. automodule:: IQDMPDF.parsers.sncpatient
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Delta4 Report Parser
----------------------------------
+ScandiDos Delta4 Report Parser
+------------------------------
 
 .. automodule:: IQDMPDF.parsers.delta4
     :members:
     :undoc-members:
     :show-inheritance:
 
+SNC Patient Report Parser
+-------------------------
+
+.. automodule:: IQDMPDF.parsers.sncpatient
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+PTW VeriSoft Report Parser
+--------------------------
+
+.. automodule:: IQDMPDF.parsers.verisoft
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Utilities
----------------------------------
+---------
 
 .. automodule:: IQDMPDF.utilities
     :members:

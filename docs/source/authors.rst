@@ -26,5 +26,5 @@ Example IMRT QA reports used for unit testing and design are available `here <ht
     * sncpatient/Northwestern_Memorial
     * sncpatient2020/Northwestern_Memorial
 
-* Aditya Panchal, Amita Health
-    * verisoft/AmitaHealth
+* Aditya Panchal, AMITA Health
+    * verisoft/AMITA_Health
