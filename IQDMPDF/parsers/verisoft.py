@@ -419,33 +419,33 @@ class VeriSoftReport(ParserBase):
     def gamma_dose_info(self):
         """Get the Gamma Dose difference info
 
-         Returns
-         -------
-         str
-             Gamma Dose Difference normalization from Gamma 2D - Parameters
-         """
+        Returns
+        -------
+        str
+            Gamma Dose Difference normalization from Gamma 2D - Parameters
+        """
         return " ".join(self.gamma_param_block[2].strip().split(" ")[2:])
 
     @property
     def threshold(self):
         """Get the Gamma Dose threshold value
 
-         Returns
-         -------
-         str
-             Gamma Dose threshold value from Gamma 2D - Parameters
-         """
+        Returns
+        -------
+        str
+            Gamma Dose threshold value from Gamma 2D - Parameters
+        """
         return "".join(self.gamma_param_block[4].strip().split(" ")[3:5])
 
     @property
     def threshold_info(self):
         """Get the Gamma Dose threshold info
 
-         Returns
-         -------
-         str
-             Gamma Dose threshold info from Gamma 2D - Parameters
-         """
+        Returns
+        -------
+        str
+            Gamma Dose threshold info from Gamma 2D - Parameters
+        """
         return " ".join(self.gamma_param_block[4].strip().split(" ")[5:])
 
     ########################################################################
@@ -508,22 +508,22 @@ class VeriSoftReport(ParserBase):
     def abs_diff_min_pos(self):
         """Get the min absolute dose diff position
 
-         Returns
-         -------
-         dict
-             'x' and 'y' positions of the min absolute dose diff value
-         """
+        Returns
+        -------
+        dict
+            'x' and 'y' positions of the min absolute dose diff value
+        """
         return self._get_diff_position("Absolute Difference", 2)
 
     @property
     def abs_diff_max_pos(self):
         """Get the max absolute dose diff position
 
-         Returns
-         -------
-         dict
-             'x' and 'y' positions of the maximum absolute dose diff value
-         """
+        Returns
+        -------
+        dict
+            'x' and 'y' positions of the maximum absolute dose diff value
+        """
         return self._get_diff_position("Absolute Difference", 3)
 
     ########################################################################
