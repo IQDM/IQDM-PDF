@@ -229,11 +229,14 @@ class VeriSoftReport(ParserBase):
     def _set_manipulations_data(self):
         """Set data from the Manipulations table"""
         key = "Calibrate Air Density"
-        data = self.data.get_block_data(
-            self.anchors[key]["page"],
-            (self.anchors[key]["bbox"][0], self.anchors[key]["bbox"][1]),
-            tol=(1000, 10),
-        )
+        if self.anchors[key]:
+            data = self.data.get_block_data(
+                self.anchors[key]["page"],
+                (self.anchors[key]["bbox"][0], self.anchors[key]["bbox"][1]),
+                tol=(1000, 10),
+            )
+        else:
+            data = []
         parameters, values = [], []
         for block in data:
             if "Parameters" in block:
