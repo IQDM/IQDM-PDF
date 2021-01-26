@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
@@ -31,7 +31,7 @@ jobs:
         pip install pytest
     - name: Test with unittest
       run: |
-        python IQDMPDF/tests/test_file_processor.py
-        python IQDMPDF/tests/test_pdf_reader.py
-        python IQDMPDF/tests/test_report_parsers.py
-        python IQDMPDF/tests/test_utilities.py
+        python tests/test_file_processor.py
+        python tests/test_pdf_reader.py
+        python tests/test_report_parsers.py
+        python tests/test_utilities.py
