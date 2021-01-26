@@ -96,7 +96,7 @@ def process_files(
 
             output = [",".join(columns[report_type])]
             output.extend(data)
-            with open(current_file, "w") as csv:
+            with open(current_file, "w", encoding="utf-8") as csv:
                 csv.write("\n".join(output))
 
             print("%s data written to %s" % (report_type, current_file))
@@ -155,7 +155,9 @@ def process_file(file_path, output_file, output_dir=None):
             ):  # if file doesn't exist, need to write columns
                 with open(current_file, "w") as csv:
                     csv.write(",".join(parser.columns) + "\n")
-            with open(current_file, "a") as csv:  # write the processed data
+            with open(
+                current_file, "a", encoding="utf-8"
+            ) as csv:  # write the processed data
                 csv.write(row + "\n")
     else:
         print("Skipping: %s" % file_path)
