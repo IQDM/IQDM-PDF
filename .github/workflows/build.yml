@@ -29,6 +29,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pytest
+        python setup.py install
     - name: Test with unittest
       run: |
         python tests/test_file_processor.py
