@@ -134,5 +134,7 @@ class TestFileProcessor(unittest.TestCase):
 
 if __name__ == "__main__":
     import sys
+    from multiprocessing import freeze_support
 
+    freeze_support()
     sys.exit(unittest.main())
