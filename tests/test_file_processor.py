@@ -18,6 +18,14 @@ from os.path import join, isdir
 SIMPLE_PDF = join(DIRECTORIES["TEST_DATA"], "simple_test.pdf")
 
 
+def unlink_file(path):
+    """unlink may throw an error in GitHub WorkFlow"""
+    try:
+        unlink(path)
+    except Exception:
+        pass
+
+
 class TestFileProcessor(unittest.TestCase):
     """Unit tests for file_processor."""
 
@@ -34,7 +42,7 @@ class TestFileProcessor(unittest.TestCase):
         output_file = "test_process_file.txt"
         pdf_path = join(directory, file_path)
         file_processor.process_file(pdf_path, output_file, output_dir)
-        unlink(join(output_dir, "SNCPatient_" + output_file))
+        unlink_file(join(output_dir, "SNCPatient_" + output_file))
 
     def test_process_file_worker(self):
         directory = join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago")
@@ -60,7 +68,7 @@ class TestFileProcessor(unittest.TestCase):
         )
         test_files = [f for f in listdir() if f.endswith("_unittest.csv")]
         for file in test_files:
-            unlink(file)
+            unlink_file(file)
 
         # no recursive search
         directory = join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago")
@@ -73,7 +81,7 @@ class TestFileProcessor(unittest.TestCase):
             if f.startswith("SNCPatient_results_") and f.endswith(".csv")
         ]
         for file in test_files:
-            unlink(file)
+            unlink_file(file)
 
     def mock_callback(self, msg):
         self.assertTrue("label" in msg.keys())
@@ -95,7 +103,7 @@ class TestFileProcessor(unittest.TestCase):
 
     def test_process_files_raise_errors_kwarg(self):
         """Check that errors raised by process_file are addressed by kwarg"""
-        bad_dir = "this doesn't exist!#anywhee^&*)"
+        bad_dir = "thisDoesntExist"
         while isdir(bad_dir):
             bad_dir = bad_dir + "0"
 
