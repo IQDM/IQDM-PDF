@@ -28,6 +28,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip install pytest
     - name: Test with unittest
       run: |
-        python setup.py test
+        python IQDMPDF/tests/test_file_processor.py
+        python IQDMPDF/tests/test_pdf_reader.py
+        python IQDMPDF/tests/test_report_parsers.py
+        python IQDMPDF/tests/test_utilities.py
