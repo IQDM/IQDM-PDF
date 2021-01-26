@@ -5,7 +5,6 @@
 
 from setuptools import setup, find_packages
 from IQDMPDF._version import __version__, __author__
-import multiprocessing
 
 
 with open("requirements.txt") as doc:
