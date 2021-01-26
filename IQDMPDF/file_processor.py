@@ -96,7 +96,7 @@ def process_files(
 
             output = [",".join(columns[report_type])]
             output.extend(data)
-            with open(current_file, "w") as csv:
+            with open(current_file, "w", encoding="utf-8") as csv:
                 csv.write("\n".join(output))
 
             print("%s data written to %s" % (report_type, current_file))
