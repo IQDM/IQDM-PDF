@@ -95,7 +95,7 @@ class TestFileProcessor(unittest.TestCase):
 
     def test_process_files_raise_errors_kwarg(self):
         """Check that errors raised by process_file are addressed by kwarg"""
-        bad_dir = "this doesn't exist!#anywhee^&*)"
+        bad_dir = "thisDoesntExist"
         while isdir(bad_dir):
             bad_dir = bad_dir + "0"
 
