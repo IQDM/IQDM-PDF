@@ -1,8 +1,8 @@
 Change log for IQDM-PDF
 =======================
 
-v0.2.5 (TBD)
-------------
+v0.2.5 (2021.01.27)
+-------------------
 - PTW VeriSoft: Collect 'Set Zero' data
 - Use csv standard library for CSV writing
 
