@@ -97,8 +97,7 @@ def process_files(
 
             output = [columns[report_type]]
             output.extend(data)
-            with open(current_file, "w", encoding="utf-8", newline="") as f:
-                _write_csv(f, output)
+            write_csv(current_file, output)
 
             print("%s data written to %s" % (report_type, current_file))
 
@@ -153,31 +152,33 @@ def process_file(file_path, output_file, output_dir=None):
         if row:
             # if file doesn't exist, need to write columns
             if not isfile(current_file):
-                with open(
-                    current_file, "w", encoding="utf-8", newline=""
-                ) as f:
-                    _write_csv(f, [parser.columns])
+                write_csv(current_file, [parser.columns])
             # write the processed data
-            with open(current_file, "a", encoding="utf-8") as f:
-                _write_csv(f, [row])
+            write_csv(current_file, [row], mode="a")
     else:
         print("Skipping: %s" % file_path)
 
 
-def _write_csv(file_pointer, rows):
+def write_csv(file_path, rows, mode="w", newline=""):
     """Create csv.writer, call writerows(rows)
 
     Parameters
     ----------
-    file_pointer : file pointer
-        file pointer from open()
+    file_path : str
+        path to file
     rows : list, iterable
         Items to be written to file_pointer (input for csv.writer.writerows)
+    mode : str
+        optional string that specifies the mode in which the file is opened
+    newline : str
+        controls how universal newlines mode works.
+        It can be None, '', '\n', '\r', and '\r\n'
     """
-    writer = csv.writer(
-        file_pointer, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
-    )
-    writer.writerows(rows)
+    with open(file_path, mode, encoding="utf-8", newline=newline) as f:
+        writer = csv.writer(
+            f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
+        )
+        writer.writerows(rows)
 
 
 def validate_kwargs(kwargs, add_print_callback=True):
