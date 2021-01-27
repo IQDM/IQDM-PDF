@@ -1,6 +1,10 @@
 Change log for IQDM-PDF
 =======================
 
+v0.2.5 (TBD)
+------------
+- PTW VeriSoft: Collect Set Zero
+
 v0.2.4 (2021.01.24)
 -------------------
 - Support for PTW VeriSoft
