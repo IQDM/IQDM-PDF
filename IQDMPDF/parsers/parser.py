@@ -4,7 +4,7 @@
 # parser.py
 """Unified IMRT QA report parser"""
 #
-# Copyright (c) 2020 Dan Cutright
+# Copyright (c) 2021 Dan Cutright
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution
 
@@ -65,7 +65,7 @@ class ReportParser:
         return columns + ["report_file_path"] if columns else []
 
     @property
-    def csv(self):
+    def csv_data(self):
         """Get a csv string from the selected ReportParser
 
         Returns
@@ -73,8 +73,8 @@ class ReportParser:
         str
             Report columns + "report_file_path"
         """
-        csv = getattr(self.report, "csv", None)
-        return '%s,"%s"' % (csv, self.file_path) if csv else ""
+        csv_data = getattr(self.report, "csv_data", None)
+        return csv_data + [self.file_path] if csv_data else [""]
 
     @property
     def report_type(self):

@@ -8,10 +8,11 @@
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution
 
-from IQDMPDF.parsers.parser import ReportParser
-from IQDMPDF.utilities import get_files, run_multiprocessing
 from datetime import datetime
 from os.path import isfile, join
+import csv
+from IQDMPDF.parsers.parser import ReportParser
+from IQDMPDF.utilities import get_files, run_multiprocessing
 from IQDMPDF._version import __version__
 
 
@@ -94,10 +95,10 @@ def process_files(
             if output_dir is not None:
                 current_file = join(output_dir, current_file)
 
-            output = [",".join(columns[report_type])]
+            output = [columns[report_type]]
             output.extend(data)
-            with open(current_file, "w", encoding="utf-8") as csv:
-                csv.write("\n".join(output))
+            with open(current_file, "w", encoding="utf-8", newline="") as f:
+                _write_csv(f, output)
 
             print("%s data written to %s" % (report_type, current_file))
 
@@ -113,14 +114,14 @@ def process_file_worker(file_path):
     Returns
     -------
     dict
-        {"data": ReportParser.csv, "report_type": ReportParser.report_type,
+        {"data": ReportParser.csv_data, "report_type": ReportParser.report_type,
         "columns": ReportParser.columns}
     """
     data, report_type, columns = None, None, None
     try:
         parser = ReportParser(file_path)
         if parser.report is not None:
-            data = parser.csv
+            data = parser.csv_data
             report_type = parser.report_type
             columns = parser.columns
     except Exception:
@@ -142,7 +143,7 @@ def process_file(file_path, output_file, output_dir=None):
     """
     parser = ReportParser(file_path)
     if parser.report is not None:
-        row = parser.csv
+        row = parser.csv_data
         current_file = "%s_%s" % (
             parser.report_type,
             output_file,
@@ -150,17 +151,33 @@ def process_file(file_path, output_file, output_dir=None):
         if output_dir is not None:
             current_file = join(output_dir, current_file)
         if row:
-            if not isfile(
-                current_file
-            ):  # if file doesn't exist, need to write columns
-                with open(current_file, "w") as csv:
-                    csv.write(",".join(parser.columns) + "\n")
-            with open(
-                current_file, "a", encoding="utf-8"
-            ) as csv:  # write the processed data
-                csv.write(row + "\n")
+            # if file doesn't exist, need to write columns
+            if not isfile(current_file):
+                with open(
+                    current_file, "w", encoding="utf-8", newline=""
+                ) as f:
+                    _write_csv(f, [parser.columns])
+            # write the processed data
+            with open(current_file, "a", encoding="utf-8") as f:
+                _write_csv(f, [row])
     else:
         print("Skipping: %s" % file_path)
+
+
+def _write_csv(file_pointer, rows):
+    """Create csv.writer, call writerows(rows)
+
+    Parameters
+    ----------
+    file_pointer : file pointer
+        file pointer from open()
+    rows : list, iterable
+        Items to be written to file_pointer (input for csv.writer.writerows)
+    """
+    writer = csv.writer(
+        file_pointer, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
+    )
+    writer.writerows(rows)
 
 
 def validate_kwargs(kwargs, add_print_callback=True):
