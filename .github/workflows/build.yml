@@ -31,4 +31,4 @@ jobs:
         python setup.py install
     - name: Test with unittest
       run: |
-        python tests/test_suite.py
+        python run_tests.py

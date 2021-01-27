@@ -7,5 +7,5 @@
 #    See the file LICENSE included with this distribution
 
 __author__ = "Dan Cutright"
-__version__ = "0.2.4.post2"
-__release__ = "0.2.4.post2"
+__version__ = "0.2.5"
+__release__ = "0.2.5"

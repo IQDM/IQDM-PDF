@@ -10,6 +10,7 @@ omit =
     setup.py
     IQDMPDF/_version.py
     tests/*
+    run_tests.py
     docs/*
     venv/*
     IQDMPDF/main.py

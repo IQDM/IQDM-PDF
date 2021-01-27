@@ -4,11 +4,11 @@
 # generic.py
 """Generic IMRT QA report parser"""
 #
-# Copyright (c) 2020 Dan Cutright
+# Copyright (c) 2021 Dan Cutright
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution
 
-from IQDMPDF.utilities import get_csv_row, are_all_strings_in_text
+from IQDMPDF.utilities import are_all_strings_in_text
 from IQDMPDF.pdf_reader import CustomPDFReader, convert_pdf_to_txt
 import json
 
@@ -42,16 +42,18 @@ class ParserBase:
         return are_all_strings_in_text(text, self.identifiers)
 
     @property
-    def csv(self):
-        """Get a CSV of summary_data for all columns
+    def csv_data(self):
+        """Get a CSV data of summary_data for all columns for csv.writer
 
         Returns
         ----------
-        str
-            Output from ``utilities.get_csv_row``. File path automatically
+        list
+            summary data as a list in order of columns. File path automatically
             appended to data
         """
-        return get_csv_row(self.summary_data, self.columns)
+        return [
+            str(self.summary_data[c]).replace("\n", "<>") for c in self.columns
+        ]
 
 
 class GenericReport(ParserBase):

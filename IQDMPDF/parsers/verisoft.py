@@ -32,7 +32,9 @@ class VeriSoftReport(ParserBase):
             "Data Set B",
             "Calibrate Air Density",
             "Set Zero X",
+            "Set Zero X Units",
             "Set Zero Y",
+            "Set Zero Y Units",
             "Gamma Dist.",
             "Gamma Dose",
             "Gamma Dose Info",
@@ -105,6 +107,7 @@ class VeriSoftReport(ParserBase):
         keys = [
             "Administrative Data",
             "Data Set A",
+            "Manipulations",
             "Set Zero",
             "Calibrate Air Density",
             "Gamma 2D",
@@ -231,15 +234,21 @@ class VeriSoftReport(ParserBase):
 
     def _set_manipulations_data(self):
         """Set data from the Manipulations table"""
-        key = "Calibrate Air Density"
-        if self.anchors[key]:
-            data = self.data.get_block_data(
+        key = None
+        if self.anchors["Calibrate Air Density"]:
+            key = "Calibrate Air Density"
+        elif self.anchors["Manipulations"]:
+            key = "Manipulations"
+
+        data = (
+            self.data.get_block_data(
                 self.anchors[key]["page"],
                 (self.anchors[key]["bbox"][0], self.anchors[key]["bbox"][1]),
                 tol=(1000, 10),
             )
-        else:
-            data = []
+            if key is not None
+            else []
+        )
         parameters, values = [], []
         for block in data:
             if "Parameters" in block:
@@ -369,26 +378,34 @@ class VeriSoftReport(ParserBase):
         return self._get_manipulation_value("kUser")
 
     @property
-    def set_zero_x(self):
-        """Get the Set Zero x value
+    def set_zero(self):
+        """Get the Set Zero data
 
         Returns
         -------
-        str
-            Get the Set Zero x from Manipulations table
+        dict
+            Get the Set Zero data from Manipulations table
         """
-        return self._get_manipulation_value("LR")
+        return {key: self._get_set_zero(key) for key in ["TG", "LR"]}
 
-    @property
-    def set_zero_y(self):
-        """Get the Set Zero y value
+    def _get_set_zero(self, key):
+        """If Set Zero is found, split by value and units
+
+        Parameters
+        ----------
+        key : str
+            Either 'LR' or 'TG'
 
         Returns
         -------
-        str
-            Get the Set Zero y from Manipulations table
+        dict
+            Keys of 'value' and 'units', each value is a strings
         """
-        return self._get_manipulation_value("TG")
+        ans = self._get_manipulation_value(key)
+        if " " in ans:
+            split = ans.split(" ")
+            return {"value": split[0].strip(), "units": split[1].strip()}
+        return {"value": "N/A", "units": "N/A"}
 
     def _get_manipulation_value(self, key):
         """Get a manipulation_data value
@@ -751,6 +768,8 @@ class VeriSoftReport(ParserBase):
         abs_min_pos = self.abs_diff_min_pos
         abs_max_pos = self.abs_diff_max_pos
 
+        set_zero = self.set_zero
+
         return {
             "Patient Name": self.patient_name,
             "Patient ID": self.patient_id,
@@ -762,8 +781,10 @@ class VeriSoftReport(ParserBase):
             "Data Set A": self.data_set_a,
             "Data Set B": self.data_set_b,
             "Calibrate Air Density": self.calibrate_air_density,
-            "Set Zero X": self.set_zero_x,
-            "Set Zero Y": self.set_zero_y,
+            "Set Zero X": set_zero["LR"]["value"],
+            "Set Zero X Units": set_zero["LR"]["units"],
+            "Set Zero Y": set_zero["TG"]["value"],
+            "Set Zero Y Units": set_zero["TG"]["units"],
             "Gamma Dist.": self.gamma_dist,
             "Gamma Dose": self.gamma_dose,
             "Gamma Dose Info": self.gamma_dose_info,

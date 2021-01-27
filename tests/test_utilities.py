@@ -4,7 +4,7 @@
 # test_utilities.py
 """unittest cases for utilities."""
 #
-# Copyright (c) 2020 Dan Cutright
+# Copyright (c) 2021 Dan Cutright
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution, also
 
@@ -28,13 +28,6 @@ class TestUtilities(unittest.TestCase):
         self.assertTrue(utilities.are_all_strings_in_text(text, strings))
         strings.append("FAIL")
         self.assertFalse(utilities.are_all_strings_in_text(text, strings))
-
-    def test_get_csv_row(self):
-        """Test test_get_csv_row"""
-        data = {"a": 0, "b": "test,", "c": 3.54, "d": "ignore me!"}
-        columns = ["b", "a", "c"]
-        expected = '"test,",0,3.54'
-        self.assertEqual(utilities.get_csv_row(data, columns), expected)
 
     def test_get_sorted_indices(self):
         """Test get_sorted_indices"""
@@ -77,18 +70,6 @@ class TestUtilities(unittest.TestCase):
         test_path = join(*test_path)
         rel_test_path = utilities.get_relative_path(test_path, "test")
         self.assertEqual(exp_path, rel_test_path)
-
-    def test_csv_to_list(self):
-        """Test the csv to list function"""
-        test_csv = 'this,is,a,test,with,a,"comma,",and,empty,final,value,'
-        test_list = utilities.csv_to_list(test_csv)
-        self.assertEqual(test_list[0], "this")
-        self.assertEqual(test_list[6], "comma,")
-        self.assertEqual(test_list[-1], "")
-
-        test_csv = "this,is,a,test,with,a,nonempty,final,value"
-        test_list = utilities.csv_to_list(test_csv)
-        self.assertEqual(test_list[-1], "value")
 
     def test_create_arg_parser(self):
         """Test arg parser creation"""

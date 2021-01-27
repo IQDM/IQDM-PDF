@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# test_suite.py
-"""unittest test suite"""
+# run_tests.py
+"""unittest test suite so freeze_support can be called globally"""
 #
 # Copyright (c) 2021 Dan Cutright
 # This file is part of IQDM-PDF, released under a MIT license.
