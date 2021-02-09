@@ -463,7 +463,9 @@ class SNCPatientCustom(ParserBase):
         str
             Rotation angle applied to data for analysis
         """
-        return self._get_block_element_by_key("Dose Comparison", "Rotation Angle")
+        return self._get_block_element_by_key(
+            "Dose Comparison", "Rotation Angle"
+        )
 
     @property
     def dose_diff_threshold(self):
