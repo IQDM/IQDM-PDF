@@ -95,8 +95,11 @@ class SNCPatientCustom(ParserBase):
             "Difference (%)",
             "Distance (mm)",
             "Threshold (%)",
+            "Rotation Angle",
             "Meas Uncertainty",
             "Use Global (%)",
+            "Dose Diff Thresh",
+            "Use VanDyk",
             "Summary Type",
             "Total Points",
             "Pass",
@@ -131,7 +134,6 @@ class SNCPatientCustom(ParserBase):
             "QA File Parameter",
             "Dose Comparison",
             "Summary",
-            "Dose Values in",
             "Notes",
         ]
         self.anchors = {
@@ -176,7 +178,7 @@ class SNCPatientCustom(ParserBase):
         Parameters
         ----------
         anchor_key : str
-            Key to VeriSoftReport.anchors
+            Key to SNCPatientCustom.anchors
         y_tol : int
             tolerance in y direction for CustomPDFReader.get_block_data
 
@@ -220,6 +222,21 @@ class SNCPatientCustom(ParserBase):
             return "N/A"
 
     def _get_row_index(self, anchor_key, keyword):
+        """Look up the block index based on its variable name
+
+        Parameters
+        ----------
+        anchor_key : str
+            key for ``SNCPatient.anchors`` (i.e., "Date:", "QA File Parameter",
+            "Dose Comparison", "Summary", "Dose Values in", "Notes")
+        keyword : str
+            variable name (or partial name)
+
+        Returns
+        -------
+        int
+            index of data block for the given keyword (header row ignored)
+        """
         text = self.anchors[anchor_key]["text"].split("\n")
         text = [row for row in text if ":" not in row]
         for i, row in enumerate(text[1:]):
@@ -227,6 +244,22 @@ class SNCPatientCustom(ParserBase):
                 return i
 
     def _get_block_element_by_key(self, anchor_key, keyword):
+        """Get the block element value based on a variable name
+
+        Parameters
+        ----------
+        anchor_key : str
+            key for ``SNCPatient.anchors`` (i.e., "Date:", "QA File Parameter",
+            "Dose Comparison", "Summary", "Dose Values in", "Notes")
+        keyword : str
+            variable name or partial variable name (e.g., 'Distance', Passed)
+
+        Returns
+        -------
+        str
+            value on right side of report table
+
+        """
         index = self._get_row_index(anchor_key, keyword)
         block = self.block_lut[anchor_key]
         return self._get_block_element(block, index)
@@ -236,6 +269,13 @@ class SNCPatientCustom(ParserBase):
     ########################################################################
     @property
     def qa_date(self):
+        """Date in top-left of the report
+
+        Returns
+        -------
+        str
+            QA report date
+        """
         return self.anchors["Date:"]["text"].split("Date:")[1].strip()
 
     ########################################################################
@@ -243,38 +283,94 @@ class SNCPatientCustom(ParserBase):
     ########################################################################
     @property
     def patient_name(self):
+        """Patient name in QA File Parameter table
+
+        Returns
+        -------
+        str
+            Patient name
+        """
         return self._get_block_element_by_key(
             "QA File Parameter", "Patient Name"
         )
 
     @property
     def patient_id(self):
+        """Patient ID in QA File Parameter table
+
+        Returns
+        -------
+        str
+            Patient ID
+        """
         return self._get_block_element_by_key(
             "QA File Parameter", "Patient ID"
         )
 
     @property
     def plan_date(self):
+        """Plan date in QA File Parameter table
+
+        Returns
+        -------
+        str
+            Plan date
+        """
         return self._get_block_element_by_key("QA File Parameter", "Plan Date")
 
     @property
     def ssd(self):
+        """SSD in QA File Parameter table
+
+        Returns
+        -------
+        str
+            SSD
+        """
         return self._get_block_element_by_key("QA File Parameter", "SSD")
 
     @property
     def sdd(self):
+        """SDD in QA File Parameter table
+
+        Returns
+        -------
+        str
+            SDD
+        """
         return self._get_block_element_by_key("QA File Parameter", "SDD")
 
     @property
     def depth(self):
+        """Depth in QA File Parameter table
+
+        Returns
+        -------
+        str
+            Depth
+        """
         return self._get_block_element_by_key("QA File Parameter", "Depth")
 
     @property
     def energy(self):
+        """Energy in QA File Parameter table
+
+        Returns
+        -------
+        str
+            Energy
+        """
         return self._get_block_element_by_key("QA File Parameter", "Energy")
 
     @property
     def angle(self):
+        """Angle in QA File Parameter table
+
+        Returns
+        -------
+        str
+            Angle
+        """
         return self._get_block_element_by_key("QA File Parameter", "Angle")
 
     ########################################################################
@@ -282,6 +378,13 @@ class SNCPatientCustom(ParserBase):
     ########################################################################
     @property
     def dose_comparison_type(self):
+        """Dose comparison type based on table title
+
+        Returns
+        -------
+        str
+            Dose comparison type (e.g., Absolute)
+        """
         return (
             self.anchors["Dose Comparison"]["text"]
             .split("\n")[0]
@@ -291,6 +394,13 @@ class SNCPatientCustom(ParserBase):
 
     @property
     def dose_diff_param(self):
+        """Dose difference criteria
+
+        Returns
+        -------
+        str
+            Dose difference criteria for analysis
+        """
         ans = self._get_block_element_by_key(
             "Dose Comparison", "Difference (%)"
         )
@@ -299,44 +409,140 @@ class SNCPatientCustom(ParserBase):
         return ans
 
     @property
-    def dist_diff_param(self):
+    def dist_param(self):
+        """Distance criteria
+
+        Returns
+        -------
+        str
+            Distance criteria for analysis
+        """
         return self._get_block_element_by_key("Dose Comparison", "Distance")
 
     @property
     def threshold_param(self):
+        """Dose threshold criteria
+
+        Returns
+        -------
+        str
+            Minimum dose threshold for analysis
+        """
         return self._get_block_element_by_key("Dose Comparison", "Threshold")
 
     @property
     def meas_uncertainty(self):
+        """Measurement Uncertainty
+
+        Returns
+        -------
+        str
+            Whether or not measurement uncertainty is turned on
+        """
         return self._get_block_element_by_key(
             "Dose Comparison", "Meas Uncertainty"
         )
 
     @property
     def use_global(self):
+        """Use Global %
+
+        Returns
+        -------
+        str
+            Whether or not Use Global % is turned on
+        """
         return self._get_block_element_by_key("Dose Comparison", "Use Global")
+
+    @property
+    def rotation_angle(self):
+        """Rotation angle
+
+        Returns
+        -------
+        str
+            Rotation angle applied to data for analysis
+        """
+        return self._get_block_element_by_key("Dose Comparison", "Rotation Angle")
+
+    @property
+    def dose_diff_threshold(self):
+        """Dose Diff Threshold
+
+        Returns
+        -------
+        str
+            Dose Difference Threshold for analysis
+        """
+        return self._get_block_element_by_key("Dose Comparison", "Dose Diff")
+
+    @property
+    def use_van_dyk(self):
+        """Use VanDyk
+
+        Returns
+        -------
+        str
+            Whether or not Van Dyk criteria is turned on
+        """
+        return self._get_block_element_by_key("Dose Comparison", "VanDyk")
 
     ########################################################################
     # Summary Block
     ########################################################################
     @property
     def summary_type(self):
+        """Title of the dose comparison table
+
+        Returns
+        -------
+        str
+            Dose comparison type (e.g., Absolute)
+        """
         return self.anchors["Summary"]["text"].split("\n")[0].strip()
 
     @property
     def total_points(self):
+        """Total Points
+
+        Returns
+        -------
+        str
+            Total number of points/detectors used for analysis
+        """
         return self._get_block_element(self.summary_block, 0)
 
     @property
     def passed_points(self):
+        """Number of points passing analysis
+
+        Returns
+        -------
+        str
+            Number of points/detectors meeting analysis criteria
+        """
         return self._get_block_element(self.summary_block, 1)
 
     @property
     def failed_points(self):
+        """Number of points failing analysis
+
+        Returns
+        -------
+        str
+            Number of points/detectors not meeting analysis criteria
+        """
         return self._get_block_element(self.summary_block, 2)
 
     @property
     def pass_rate(self):
+        """Passing rate of points
+
+        Returns
+        -------
+        str
+            Percentage of points/detectors meeting analysis criteria
+        """
         return self._get_block_element(self.summary_block, 3)
 
     ########################################################################
@@ -344,6 +550,14 @@ class SNCPatientCustom(ParserBase):
     ########################################################################
     @property
     def notes(self):
+        """Custom note entered by report author
+
+        Returns
+        -------
+        str
+            Text from the Notes block
+
+        """
         anchor = self.anchors["Notes"]
         text = anchor["text"]
 
@@ -385,10 +599,13 @@ class SNCPatientCustom(ParserBase):
             "Depth": self.depth,
             "Dose Type": self.dose_comparison_type,
             "Difference (%)": self.dose_diff_param,
-            "Distance (mm)": self.dist_diff_param,
+            "Distance (mm)": self.dist_param,
             "Threshold (%)": self.threshold_param,
+            "Rotation Angle": self.rotation_angle,
             "Meas Uncertainty": self.meas_uncertainty,
             "Use Global (%)": self.use_global,
+            "Dose Diff Thresh": self.dose_diff_threshold,
+            "Use VanDyk": self.use_van_dyk,
             "Summary Type": self.summary_type,
             "Total Points": self.total_points,
             "Pass": self.passed_points,
