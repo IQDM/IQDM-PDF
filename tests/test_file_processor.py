@@ -42,14 +42,14 @@ class TestFileProcessor(unittest.TestCase):
         output_file = "test_process_file.txt"
         pdf_path = join(directory, file_path)
         file_processor.process_file(pdf_path, output_file, output_dir)
-        unlink_file(join(output_dir, "SNCPatient_" + output_file))
+        unlink_file(join(output_dir, "SNCPatientCustom_" + output_file))
 
     def test_process_file_worker(self):
         directory = join(DIRECTORIES["SNCPATIENT_EXAMPLES"], "UChicago")
         file_path = listdir(directory)[0]
         pdf_path = join(directory, file_path)
         data = file_processor.process_file_worker(pdf_path)
-        self.assertEqual(data["report_type"], "SNCPatient")
+        self.assertEqual(data["report_type"], "SNCPatientCustom")
 
         data = file_processor.process_file_worker(SIMPLE_PDF)
         self.assertIsNone(data["report_type"])
@@ -78,7 +78,7 @@ class TestFileProcessor(unittest.TestCase):
         test_files = [
             f
             for f in listdir()
-            if f.startswith("SNCPatient_results_") and f.endswith(".csv")
+            if f.startswith("SNCPatientCustom_results_") and f.endswith(".csv")
         ]
         for file in test_files:
             unlink_file(file)

@@ -79,7 +79,7 @@ def convert_pdf_to_txt(path):
 class CustomPDFReader:
     """Custom PDF Parsing module"""
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, laparams_kwargs=None):
         """Initialize a CustomPDFReader object
 
         Parameters
@@ -89,6 +89,7 @@ class CustomPDFReader:
         """
         self.page = []
         self.file_path = file_path
+        self.laparams_kwargs = laparams_kwargs
         self.convert_pdf_to_text()
         self.data = []
 
@@ -173,7 +174,8 @@ class CustomPDFReader:
 
         # BEGIN LAYOUT ANALYSIS
         # Set parameters for analysis.
-        laparams = LAParams()
+        kwargs = {} if self.laparams_kwargs is None else self.laparams_kwargs
+        laparams = LAParams(**kwargs)
 
         # Create a PDF page aggregator object.
         device = PDFPageAggregator(rsrcmgr, laparams=laparams)

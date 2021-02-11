@@ -19,7 +19,7 @@ from IQDMPDF.parsers import verisoft
 TestDataHelper.__test__ = False
 
 PARSERS = {
-    "sncpatient": sncpatient.SNCPatientReport,
+    "sncpatient": sncpatient.SNCPatientCustom,
     "delta4": delta4.Delta4Report,
     "sncpatient2020": sncpatient.SNCPatientReport2020,
     "verisoft": verisoft.VeriSoftReport,
