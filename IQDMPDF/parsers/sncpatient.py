@@ -23,7 +23,7 @@ class SNCPatientReport2020(GenericReport):
         GenericReport.__init__(self, template)
         self.analysis_columns = {'uid': [0, 1, 2, 5],
                                  'date': 2,
-                                 'criteria': [8, 9, 10, 11, 12, 13, 14, 15]}
+                                 'criteria': [8, 9, 10, 11, 12, 13, 14]}
 
 # class SNCPatientReport(GenericReport):
 #     """SNCPatientReport parser for the new format released prior to 2020"""
