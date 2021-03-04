@@ -49,6 +49,11 @@ class Delta4Report(ParserBase):
             "Selected Detectors",
             "Parameter Definitions & Acceptance Criteria, Detectors",
         ]
+        self.analysis_columns = {
+            "uid": [0, 1, 2, 3, 4],
+            "date": 4,
+            "criteria": [11, 14, 15, 16, 17],
+        }
 
     def __call__(self, report_file_path):
         """Process an IMRT QA report PDF

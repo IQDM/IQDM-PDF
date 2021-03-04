@@ -21,6 +21,11 @@ class SNCPatientReport2020(GenericReport):
         """Initialization of a SNCPatientReport class"""
         template = join(DIRECTORIES["REPORT_TEMPLATES"], "sncpatient2020.json")
         GenericReport.__init__(self, template)
+        self.analysis_columns = {
+            "uid": [0, 1, 2, 5],
+            "date": 2,
+            "criteria": [14, 8, 11, 13, 9, 10, 12],
+        }
 
 
 # class SNCPatientReport(GenericReport):
@@ -116,6 +121,11 @@ class SNCPatientCustom(ParserBase):
             "Depth",
             "Energy",
         ]
+        self.analysis_columns = {
+            "uid": [0, 1, 2],
+            "date": 2,
+            "criteria": [18, 9, 10, 11, 12, 16, 15, 14, 17],
+        }
 
     def __call__(self, report_file_path):
         """Process an IMRT QA report PDF
