@@ -1,11 +1,11 @@
 Change log for IQDM-PDF
 =======================
 
-v0.2.7 (TBD)
-------------
- - Updates to SNCPatient2020 parser
- - Ignore parsed values that are equal to column names
- - Added ``analysis_columns`` property for IQDM Analytics support.
+v0.2.7 (2021.03.04)
+--------------------
+- Updates to SNCPatient2020 parser
+- Ignore parsed values that are equal to column names
+- Added ``analysis_columns`` property for IQDM Analytics support
 
 v0.2.6 (2021.02.11)
 -------------------
