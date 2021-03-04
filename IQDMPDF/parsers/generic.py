@@ -169,9 +169,27 @@ class GenericReport(ParserBase):
 
         """
         for key in list(data):
-            data[key] = data[key][0] if len(data[key]) else ""
-            if data[key] == "":
+            data[key] = self._process_data_element(data[key])
+            if not data[key]:
                 self.missing_columns.append(key)
+
+    def _process_data_element(self, data_block):
+        """Process data element from a data block
+
+        Parameters
+        ----------
+        data_block : a return from ``get_block_data``
+
+        Returns
+        -------
+        str
+            Returns the first element of a data block, unless it is equal to
+            a column name. Returns an empty string when nothing found.
+
+        """
+        if len(data_block) and data_block[0] not in self.columns:
+            return data_block[0]
+        return ""
 
     def _apply_alternates(self, data):
         """Check json_data["alternates"] for alternate instructions. Unlike
@@ -199,7 +217,7 @@ class GenericReport(ParserBase):
                     data[key] = self.data.get_block_data(
                         **alt, text_cleaner=self.text_cleaner
                     )
-                    data[key] = data[key][0] if len(data[key]) else ""
+                    data[key] = self._process_data_element(data[key])
                     if data[key] != "":
                         self.missing_columns.pop(
                             self.missing_columns.index(key)

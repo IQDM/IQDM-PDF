@@ -92,9 +92,11 @@ class VeriSoftReport(ParserBase):
             "Institution",
             "Physicist",
         ]
-        self.analysis_columns = {'uid': [0, 1, 5],
-                                 'date': 5,
-                                 'criteria': [14, 15, 16, 17, 18]}
+        self.analysis_columns = {
+            "uid": [0, 1, 5],
+            "date": 5,
+            "criteria": [14, 15, 16, 17, 18],
+        }
 
     def __call__(self, report_file_path):
         """Process an IMRT QA report PDF

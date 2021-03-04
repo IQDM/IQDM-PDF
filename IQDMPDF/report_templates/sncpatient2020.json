@@ -33,9 +33,13 @@
   ],
   "alternates": [
     {"column": "Threshold (%)", "page": 0, "pos": [171.59, 461.94], "mode": "bottom-right", "numeric": true},
+    {"column": "Threshold (%)", "page": 0, "pos": [167.43, 463.12], "mode": "bottom-right", "numeric": true},
     {"column": "Use Global (%)", "page": 0, "pos": [91.22, 461.94], "mode": "bottom-right", "numeric":  false},
+    {"column": "Use Global (%)", "page": 0, "pos": [467.8, 463.12], "mode": "bottom-right", "numeric":  false},
     {"column": "Difference (%)", "page": 0, "pos": [168.84, 439.84], "mode": "bottom-right", "numeric": true},
+    {"column": "Distance (mm)", "page": 0, "pos": [168.84, 418.91], "mode": "bottom-right", "numeric": true},
     {"column": "Meas Uncertainty", "page": 0, "pos": [92.33, 439.84], "mode": "bottom-right", "numeric":  false},
+    {"column": "Meas Uncertainty", "page": 0, "pos": [465.51, 441.02], "mode": "bottom-right", "numeric":  false},
     {"column": "Pass (%)", "page": 0, "pos": [28.44, 366.04], "numeric": true},
     {"column": "Pass", "page": 0, "pos": [28.44, 343.93], "numeric": true},
     {"column": "Fail", "page": 0, "pos": [28.44, 321.83], "numeric": true},
