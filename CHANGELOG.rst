@@ -1,8 +1,8 @@
 Change log for IQDM-PDF
 =======================
 
-v0.2.6 (TBD)
-------------
+v0.2.6 (2021.02.11)
+-------------------
 - New Custom SNCPatient parser using relative positions
 
 v0.2.5 (2021.01.27)

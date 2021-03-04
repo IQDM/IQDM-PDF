@@ -23,7 +23,7 @@ class SNCPatientReport2020(GenericReport):
         GenericReport.__init__(self, template)
         self.analysis_columns = {'uid': [0, 1, 2, 5],
                                  'date': 2,
-                                 'criteria': [8, 9, 10, 11, 12, 13, 14]}
+                                 'criteria': [14, 8, 11, 13, 9, 10, 12]}
 
 # class SNCPatientReport(GenericReport):
 #     """SNCPatientReport parser for the new format released prior to 2020"""
@@ -120,7 +120,7 @@ class SNCPatientCustom(ParserBase):
         ]
         self.analysis_columns = {'uid': [0, 1, 2],
                                  'date': 2,
-                                 'criteria': [10, 11, 12, 14, 15, 16, 17]}
+                                 'criteria': [18, 9, 10, 11, 12, 16, 15, 14, 17]}
 
     def __call__(self, report_file_path):
         """Process an IMRT QA report PDF
