@@ -53,7 +53,14 @@ class Delta4Report(ParserBase):
             "uid": [0, 1, 2, 3, 4],
             "date": 4,
             "criteria": [11, 14, 15, 16, 17],
-            "y": [12, 11, 10, 7, 8, 9],
+            "y": [
+                {"index": 13, "ucl_limit": 100, "lcl_limit": 0},
+                {"index": 12, "ucl_limit": None, "lcl_limit": None},
+                {"index": 10, "ucl_limit": 100, "lcl_limit": 0},
+                {"index": 9, "ucl_limit": 100, "lcl_limit": 0},
+                {"index": 8, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 7, "ucl_limit": None, "lcl_limit": 0},
+            ],
         }
 
     def __call__(self, report_file_path):

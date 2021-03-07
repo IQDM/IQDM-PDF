@@ -25,7 +25,13 @@ class SNCPatientReport2020(GenericReport):
             "uid": [0, 1, 2, 5],
             "date": 2,
             "criteria": [14, 8, 11, 13, 9, 10, 12],
-            "y": [15, 16, 17, 18, 7],
+            "y": [
+                {"index": 15, "ucl_limit": 100, "lcl_limit": 0},
+                {"index": 16, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 17, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 18, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 7, "ucl_limit": None, "lcl_limit": 0},
+            ],
         }
 
 
@@ -126,7 +132,12 @@ class SNCPatientCustom(ParserBase):
             "uid": [0, 1, 2],
             "date": 2,
             "criteria": [18, 9, 10, 11, 12, 16, 15, 14, 17],
-            "y": [22, 20, 21, 19],
+            "y": [
+                {"index": 22, "ucl_limit": 100, "lcl_limit": 0},
+                {"index": 20, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 21, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 19, "ucl_limit": None, "lcl_limit": 0},
+            ],
         }
 
     def __call__(self, report_file_path):
