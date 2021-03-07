@@ -280,7 +280,7 @@ def run_multiprocessing(worker, queue, processes, callback=None):
                 if callback is not None:
                     callback(str(pbar))
     if callback is not None:
-        callback('complete')
+        callback("complete")
     return data
 
 
