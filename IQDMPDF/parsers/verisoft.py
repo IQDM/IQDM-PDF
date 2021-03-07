@@ -96,6 +96,25 @@ class VeriSoftReport(ParserBase):
             "uid": [0, 1, 5],
             "date": 5,
             "criteria": [14, 15, 16, 17, 18],
+            "y": [
+                54,
+                51,
+                50,
+                53,
+                52,
+                49,
+                48,
+                22,
+                21,
+                20,
+                19,
+                10,
+                12,
+                37,
+                35,
+                33,
+                31,
+            ],
         }
 
     def __call__(self, report_file_path):
