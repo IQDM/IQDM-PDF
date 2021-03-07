@@ -258,8 +258,8 @@ def run_multiprocessing(worker, queue, processes, callback=None):
     processes : int
         Number of processes for multiprocessing.Pool
     callback : callable
-        Optional call back function on progress update, send str rep of
-        tqdm object
+        Optional call back function on progress update, accepts str rep of
+        tqdm object. Final call sent with 'complete'
 
     Returns
     -------
@@ -279,6 +279,8 @@ def run_multiprocessing(worker, queue, processes, callback=None):
                 pbar.update()
                 if callback is not None:
                     callback(str(pbar))
+    if callback is not None:
+        callback('complete')
     return data
 
 
