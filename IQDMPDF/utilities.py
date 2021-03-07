@@ -246,7 +246,7 @@ def create_arg_parser():
     return cmd_parser
 
 
-def run_multiprocessing(worker, queue, processes):
+def run_multiprocessing(worker, queue, processes, callback=None):
     """Parallel processing
 
     Parameters
@@ -257,6 +257,9 @@ def run_multiprocessing(worker, queue, processes):
         A list of arguments for worker
     processes : int
         Number of processes for multiprocessing.Pool
+    callback : callable
+        Optional call back function on progress update, accepts str rep of
+        tqdm object. Final call sent with 'complete'
 
     Returns
     -------
@@ -274,6 +277,10 @@ def run_multiprocessing(worker, queue, processes):
             for item in pool.imap_unordered(worker, queue):
                 data.append(item)
                 pbar.update()
+                if callback is not None:
+                    callback(str(pbar))
+    if callback is not None:
+        callback("complete")
     return data
 
 

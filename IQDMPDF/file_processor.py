@@ -73,7 +73,9 @@ def process_files(
     else:
         # Multiprocessing
         print("Processing %s file(s) ..." % len(files))
-        all_data = run_multiprocessing(process_file_worker, files, processes)
+        all_data = run_multiprocessing(
+            process_file_worker, files, processes, callback=callback
+        )
 
         print("Writing results to file(s) ...")
 

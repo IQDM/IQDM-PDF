@@ -96,6 +96,7 @@ class TestFileProcessor(unittest.TestCase):
             output_file="unittest.csv",
             output_dir=".",
             processes=4,
+            callback=str,
         )
         test_files = [f for f in listdir() if f.endswith("_unittest.csv")]
         for file in test_files:

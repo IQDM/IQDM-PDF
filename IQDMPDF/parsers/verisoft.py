@@ -96,6 +96,25 @@ class VeriSoftReport(ParserBase):
             "uid": [0, 1, 5],
             "date": 5,
             "criteria": [14, 15, 16, 17, 18],
+            "y": [
+                {"index": 54, "ucl_limit": 100, "lcl_limit": 0},
+                {"index": 51, "ucl_limit": 100, "lcl_limit": 0},
+                {"index": 50, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 53, "ucl_limit": 100, "lcl_limit": 0},
+                {"index": 52, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 49, "ucl_limit": 100, "lcl_limit": 0},
+                {"index": 48, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 22, "ucl_limit": 1, "lcl_limit": 0},
+                {"index": 21, "ucl_limit": 1, "lcl_limit": 0},
+                {"index": 20, "ucl_limit": 1, "lcl_limit": 0},
+                {"index": 19, "ucl_limit": 1, "lcl_limit": 0},
+                {"index": 10, "ucl_limit": None, "lcl_limit": None},
+                {"index": 12, "ucl_limit": None, "lcl_limit": None},
+                {"index": 37, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 35, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 33, "ucl_limit": None, "lcl_limit": 0},
+                {"index": 31, "ucl_limit": None, "lcl_limit": 0},
+            ],
         }
 
     def __call__(self, report_file_path):
