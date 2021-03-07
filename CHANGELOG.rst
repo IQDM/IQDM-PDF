@@ -1,8 +1,8 @@
 Change log for IQDM-PDF
 =======================
 
-v0.2.8 (TBD)
-------------
+v0.2.8 (2021.03.07)
+-------------------
 - IQDM Analytics support from GUI
 
 v0.2.7 (2021.03.04)
