@@ -1,6 +1,10 @@
 Change log for IQDM-PDF
 =======================
 
+v0.2.9 (TBD)
+------------
+- Better date parsing for Delta4
+
 v0.2.8 (2021.03.07)
 -------------------
 - IQDM Analytics support from GUI

@@ -196,7 +196,7 @@ class Delta4Report(ParserBase):
         str
             Plan date from DICOM
         """
-        return self.find_nth_date_in_block(0)
+        return self.clean_date(self.find_nth_date_in_block(0))
 
     @property
     def meas_date(self):
@@ -207,7 +207,7 @@ class Delta4Report(ParserBase):
         str
             Date of QA measurement
         """
-        return self.find_nth_date_in_block(1)
+        return self.clean_date(self.find_nth_date_in_block(1))
 
     @property
     def accepted_date(self):
@@ -218,7 +218,33 @@ class Delta4Report(ParserBase):
         str
             QA Accepted date from DICOM
         """
-        return self.find_nth_date_in_block(2)
+        return self.clean_date(self.find_nth_date_in_block(2))
+
+    @staticmethod
+    def clean_date(date_str):
+        """Remove anything after AM or PM, cat month and date swapping
+
+        Parameters
+        ----------
+        date_str : str
+            output from ``find_nth_date_in_block``
+
+        Returns
+        -------
+        str
+            ``date`` str up until AM/PM (if exists), with M/D/Y format
+        """
+        date_str = date_str.upper()
+        for s in [' AM', ' PM']:
+            date_str = date_str.split(s)[0] + s if s in date_str else date_str
+
+        # It seems Delta4 reports use a period separator when flipping m/d
+        if date_str.count('.') > 1:
+            date_split = date_str.split('.')
+            month, day = date_split[1], date_split[0]
+            date_str = f"{month}/{day}/{''.join(date_split[2:])}"
+
+        return date_str
 
     @property
     def radiation_dev(self):
