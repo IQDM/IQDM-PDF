@@ -12,6 +12,7 @@ from IQDMPDF.pdf_reader import convert_pdf_to_txt
 from IQDMPDF.parsers.delta4 import Delta4Report
 from IQDMPDF.parsers.sncpatient import SNCPatientCustom, SNCPatientReport2020
 from IQDMPDF.parsers.verisoft import VeriSoftReport
+from IQDMPDF.utilities import creation_date
 
 # These classes will be checked in ReportParser.get_report()
 REPORT_CLASSES = [
@@ -36,6 +37,7 @@ class ReportParser:
         self.file_path = file_path
         self.text = convert_pdf_to_txt(file_path)
         self.report = self.get_report()
+        self.creation_date = creation_date(file_path)
 
     def get_report(self):
         """Determine the report_class, then return class with data processed
@@ -62,7 +64,8 @@ class ReportParser:
             Report columns + "report_file_path"
         """
         columns = getattr(self.report, "columns", None)
-        return columns + ["report_file_path"] if columns else []
+        file_info = ["report_file_creation", "report_file_path"]
+        return columns + file_info if columns else []
 
     @property
     def csv_data(self):
@@ -74,7 +77,8 @@ class ReportParser:
             Report columns + "report_file_path"
         """
         csv_data = getattr(self.report, "csv_data", None)
-        return csv_data + [self.file_path] if csv_data else [""]
+        file_info = [self.creation_date, self.file_path]
+        return csv_data + file_info if csv_data else [""]
 
     @property
     def report_type(self):

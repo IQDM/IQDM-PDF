@@ -8,8 +8,9 @@
 # This file is part of IQDM-PDF, released under a MIT license.
 #    See the file LICENSE included with this distribution
 
-from os.path import join, splitext, normpath
-from os import walk, listdir, sep
+from os.path import join, splitext, normpath, getctime
+from os import walk, listdir, sep, stat
+import platform
 import argparse
 from multiprocessing import Pool
 from tqdm import tqdm
@@ -302,3 +303,27 @@ def is_numeric(val):
         return True
     except ValueError:
         return False
+
+
+def creation_date(path_to_file):
+    """
+    Try to get the date that a file was created, falling back to when it was
+    last modified if that isn't possible.
+    See http://stackoverflow.com/a/39501288/1709587 for explanation.
+
+    Parameters
+    ----------
+    path_to_file : str
+        Path to any file
+
+    Returns
+    -------
+    float
+        Time stamp of file
+
+    """
+    if platform.system() == 'Windows':
+        return getctime(path_to_file)
+    else:
+        stat_ = stat(path_to_file)
+        return getattr(stat_, 'st_birthtime', stat_.st_mtime)
