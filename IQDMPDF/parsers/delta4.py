@@ -235,12 +235,12 @@ class Delta4Report(ParserBase):
             ``date`` str up until AM/PM (if exists), with M/D/Y format
         """
         date_str = date_str.upper()
-        for s in [' AM', ' PM']:
+        for s in [" AM", " PM"]:
             date_str = date_str.split(s)[0] + s if s in date_str else date_str
 
         # It seems Delta4 reports use a period separator when flipping m/d
-        if date_str.count('.') > 1:
-            date_split = date_str.split('.')
+        if date_str.count(".") > 1:
+            date_split = date_str.split(".")
             month, day = date_split[1], date_split[0]
             date_str = f"{month}/{day}/{''.join(date_split[2:])}"
 
