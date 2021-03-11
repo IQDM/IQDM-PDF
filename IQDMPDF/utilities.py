@@ -322,8 +322,8 @@ def creation_date(path_to_file):
         Time stamp of file
 
     """
-    if platform.system() == 'Windows':
+    if platform.system() == "Windows":
         return getctime(path_to_file)
     else:
         stat_ = stat(path_to_file)
-        return getattr(stat_, 'st_birthtime', stat_.st_mtime)
+        return getattr(stat_, "st_birthtime", stat_.st_mtime)
