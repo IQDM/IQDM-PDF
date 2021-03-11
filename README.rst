@@ -11,7 +11,7 @@ Scans a directory for IMRT QA reports and parses data into a CSV.
 Other information
 -----------------
 This library is part of the IMRT QA Data Mining (IQDM) project for
-the `AAPM's IMRT Working Group (WGIMRT) <https://www.aapm.org/org/structure/?committee_code=WGIMRT>`__.
+the AAPM `IMRT Working Group (WGIMRT) <https://www.aapm.org/org/structure/?committee_code=WGIMRT>`__.
 
 -  Free software: `MIT license <https://github.com/IQDM/IQDM-PDF/blob/master/LICENSE>`__
 -  Documentation: `Read the docs <https://iqdm-pdf.readthedocs.io>`__
@@ -138,6 +138,9 @@ Example IMRT QA reports used for unit testing and design are available `here <ht
 
 * Aditya Panchal, AMITA Health
     * verisoft/AMITA_Health
+
+* Michael Snyder, Beaumont Health
+    * sncpatient/Beaumont
 
 
 .. |build| image:: https://github.com/IQDM/IQDM-PDF/workflows/build/badge.svg

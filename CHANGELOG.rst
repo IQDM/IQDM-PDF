@@ -1,5 +1,11 @@
-Change log for IQDM-PDF
+Change Log for IQDM-PDF
 =======================
+
+v0.2.9 (2021.03.11)
+-------------------
+- Better date parsing for Delta4
+- Address "Set1" issue for long patient names with ``SNCPatientCustom``
+- Add ``report_file_creation`` column
 
 v0.2.8 (2021.03.07)
 -------------------

@@ -167,6 +167,9 @@ class SNCPatientCustom(ParserBase):
         }
 
         self.file_param_block = self._get_lateral_block("QA File Parameter")
+        # long names may cause Set1 to get picked up
+        if self.file_param_block[0].strip().lower() == "set1":
+            self.file_param_block.pop(0)
         while len(self.file_param_block) < 7:  # in case redaction removed ':'
             self.file_param_block.insert(0, ":")
 
