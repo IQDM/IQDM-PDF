@@ -1,9 +1,10 @@
-Change log for IQDM-PDF
+Change Log for IQDM-PDF
 =======================
 
 v0.2.9 (TBD)
 ------------
 - Better date parsing for Delta4
+- Address "Set1" issue for long patient names with SNCPatientCustom
 
 v0.2.8 (2021.03.07)
 -------------------

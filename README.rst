@@ -139,6 +139,9 @@ Example IMRT QA reports used for unit testing and design are available `here <ht
 * Aditya Panchal, AMITA Health
     * verisoft/AMITA_Health
 
+* Michael Snyder, Beaumont Health
+    * sncpatient/Beaumont
+
 
 .. |build| image:: https://github.com/IQDM/IQDM-PDF/workflows/build/badge.svg
    :target: https://github.com/IQDM/IQDM-PDF/actions
