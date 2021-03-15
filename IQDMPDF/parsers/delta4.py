@@ -144,7 +144,6 @@ class Delta4Report(ParserBase):
             if "\n" in self.patient_info_block:
                 return self.patient_info_block.split("\n")[0]
             return self.patient_info_block[0]
-        return ""
 
     @property
     def patient_id(self):
@@ -158,7 +157,6 @@ class Delta4Report(ParserBase):
         if self.patient_info_block:
             if "\n" in self.patient_info_block:
                 return self.patient_info_block.split("\n")[1]
-        return ""
 
     ###########################################################################
     # Plan block
@@ -175,7 +173,6 @@ class Delta4Report(ParserBase):
         for row in self.plan_block:
             if "Plan: " in row:
                 return row.split("Plan: ")[1].strip()
-        return ""
 
     @property
     def plan_date(self):
@@ -240,8 +237,6 @@ class Delta4Report(ParserBase):
                     return date_str.split(" ")[0]
                 return date_str
 
-        return ""
-
     ###########################################################################
     # Treatment Summary block
     ###########################################################################
@@ -257,7 +252,6 @@ class Delta4Report(ParserBase):
         for row in self.treatment_summary_block:
             if row.startswith("Radiation Device: "):
                 return row.split("Radiation Device: ")[1].strip()
-        return ""
 
     @property
     def beam_count(self):
@@ -270,7 +264,7 @@ class Delta4Report(ParserBase):
         """
         for r, row in enumerate(self.treatment_summary_block):
             if "Gy" in row:
-                return len(self.treatment_summary_block) - r - 1
+                return str(len(self.treatment_summary_block) - r - 1)
 
     @property
     def composite_tx_summary_data(self):
@@ -310,7 +304,6 @@ class Delta4Report(ParserBase):
                 while data[-1].isnumeric() or data[-1] == ".":
                     data = data[:-1]
                 return data.strip()
-        return ""
 
     @property
     def daily_corr(self):
@@ -333,7 +326,6 @@ class Delta4Report(ParserBase):
                     data = data[:-1]
                 if daily_corr.replace(".", "").isnumeric():
                     return daily_corr
-        return ""
 
     ###########################################################################
     # Parameter block
@@ -392,7 +384,7 @@ class Delta4Report(ParserBase):
             Keys will match "column" elements Values are of type str
         """
         comp_tx_data = self.composite_tx_summary_data
-        return {
+        ans = {
             "Patient Name": self.patient_name,
             "Patient ID": self.patient_id,
             "Plan Date": self.plan_date,
@@ -414,3 +406,4 @@ class Delta4Report(ParserBase):
             "Threshold": self.threshold,
             "Beam Count": self.beam_count,
         }
+        return {k: '' if v is None else v for k, v in ans.items()}

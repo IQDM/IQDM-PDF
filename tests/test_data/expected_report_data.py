@@ -96,7 +96,7 @@ TEST_DATA = {
                 "Gamma Pass Criteria": "95%",
                 "Gamma Dose Criteria": "2.0%",
                 "Gamma Dist Criteria": "2.0 mm",
-                "Beam Count": 2,
+                "Beam Count": '2',
             },
         },
         "6 MV": {
@@ -123,7 +123,7 @@ TEST_DATA = {
                 "Gamma Pass Criteria": "95%",
                 "Gamma Dose Criteria": "3.0%",
                 "Gamma Dist Criteria": "2.0 mm",
-                "Beam Count": 4,
+                "Beam Count": '4',
             },
         },
         "2ndPageTxSummary": {
@@ -150,7 +150,7 @@ TEST_DATA = {
                 "Gamma Pass Criteria": "95%",
                 "Gamma Dose Criteria": "2.0%",
                 "Gamma Dist Criteria": "2.0 mm",
-                "Beam Count": 3,
+                "Beam Count": '3',
             },
         },
         "Dates with . and energy/daily_corr swap": {
@@ -178,7 +178,7 @@ TEST_DATA = {
                 "Gamma Dose Criteria": "3.0%",
                 "Gamma Dist Criteria": "3.0 mm",
                 "Threshold": "10%",
-                "Beam Count": 3,
+                "Beam Count": '3',
             },
         },
         "Energy in beam name": {
@@ -206,7 +206,7 @@ TEST_DATA = {
                 "Gamma Dose Criteria": "3.0%",
                 "Gamma Dist Criteria": "3.0 mm",
                 "Threshold": "10%",
-                "Beam Count": 2,
+                "Beam Count": '2',
             },
         },
         "TxSummary block returns daily corr": {
@@ -234,7 +234,7 @@ TEST_DATA = {
                 "Gamma Dose Criteria": "3.0%",
                 "Gamma Dist Criteria": "3.0 mm",
                 "Threshold": "10%",
-                "Beam Count": 2,
+                "Beam Count": '2',
             },
         },
         "Date index search": {
@@ -262,7 +262,7 @@ TEST_DATA = {
                 "Gamma Dose Criteria": "2.0%",
                 "Gamma Dist Criteria": "2.0 mm",
                 "Threshold": "10%",
-                "Beam Count": 1,
+                "Beam Count": '1',
             },
         },
         "No Composite/Fraction in Energy Block": {
@@ -289,7 +289,7 @@ TEST_DATA = {
                 "Gamma Dose Criteria": "3.0%",
                 "Gamma Dist Criteria": "3.0 mm",
                 "Threshold": "10%",
-                "Beam Count": 2,
+                "Beam Count": '2',
             },
         },
         "AM/PM in date, month/day swapped": {
@@ -316,7 +316,7 @@ TEST_DATA = {
                 "Gamma Dose Criteria": "3.0%",
                 "Gamma Dist Criteria": "3.0 mm",
                 "Threshold": "10%",
-                "Beam Count": 2,
+                "Beam Count": '2',
             },
         },
         "High resolution / Gy": {
@@ -344,7 +344,7 @@ TEST_DATA = {
                 "Gamma Dose Criteria": "3.0%",
                 "Gamma Dist Criteria": "2.0 mm",
                 "Threshold": "20%",
-                "Beam Count": 4,
+                "Beam Count": '4',
             },
         },
     },
