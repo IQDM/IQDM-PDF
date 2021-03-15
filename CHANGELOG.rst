@@ -1,8 +1,8 @@
 Change Log for IQDM-PDF
 =======================
 
-v0.3.0 (TBD)
-------------
+v0.3.0 (2021.03.14)
+-------------------
 - Brand new Delta4 parser using only relative positions
 
 v0.2.9 (2021.03.11)
