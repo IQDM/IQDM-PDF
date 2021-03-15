@@ -19,7 +19,7 @@ class Delta4Report(ParserBase):
         """Initialize SNCPatientCustom class"""
         ParserBase.__init__(self)
 
-        self.report_type = "Delta4Custom"
+        self.report_type = "Delta4"
         self.columns = [
             "Patient Name",
             "Patient ID",
@@ -119,7 +119,7 @@ class Delta4Report(ParserBase):
             if "Gamma" in {row_split[0], row_split[1]}:
                 break
         row = self.params_block[r]
-        while "  " in " ":
+        while "  " in row:
             row = row.replace("  ", " ")
         self.gamma_index_row = row.strip().split(" ")
 
