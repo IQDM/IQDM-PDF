@@ -71,7 +71,7 @@ class Delta4Report(ParserBase):
             File path pointing to an IMRT QA report
         """
         super().__call__(report_file_path)
-        laparams_kwargs = {"line_margin": 2, 'char_margin': 100}
+        laparams_kwargs = {"line_margin": 2, "char_margin": 100}
         self.data = CustomPDFReader(report_file_path, laparams_kwargs)
 
         keys = [
@@ -92,27 +92,36 @@ class Delta4Report(ParserBase):
             if "Plan:" in row:
                 start = i
                 break
-        stop = raw.index("Treatment Summary") if "Treatment Summary" in raw else -1
+        stop = (
+            raw.index("Treatment Summary")
+            if "Treatment Summary" in raw
+            else -1
+        )
         self.plan_block = raw[start:] if stop == -1 else raw[start:stop]
 
         raw = self.anchors["Treatment Summary"]["text"].split("\n")
         start = raw.index("Treatment Summary") + 1
         stop = raw.index("Histograms") if "Histograms" in raw else -1
-        self.treatment_summary_block = raw[start:] if stop == -1 else raw[start:stop]
+        self.treatment_summary_block = (
+            raw[start:] if stop == -1 else raw[start:stop]
+        )
 
         raw = self.anchors["Parameter Definitions"]["text"].split("\n")
-        start = raw.index("Parameter Definitions & Acceptance Criteria, Detectors") + 2
+        start = (
+            raw.index("Parameter Definitions & Acceptance Criteria, Detectors")
+            + 2
+        )
         self.params_block = raw[start:]
 
         r = -1
         for r, row in enumerate(self.params_block):
-            row_split = row.split(' ')
+            row_split = row.split(" ")
             if "Gamma" in {row_split[0], row_split[1]}:
                 break
         row = self.params_block[r]
-        while '  ' in ' ':
-            row = row.replace('  ', ' ')
-        self.gamma_index_row = row.strip().split(' ')
+        while "  " in " ":
+            row = row.replace("  ", " ")
+        self.gamma_index_row = row.strip().split(" ")
 
         self.patient_info_block = self.data.page[0].data["text"][1]
         if "Clinic: " in self.patient_info_block:
@@ -132,10 +141,10 @@ class Delta4Report(ParserBase):
 
         """
         if self.patient_info_block:
-            if '\n' in self.patient_info_block:
-                return self.patient_info_block.split('\n')[0]
+            if "\n" in self.patient_info_block:
+                return self.patient_info_block.split("\n")[0]
             return self.patient_info_block[0]
-        return ''
+        return ""
 
     @property
     def patient_id(self):
@@ -147,9 +156,9 @@ class Delta4Report(ParserBase):
             Patient ID
         """
         if self.patient_info_block:
-            if '\n' in self.patient_info_block:
-                return self.patient_info_block.split('\n')[1]
-        return ''
+            if "\n" in self.patient_info_block:
+                return self.patient_info_block.split("\n")[1]
+        return ""
 
     ###########################################################################
     # Plan block
@@ -164,8 +173,8 @@ class Delta4Report(ParserBase):
             Plan name from DICOM
         """
         for row in self.plan_block:
-            if 'Plan: ' in row:
-                return row.split('Plan: ')[1].strip()
+            if "Plan: " in row:
+                return row.split("Plan: ")[1].strip()
         return ""
 
     @property
@@ -177,7 +186,7 @@ class Delta4Report(ParserBase):
         str
             Plan date from DICOM
         """
-        return self._get_plan_block_date('Planned: ')
+        return self._get_plan_block_date("Planned: ")
 
     @property
     def measured_date(self):
@@ -188,7 +197,7 @@ class Delta4Report(ParserBase):
         str
             Date of QA measurement
         """
-        return self._get_plan_block_date('Measured: ')
+        return self._get_plan_block_date("Measured: ")
 
     @property
     def accepted_date(self):
@@ -199,7 +208,7 @@ class Delta4Report(ParserBase):
         str
             QA Accepted date from DICOM
         """
-        return self._get_plan_block_date('Accepted: ')
+        return self._get_plan_block_date("Accepted: ")
 
     def _get_plan_block_date(self, key):
         """Get a date from the plan_block
@@ -217,18 +226,18 @@ class Delta4Report(ParserBase):
         for row in self.plan_block:
             if key in row:
                 info = row.split(key)[1].strip()
-                while '  ' in info:
-                    info = info.replace('  ', ' ').strip()
-                if ' AM' in info or ' PM' in info:
-                    date_str = ' '.join(info.split(' ')[:3])
+                while "  " in info:
+                    info = info.replace("  ", " ").strip()
+                if " AM" in info or " PM" in info:
+                    date_str = " ".join(info.split(" ")[:3])
                 else:
-                    date_str = ' '.join(info.split(' ')[:2])
+                    date_str = " ".join(info.split(" ")[:2])
                 if date_str.count(".") > 1:
                     date_split = date_str.split(".")
                     month, day = date_split[1], date_split[0]
                     date_str = f"{month}/{day}/{''.join(date_split[2:])}"
-                if ':' not in date_str:
-                    return date_str.split(' ')[0]
+                if ":" not in date_str:
+                    return date_str.split(" ")[0]
                 return date_str
 
         return ""
@@ -246,8 +255,8 @@ class Delta4Report(ParserBase):
             Radiation device per DICOM-RT Plan
         """
         for row in self.treatment_summary_block:
-            if row.startswith('Radiation Device: '):
-                return row.split('Radiation Device: ')[1].strip()
+            if row.startswith("Radiation Device: "):
+                return row.split("Radiation Device: ")[1].strip()
         return ""
 
     @property
@@ -260,7 +269,7 @@ class Delta4Report(ParserBase):
             The number of beams
         """
         for r, row in enumerate(self.treatment_summary_block):
-            if 'Gy' in row:
+            if "Gy" in row:
                 return len(self.treatment_summary_block) - r - 1
 
     @property
@@ -273,16 +282,16 @@ class Delta4Report(ParserBase):
             'norm_dose', 'dev', 'dta', 'gamma_index', and 'dose_dev'
         """
         for row in self.treatment_summary_block:
-            if 'Gy' in row:
-                units = 'cGy' if 'cGy' in row else 'Gy'
+            if "Gy" in row:
+                units = "cGy" if "cGy" in row else "Gy"
                 text = row.split(units)
-                pass_rate_data = text[1].strip().split('%')
+                pass_rate_data = text[1].strip().split("%")
                 return {
-                    "norm_dose": text[0].strip().split(' ')[-1] + " " + units,
-                    "dev": pass_rate_data[-5].strip() + '%',
-                    "dta": pass_rate_data[-4].strip() + '%',
-                    "gamma_index": pass_rate_data[-3].strip() + '%',
-                    "dose_dev": pass_rate_data[-2].strip() + '%',
+                    "norm_dose": text[0].strip().split(" ")[-1] + " " + units,
+                    "dev": pass_rate_data[-5].strip() + "%",
+                    "dta": pass_rate_data[-4].strip() + "%",
+                    "gamma_index": pass_rate_data[-3].strip() + "%",
+                    "dose_dev": pass_rate_data[-2].strip() + "%",
                 }
 
     @property
@@ -295,10 +304,10 @@ class Delta4Report(ParserBase):
             Energy of the first reported beam
         """
         for row in self.treatment_summary_block:
-            if row.count('°') == 2:
-                data = row.split('°')[-1].strip()
-                data = ' '.join(data.split(' ')[:-6])
-                while data[-1].isnumeric() or data[-1] == '.':
+            if row.count("°") == 2:
+                data = row.split("°")[-1].strip()
+                data = " ".join(data.split(" ")[:-6])
+                while data[-1].isnumeric() or data[-1] == ".":
                     data = data[:-1]
                 return data.strip()
         return ""
@@ -313,16 +322,16 @@ class Delta4Report(ParserBase):
             The daily correction factor
         """
         for row in self.treatment_summary_block:
-            if row.count('°') == 2:
-                init_data = row.split('°')[-1].strip()
-                data = ' '.join(init_data.split(' ')[:-6])
+            if row.count("°") == 2:
+                init_data = row.split("°")[-1].strip()
+                data = " ".join(init_data.split(" ")[:-6])
                 if not data[-1].isnumeric():
-                    data = ' '.join(init_data.split(' ')[:-5])
-                daily_corr = ''
-                while data[-1].isnumeric() or data[-1] == '.':
+                    data = " ".join(init_data.split(" ")[:-5])
+                daily_corr = ""
+                while data[-1].isnumeric() or data[-1] == ".":
                     daily_corr = data[-1] + daily_corr
                     data = data[:-1]
-                if daily_corr.replace('.', '').isnumeric():
+                if daily_corr.replace(".", "").isnumeric():
                     return daily_corr
         return ""
 
@@ -338,7 +347,7 @@ class Delta4Report(ParserBase):
         str
             Gamma dose criteria
         """
-        return self.gamma_index_row[7].replace('±', '')
+        return self.gamma_index_row[7].replace("±", "")
 
     @property
     def gamma_distance(self):
@@ -396,7 +405,7 @@ class Delta4Report(ParserBase):
             "Norm Dose": comp_tx_data["norm_dose"],
             "Dev": comp_tx_data["dev"],
             "DTA": comp_tx_data["dta"],
-            "DTA Criteria": 'TODO',
+            "DTA Criteria": "TODO",
             "Dose Dev": comp_tx_data["dose_dev"],
             "Gamma-Index": comp_tx_data["gamma_index"],
             "Gamma Pass Criteria": self.gamma_pass_criteria,

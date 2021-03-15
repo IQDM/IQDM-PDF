@@ -331,7 +331,7 @@ TEST_DATA = {
                 "Plan Date": "12/29/2014 6:49 PM",
                 "Plan Name": "Dlt4QA_Prst",
                 "Meas Date": "12/29/2014 6:58 PM",
-                "Accepted Date": '',
+                "Accepted Date": "",
                 "Radiation Dev": "SCHTrueBeam",
                 "Energy": "6 MV",
                 "Daily Corr": "1.005",
