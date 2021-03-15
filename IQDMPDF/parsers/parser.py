@@ -61,7 +61,7 @@ class ReportParser:
         Returns
         ----------
         list
-            Report columns + "report_file_path"
+            Report columns + "report_file_creation" + "report_file_path"
         """
         columns = getattr(self.report, "columns", None)
         file_info = ["report_file_creation", "report_file_path"]
@@ -74,7 +74,7 @@ class ReportParser:
         Returns
         ----------
         str
-            Report columns + "report_file_path"
+            Report columns + "report_file_creation" + "report_file_path"
         """
         csv_data = getattr(self.report, "csv_data", None)
         file_info = [self.creation_date, self.file_path]
