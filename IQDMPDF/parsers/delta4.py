@@ -406,4 +406,4 @@ class Delta4Report(ParserBase):
             "Threshold": self.threshold,
             "Beam Count": self.beam_count,
         }
-        return {k: '' if v is None else v for k, v in ans.items()}
+        return {k: "" if v is None else v for k, v in ans.items()}
