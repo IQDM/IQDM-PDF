@@ -7,7 +7,7 @@ extract text and coordinates from IMRT QA PDF files.
 
 Step 1: Match Report Parser
 ============================
-Each report parser has an ``identifiers`` property which contain words and
+Each report parser has an ``identifiers`` property which contains words and
 phrases used to uniquely pair a PDF to a report parser. If all of the
 identifiers are found in the PDF text, that report parser will be
 selected.
@@ -69,6 +69,16 @@ If the data in the reports have varying coordinates, the code needs more
 customization. See the `Delta4 <https://iqdm-pdf.readthedocs.io/en/latest/_modules/IQDMPDF/parsers/delta4.html#Delta4Report>`__
 report parser for examples/inspiration.
 
+Generally speaking, the `LAParams for pdfminer.six <https://pdfminersix.readthedocs.io/en/latest/reference/composable.html#api-laparams>`__
+are customized (e.g., ``char_margin``, ``line_margin``) to get sections of the
+IMRT QA report text to be collected into one block. Then key words are used to
+connect data to variable names. Another trick is to look up the positions
+boxes containing key words, then use the y-position to search for another
+block of text laterally (used frequently in the `PTW Verisoft <https://iqdm-pdf.readthedocs.io/en/latest/_modules/IQDMPDF/parsers/verisoft.html#VeriSoftReport>`__ parser).
+
+These methods are needed if reports have variable templates, fonts, or font
+sizes. So far, all of IQDM-PDF's parsers are non-template based, with the
+exception of the new SNC Patient format introduced in 2020.
 
 Building a New Template
 =======================
